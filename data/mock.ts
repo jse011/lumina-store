@@ -1,3 +1,5 @@
+export const APP_VERSION = '1.0.1';
+
 export interface NavItem {
   id: string;
   label: string;
