@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-xl">
+    <section id="inicio" className="relative min-h-screen flex items-center pt-xl">
       <div className="absolute inset-0 z-0">
         <Image
           alt="Exhibición holográfica futurista de un recuerdo familiar"
