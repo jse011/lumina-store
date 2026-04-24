@@ -18,7 +18,7 @@ export default function Hero() {
           <h1 className="font-display text-display text-white leading-tight">
             Revive tus momentos <span className="text-tertiary">favoritos en 3D</span>
           </h1>
-          <p className="font-body-lg text-on-surface-variant max-w-lg">
+          <p className="font-body-lg text-on-surface-variant">
             Transformamos tus fotos y videos en recuerdos holográficos eternos. Una ventana al pasado capturada con la tecnología del futuro.
           </p>
           <div className="pt-base">
