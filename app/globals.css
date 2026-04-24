@@ -83,16 +83,16 @@
   --text-body-md--line-height: 1.6;
   --text-body-md--font-weight: 400;
 
-  --text-display: 72px;
+  --text-display: clamp(40px, 8vw, 72px);
   --text-display--line-height: 1.1;
   --text-display--letter-spacing: -0.02em;
   --text-display--font-weight: 700;
 
-  --text-headline-md: 32px;
+  --text-headline-md: clamp(24px, 5vw, 32px);
   --text-headline-md--line-height: 1.3;
   --text-headline-md--font-weight: 500;
 
-  --text-headline-lg: 40px;
+  --text-headline-lg: clamp(32px, 6vw, 40px);
   --text-headline-lg--line-height: 1.2;
   --text-headline-lg--font-weight: 500;
 }

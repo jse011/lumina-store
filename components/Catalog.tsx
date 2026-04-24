@@ -3,7 +3,7 @@ import { PRODUCTS } from '@/data/mock';
 
 export default function Catalog() {
   return (
-    <section className="py-xl max-w-7xl mx-auto px-6" id="catalogo">
+    <section className="py-xl max-w-7xl mx-auto px-4 md:px-6" id="catalogo">
       <div className="text-center mb-xl">
         <h2 className="font-headline-lg text-white mb-base">Nuestra Colección</h2>
         <div className="h-1 w-24 bg-gradient-to-r from-cyan-400 to-violet-500 mx-auto rounded-full"></div>
@@ -25,7 +25,7 @@ export default function Catalog() {
               />
               <div className="absolute inset-0 scan-line pointer-events-none opacity-20"></div>
             </div>
-            <div className="flex justify-between items-start mb-base">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-base gap-2">
               <div>
                 <h3 className="font-headline-md text-white">{product.name}</h3>
                 <p className="font-body-md text-on-surface-variant">{product.price}</p>

@@ -13,16 +13,16 @@ export default function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#050B18] via-transparent to-[#050B18]"></div>
       </div>
-      <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-md items-center">
-        <div className="space-y-md">
-          <h1 className="font-display text-display text-white leading-tight">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 grid md:grid-cols-2 gap-md items-center">
+        <div className="space-y-md text-center md:text-left mt-20 md:mt-0">
+          <h2 className="font-display text-display text-white leading-tight">
             Revive tus momentos <span className="text-tertiary">favoritos en 3D</span>
-          </h1>
+          </h2>
           <p className="font-body-lg text-on-surface-variant">
             Transformamos tus fotos y videos en recuerdos holográficos eternos. Una ventana al pasado capturada con la tecnología del futuro.
           </p>
-          <div className="pt-base">
-            <button className="px-xl py-md bg-gradient-to-r from-cyan-400 to-violet-500 text-white rounded-xl font-headline-md shadow-[0_0_30px_rgba(34,211,238,0.2)] hover:scale-105 transition-all flex items-center gap-4">
+          <div className="pt-base flex justify-center md:justify-start">
+            <button className="px-lg py-sm md:px-xl md:py-md bg-gradient-to-r from-cyan-400 to-violet-500 text-white rounded-xl text-lg md:text-2xl font-headline-md shadow-[0_0_30px_rgba(34,211,238,0.2)] hover:scale-105 transition-all flex items-center gap-4">
               Hablar por WhatsApp
               <span className="material-symbols-outlined" aria-hidden="true">
                 chat
