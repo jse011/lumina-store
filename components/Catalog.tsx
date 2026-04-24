@@ -6,7 +6,13 @@ export default function Catalog() {
     <section className="py-xl max-w-7xl mx-auto px-4 md:px-6" id="catalogo">
       <div className="text-center mb-xl">
         <h2 className="font-headline-lg text-white mb-base">Nuestra Colección</h2>
-        <div className="h-1 w-24 bg-gradient-to-r from-cyan-400 to-violet-500 mx-auto rounded-full"></div>
+        <div className="h-1 w-24 bg-gradient-to-r from-cyan-400 to-violet-500 mx-auto rounded-full mb-8"></div>
+        <button className="px-6 py-2 bg-gradient-to-r from-cyan-500/20 to-violet-500/20 border border-cyan-500/50 text-cyan-400 rounded-full font-label-sm uppercase tracking-wider hover:scale-105 transition-all flex items-center gap-2 mx-auto shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+          Ver Galería
+          <span className="material-symbols-outlined text-base" aria-hidden="true">
+            grid_view
+          </span>
+        </button>
       </div>
       <div className="grid md:grid-cols-2 gap-lg">
         {PRODUCTS.map((product) => (
