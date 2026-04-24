@@ -1,3 +1,17 @@
+export interface NavItem {
+  id: string;
+  label: string;
+  href: string;
+  isActive?: boolean;
+}
+
+export const NAV_ITEMS: NavItem[] = [
+  { id: 'inicio', label: 'Inicio', href: '#', isActive: true },
+  { id: 'catalogo', label: 'Catálogo', href: '#catalogo', isActive: false },
+  { id: 'historias', label: 'Historias', href: '#historias', isActive: false },
+  { id: 'entrega', label: 'Entrega', href: '#entrega', isActive: false },
+];
+
 export interface Product {
   id: string;
   name: string;
