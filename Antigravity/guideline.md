@@ -15,9 +15,48 @@ Este sistema de diseño se basa en el concepto de "Inmortalidad Digital", una me
 
 - **Headlines / Títulos:** **Space Grotesk**
   - Estilo: Geométrico, técnico, futurista.
-  - Tracking: Ajustado (tight) para títulos grandes; expandido para etiquetas de datos.
 - **Body / Texto de cuerpo:** **Manrope**
   - Estilo: Proporciones equilibradas, suaviza el borde tecnológico con calidez humana.
+
+### Tokens de Tipografía (Uso Obligatorio)
+
+- **Display (`text-display`)**:
+  - Familia: Space Grotesk
+  - Tamaño (fontSize): `72px`
+  - Peso (fontWeight): `700`
+  - Altura de línea (lineHeight): `1.1`
+  - Espaciado (letterSpacing): `-0.02em`
+
+- **Headline Large (`text-headline-lg`)**:
+  - Familia: Space Grotesk
+  - Tamaño (fontSize): `40px`
+  - Peso (fontWeight): `500`
+  - Altura de línea (lineHeight): `1.2`
+
+- **Headline Medium (`text-headline-md`)**:
+  - Familia: Space Grotesk
+  - Tamaño (fontSize): `32px`
+  - Peso (fontWeight): `500`
+  - Altura de línea (lineHeight): `1.3`
+
+- **Body Large (`text-body-lg`)**:
+  - Familia: Manrope
+  - Tamaño (fontSize): `18px`
+  - Peso (fontWeight): `400`
+  - Altura de línea (lineHeight): `1.6`
+
+- **Body Medium (`text-body-md`)**:
+  - Familia: Manrope
+  - Tamaño (fontSize): `16px`
+  - Peso (fontWeight): `400`
+  - Altura de línea (lineHeight): `1.6`
+
+- **Label Small (`text-label-sm`)**:
+  - Familia: Space Grotesk
+  - Tamaño (fontSize): `12px`
+  - Peso (fontWeight): `600`
+  - Altura de línea (lineHeight): `1`
+  - Espaciado (letterSpacing): `0.1em`
 
 ## Elevación y Profundidad (Capas)
 
