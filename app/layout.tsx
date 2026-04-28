@@ -14,7 +14,7 @@ const manrope = Manrope({
   weight: ["300", "400", "500", "600"],
 });
 
-import { APP_VERSION } from "@/data/mock";
+import { APP_VERSION } from "@/core/constants";
 
 export const metadata: Metadata = {
   title: "Lumina Recuerdos | Inmortalizando Momentos en 3D",
@@ -61,7 +61,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body 
+      <body
         className="bg-background text-on-surface font-body-md overflow-x-hidden min-h-screen"
         data-version={APP_VERSION}
       >

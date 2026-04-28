@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "prueba": {
+      ".read": true,
+      ".write": true
+    },
+    "produccion": {
+      ".read": true,
+      ".write": false
+    }
+  }
+}

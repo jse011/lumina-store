@@ -1,17 +1,40 @@
 "use client";
 
 import Link from 'next/link';
-import { NAV_ITEMS } from '../data/mock';
 import { useState, useEffect } from 'react';
+import { NavItem } from '../core/domain/models';
+import { FirebaseNavRepository, FirebaseSettingsRepository } from '../core/infrastructure/firebase/repositories';
 
 export default function Navbar() {
+  const [navItems, setNavItems] = useState<NavItem[]>([]);
   const [activeId, setActiveId] = useState('inicio');
+  const [whatsappNumber, setWhatsappNumber] = useState('51900000000');
+  const [whatsappMessage, setWhatsappMessage] = useState('Hola, necesito información sobre Lumina Recuerdos');
 
   useEffect(() => {
+    const fetchData = async () => {
+      const navRepo = new FirebaseNavRepository();
+      const settingsRepo = new FirebaseSettingsRepository();
+      
+      const [items, settings] = await Promise.all([
+        navRepo.getNavItems(),
+        settingsRepo.getSettings()
+      ]);
+      
+      setNavItems(items);
+      setWhatsappNumber(settings.whatsappNumber);
+      setWhatsappMessage(settings.whatsappGeneralMessage);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (navItems.length === 0) return;
+
     const handleScroll = () => {
       let currentActiveId = 'inicio';
       
-      const sectionElements = NAV_ITEMS.map(item => {
+      const sectionElements = navItems.map(item => {
         const targetId = item.href.startsWith('#') ? item.href.substring(1) : item.id;
         return {
           id: item.id,
@@ -35,7 +58,7 @@ export default function Navbar() {
     handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [navItems]);
 
   return (
     <header className="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-[20px] border-b border-tertiary/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
@@ -45,7 +68,7 @@ export default function Navbar() {
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const isActive = item.id === activeId;
             return (
               <Link
@@ -72,7 +95,7 @@ export default function Navbar() {
           </Link>
           <a 
             className="bg-gradient-to-r from-tertiary to-secondary px-6 py-2 rounded-full text-on-primary font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all active:scale-95 text-[10px] md:text-xs" 
-            href="https://wa.me/yournumber?text=Hola,%20necesito%20información%20sobre%20Lumina%20Recuerdos"
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
           >
             Conectar
           </a>

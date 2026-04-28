@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Product } from '@/data/mock';
+import { Product } from '@/core/domain/models';
 
 interface ProductCardProps {
   product: Product;
+  whatsappNumber: string;
+  whatsappMessageTemplate: string;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, whatsappNumber, whatsappMessageTemplate }: ProductCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
 
@@ -98,7 +100,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="grid grid-cols-1 pt-4">
           <a 
             className="bg-gradient-to-r from-tertiary to-secondary text-on-primary font-display font-bold py-4 rounded-xl transition-all uppercase tracking-widest text-xs text-center flex items-center justify-center hover:shadow-[0_0_20px_rgba(34,211,238,0.3)] active:scale-95" 
-            href={`https://wa.me/yournumber?text=Hola,%20quiero%20iniciar%20mi%20pedido%20del%20${product.name}`}
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessageTemplate.replace('{productName}', product.name))}`}
           >
             INICIAR PEDIDO POR WHATSAPP
           </a>
