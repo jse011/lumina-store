@@ -1,21 +1,11 @@
-"use client";
-
-import { useState, useEffect } from 'react';
 import { FirebaseSettingsRepository } from '../core/infrastructure/firebase/repositories';
 
-export default function WhatsAppFAB() {
-  const [whatsappNumber, setWhatsappNumber] = useState('51900000000');
-  const [whatsappMessage, setWhatsappMessage] = useState('Hola, quiero crear mi recuerdo holográfico');
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      const settingsRepo = new FirebaseSettingsRepository();
-      const settings = await settingsRepo.getSettings();
-      setWhatsappNumber(settings.whatsappNumber);
-      setWhatsappMessage(settings.whatsappFABMessage);
-    };
-    fetchSettings();
-  }, []);
+export default async function WhatsAppFAB() {
+  const settingsRepo = new FirebaseSettingsRepository();
+  const settings = await settingsRepo.getSettings();
+  
+  const whatsappNumber = settings.whatsappNumber;
+  const whatsappMessage = settings.whatsappFABMessage;
 
   return (
     <a 
