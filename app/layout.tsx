@@ -47,70 +47,40 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                const getVersion = () => document.body ? document.body.getAttribute('data-version') : "${APP_VERSION}";
-                
-                const currentVersion = getVersion();
+                const currentVersion = "${APP_VERSION}";
                 const urlParams = new URLSearchParams(window.location.search);
                 const vParam = urlParams.get('v');
 
-                if (vParam) {
-                  localStorage.setItem('app_version', vParam);
-                  if (vParam === currentVersion) {
-                    const newUrl = window.location.pathname + window.location.hash;
-                    window.history.replaceState({}, '', newUrl);
-                  }
-                }
+               // 1. Limpiar la URL si ya estamos en la versión correcta
+               /* if (vParam === currentVersion) {
+                  const newUrl = window.location.pathname + window.location.hash;
+                  window.history.replaceState({}, '', newUrl);
+                }*/
 
                 const forceReload = (newVersion) => {
+                  // Si ya estamos intentando cargar esta versión, no recargar más (evita bucles)
                   if (vParam === newVersion) return;
                   
-                  console.log('Nueva versión detectada: ' + newVersion + '. Limpiando caché profunda...');
-                  
-                  // 1. Limpiar almacenamiento de variables
-                  localStorage.clear();
-                  sessionStorage.clear();
+                  console.log('Nueva versión detectada: ' + newVersion);
                   localStorage.setItem('app_version', newVersion);
-
-                  // 2. Limpiar CacheStorage (Donde el Service Worker guarda los archivos)
-                  if ('caches' in window) {
-                    caches.keys().then(function(names) {
-                      for (let name of names) caches.delete(name);
-                    });
-                  }
-
-                  // 3. Limpiar Service Workers
-                  if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                      for(let registration of registrations) { registration.unregister(); }
-                    });
-                  }
-                  
-                  // 4. Redirigir con delay para asegurar que las promesas terminen
-                  setTimeout(function() {
-                    window.location.replace(window.location.pathname + '?v=' + newVersion + window.location.hash);
-                  }, 200);
+                  window.location.href = window.location.pathname + '?v=' + newVersion + window.location.hash;
                 };
 
+                // 2. Verificar versión guardada localmente
                 const storedVersion = localStorage.getItem('app_version');
-
-                // Si la página que cargó es distinta a la versión "maestra" guardada
-                if (storedVersion && currentVersion && storedVersion !== currentVersion) {
-                  // Si storedVersion es más reciente que currentVersion, forzamos recarga
-                  // (Evitamos recargar si intentamos bajar de versión, a menos que sea necesario)
-                  forceReload(storedVersion);
+                if (storedVersion && storedVersion !== currentVersion) {
+                  forceReload(currentVersion);
                   return;
                 }
 
+                // 3. Verificar contra el servidor (con protección anti-caché)
                 fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
                   .then(res => res.json())
                   .then(data => {
-                    const latestVersion = data.version;
-                    const pageVersion = getVersion();
-                    
-                    if (latestVersion && latestVersion !== pageVersion && latestVersion !== vParam) {
-                      forceReload(latestVersion);
-                    } else if (pageVersion) {
-                      localStorage.setItem('app_version', pageVersion);
+                    if (data.version && data.version !== currentVersion) {
+                      forceReload(data.version);
+                    } else {
+                      localStorage.setItem('app_version', currentVersion);
                     }
                   })
                   .catch(err => console.log('Check skipped'));
