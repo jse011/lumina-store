@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.0.3';
+export const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '1.0.3';
 
 export const GALLERY_IMAGES = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuCI-zzaQ30XygmncwAoaC0Fa1ZkVeR-wytTm2lFfh0bPqqz9faZ5mDKMq6X4th_OW373r5DZTRAO2EdL5swbuTr4GITy6j-jtc4_Bh4ewo0oWDSjrwrGe048-jDRlZgyBUb0F5mhvambK9P1EXNC-XEf7wpF6fZIWNHzlybGqsQvWMcTNbG39gha5gkmd83ZlbkoHZ6Ltk4NfNDQWLJp4wMiZoUbfr7G4rVd4dr2soWapBFQktitw2WdDtWG6n2ZwJQFQBo1qv5pMVf',
