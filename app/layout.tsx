@@ -47,17 +47,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Función para obtener la versión del atributo data-version del body
                 const getVersion = () => document.body ? document.body.getAttribute('data-version') : "${APP_VERSION}";
                 
                 const currentVersion = getVersion();
                 const urlParams = new URLSearchParams(window.location.search);
                 const vParam = urlParams.get('v');
 
-                // 1. Si cargamos con un parámetro 'v', actualizamos el localStorage de inmediato
                 if (vParam) {
                   localStorage.setItem('app_version', vParam);
-                  // Limpiar la URL si ya estamos en la versión correcta
                   if (vParam === currentVersion) {
                     const newUrl = window.location.pathname + window.location.hash;
                     window.history.replaceState({}, '', newUrl);
@@ -67,26 +64,43 @@ export default function RootLayout({
                 const forceReload = (newVersion) => {
                   if (vParam === newVersion) return;
                   
-                  console.log('Nueva versión detectada: ' + newVersion + '. Limpiando datos...');
+                  console.log('Nueva versión detectada: ' + newVersion + '. Limpiando caché profunda...');
                   
+                  // 1. Limpiar almacenamiento de variables
                   localStorage.clear();
                   sessionStorage.clear();
                   localStorage.setItem('app_version', newVersion);
+
+                  // 2. Limpiar CacheStorage (Donde el Service Worker guarda los archivos)
+                  if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                      for (let name of names) caches.delete(name);
+                    });
+                  }
+
+                  // 3. Limpiar Service Workers
+                  if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                      for(let registration of registrations) { registration.unregister(); }
+                    });
+                  }
                   
-                  // Pequeña pausa para asegurar que el navegador escriba en disco antes de navegar
-                  setTimeout(() => {
-                    window.location.href = window.location.pathname + '?v=' + newVersion + window.location.hash;
-                  }, 50);
+                  // 4. Redirigir con delay para asegurar que las promesas terminen
+                  setTimeout(function() {
+                    window.location.replace(window.location.pathname + '?v=' + newVersion + window.location.hash);
+                  }, 200);
                 };
 
-                // 2. Verificar versión guardada localmente
                 const storedVersion = localStorage.getItem('app_version');
+
+                // Si la página que cargó es distinta a la versión "maestra" guardada
                 if (storedVersion && currentVersion && storedVersion !== currentVersion) {
-                  forceReload(currentVersion);
+                  // Si storedVersion es más reciente que currentVersion, forzamos recarga
+                  // (Evitamos recargar si intentamos bajar de versión, a menos que sea necesario)
+                  forceReload(storedVersion);
                   return;
                 }
 
-                // 3. Verificar contra el servidor
                 fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
                   .then(res => res.json())
                   .then(data => {
