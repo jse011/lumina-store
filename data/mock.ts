@@ -7,12 +7,12 @@ export interface NavItem {
   isActive?: boolean;
 }
 
-export const NAV_ITEMS: NavItem[] = [
-  { id: 'inicio', label: 'Inicio', href: '#home', isActive: true },
-  { id: 'catalogo', label: 'Catálogo', href: '#catalog', isActive: false },
-  { id: 'proceso', label: 'Proceso', href: '#process', isActive: false },
-  { id: 'historias', label: 'Historias', href: '#stories', isActive: false },
-  { id: 'entrega', label: 'Entrega', href: '#delivery', isActive: false },
+export const NAV_ITEMS: any[] = [
+  { id: 'inicio', label: 'Inicio', href: '#home', order: 1, isActive: true },
+  { id: 'catalogo', label: 'Catálogo', href: '#catalog', order: 2, isActive: false },
+  { id: 'proceso', label: 'Proceso', href: '#process', order: 3, isActive: false },
+  { id: 'historias', label: 'Historias', href: '#stories', order: 4, isActive: false },
+  { id: 'entrega', label: 'Entrega', href: '#delivery', order: 5, isActive: false },
 ];
 
 export interface Product {

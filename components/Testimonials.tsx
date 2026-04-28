@@ -1,7 +1,11 @@
 import Image from 'next/image';
-import { TESTIMONIALS, GALLERY_IMAGES } from '@/data/mock';
+import { GALLERY_IMAGES } from '@/core/constants';
+import { FirebaseTestimonialRepository } from '@/core/infrastructure/firebase/repositories';
 
-export default function Testimonials() {
+export default async function Testimonials() {
+  const testimonialRepo = new FirebaseTestimonialRepository();
+  const testimonials = await testimonialRepo.getTestimonials();
+
   return (
     <section className="py-24" id="stories">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -35,7 +39,7 @@ export default function Testimonials() {
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {TESTIMONIALS.map((testimonial) => (
+          {testimonials.map((testimonial) => (
             <div 
               key={testimonial.id} 
               className="glass-panel p-8 rounded-3xl space-y-6 border border-white/5 hover:border-white/10 transition-all"

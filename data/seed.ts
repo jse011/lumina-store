@@ -1,0 +1,51 @@
+import { FirebaseProductRepository, FirebaseNavRepository, FirebaseTestimonialRepository, FirebaseProcessRepository, FirebaseSettingsRepository } from '../core/infrastructure/firebase/repositories';
+import { PRODUCTS, NAV_ITEMS, TESTIMONIALS, PROCESS_STEPS } from './mock';
+
+async function seed() {
+  console.log('Starting seed...');
+
+  const productRepo = new FirebaseProductRepository();
+  const navRepo = new FirebaseNavRepository();
+  const testimonialRepo = new FirebaseTestimonialRepository();
+  const processRepo = new FirebaseProcessRepository();
+
+  console.log('Seeding products...');
+  for (const product of PRODUCTS) {
+    await productRepo.saveProduct(product);
+  }
+
+  console.log('Seeding nav items...');
+  for (const item of NAV_ITEMS) {
+    await navRepo.saveNavItem(item);
+  }
+
+  console.log('Seeding testimonials...');
+  for (const testimonial of TESTIMONIALS) {
+    await testimonialRepo.saveTestimonial(testimonial);
+  }
+
+  console.log('Seeding process steps...');
+  for (const step of PROCESS_STEPS) {
+    await processRepo.saveProcessStep(step);
+  }
+
+  console.log('Seeding app settings...');
+  const settingsRepo = new FirebaseSettingsRepository();
+  await settingsRepo.updateSettings({
+    whatsappNumber: '51900000000', // Reemplaza con tu número real
+    contactEmail: 'contacto@lumina.com',
+    whatsappGeneralMessage: 'Hola, necesito información sobre Lumina Recuerdos',
+    whatsappProductMessage: 'Hola, quiero iniciar mi pedido del {productName}',
+    whatsappFABMessage: 'Hola, quiero crear mi recuerdo holográfico',
+    shippingTimeLima: '2 a 3 días hábiles',
+    shippingTimeProvincia: '3 días hábiles'
+  });
+
+  console.log('Seed completed successfully!');
+  process.exit(0);
+}
+
+seed().catch((error) => {
+  console.error('Seed failed:', error);
+  process.exit(1);
+});

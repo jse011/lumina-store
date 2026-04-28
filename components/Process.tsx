@@ -1,7 +1,10 @@
-import { PROCESS_STEPS } from '@/data/mock';
+import { FirebaseProcessRepository } from '@/core/infrastructure/firebase/repositories';
 import Link from 'next/link';
 
-export default function Process() {
+export default async function Process() {
+  const processRepo = new FirebaseProcessRepository();
+  const processSteps = await processRepo.getProcessSteps();
+
   return (
     <section className="py-24 bg-surface/30 border-y border-tertiary/10" id="process">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -10,7 +13,7 @@ export default function Process() {
           <h2 className="font-display text-3xl md:text-5xl text-white font-medium">Cómo crear tu recuerdo</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {PROCESS_STEPS.map((step) => {
+          {processSteps.map((step) => {
             const Content = (
               <>
                 <div className={`absolute -right-4 -top-4 text-white/5 font-display text-7xl md:text-8xl font-bold group-hover:text-${step.color === 'tertiary' ? 'tertiary' : 'secondary'}/10 transition-colors`}>

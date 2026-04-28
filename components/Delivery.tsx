@@ -1,6 +1,10 @@
+import { FirebaseSettingsRepository } from '@/core/infrastructure/firebase/repositories';
 import Link from 'next/link';
 
-export default function Delivery() {
+export default async function Delivery() {
+  const settingsRepo = new FirebaseSettingsRepository();
+  const settings = await settingsRepo.getSettings();
+
   return (
     <section className="py-24" id="delivery">
       <div className="max-w-5xl mx-auto px-4 md:px-8">
@@ -21,7 +25,7 @@ export default function Delivery() {
                   </div>
                   <div>
                     <p className="text-white font-bold text-lg md:text-xl">Lima</p>
-                    <p className="text-xs md:text-sm text-tertiary font-medium">2 a 3 días hábiles</p>
+                    <p className="text-xs md:text-sm text-tertiary font-medium">{settings.shippingTimeLima}</p>
                   </div>
                 </div>
                 
@@ -31,7 +35,7 @@ export default function Delivery() {
                   </div>
                   <div>
                     <p className="text-white font-bold text-lg md:text-xl">Provincias</p>
-                    <p className="text-xs md:text-sm text-secondary font-medium">3 días hábiles</p>
+                    <p className="text-xs md:text-sm text-secondary font-medium">{settings.shippingTimeProvincia}</p>
                   </div>
                 </div>
                 

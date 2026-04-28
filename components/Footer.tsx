@@ -1,4 +1,4 @@
-import { APP_VERSION } from '../data/mock';
+import { APP_VERSION } from '../core/constants';
 
 export default function Footer() {
   return (
