@@ -40,22 +40,43 @@ export default function RootLayout({
           href={`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap&v=${APP_VERSION}`}
           rel="stylesheet"
         />
+        <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                const version = "${APP_VERSION}";
-                const storedVersion = localStorage.getItem('app_version');
-                if (storedVersion && storedVersion !== version) {
-                  console.log('Nueva versión detectada: ' + version + '. Limpiando caché...');
+                const currentVersion = "${APP_VERSION}";
+                
+                // Función para limpiar caché y recargar
+                const forceReload = (newVersion) => {
+                  console.log('Nueva versión detectada: ' + newVersion + '. Limpiando caché...');
                   localStorage.clear();
                   sessionStorage.clear();
-                  localStorage.setItem('app_version', version);
-                  // Intentamos forzar una recarga limpia
-                  window.location.href = window.location.href.split('?')[0] + '?v=' + version;
-                } else {
-                  localStorage.setItem('app_version', version);
+                  localStorage.setItem('app_version', newVersion);
+                  window.location.reload(true);
+                  window.location.href = window.location.href.split('?')[0] + '?v=' + newVersion;
+                };
+
+                // 1. Verificar versión guardada localmente
+                const storedVersion = localStorage.getItem('app_version');
+                if (storedVersion && storedVersion !== currentVersion) {
+                  forceReload(currentVersion);
+                  return;
                 }
+
+                // 2. Verificar versión real en el servidor (evitando caché del fetch)
+                fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.version && data.version !== currentVersion && data.version !== storedVersion) {
+                      forceReload(data.version);
+                    } else {
+                      localStorage.setItem('app_version', currentVersion);
+                    }
+                  })
+                  .catch(err => console.error('Error verificando versión:', err));
               })();
             `,
           }}
