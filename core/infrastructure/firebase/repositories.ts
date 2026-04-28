@@ -85,13 +85,13 @@ export class FirebaseSettingsRepository implements ISettingsRepository {
     }
     // Default values if not found
     return {
-      whatsappNumber: '51900000000',
-      contactEmail: 'contacto@lumina.com',
-      whatsappGeneralMessage: 'Hola, necesito información sobre Lumina Recuerdos',
-      whatsappProductMessage: 'Hola, quiero iniciar mi pedido del {productName}',
-      whatsappFABMessage: 'Hola, quiero crear mi recuerdo holográfico',
-      shippingTimeLima: '2 a 3 días hábiles',
-      shippingTimeProvincia: '3 días hábiles'
+      whatsappNumber: 'Nan',
+      contactEmail: 'nan',
+      whatsappGeneralMessage: 'Nan',
+      whatsappProductMessage: 'Nan',
+      whatsappFABMessage: 'Nan',
+      shippingTimeLima: 'Nan',
+      shippingTimeProvincia: 'Nan'
     };
   }
 
