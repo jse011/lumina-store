@@ -47,7 +47,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                const currentVersion = "${APP_VERSION}";
+                // Función para obtener la versión del atributo data-version del body
+                const getVersion = () => document.body ? document.body.getAttribute('data-version') : "${APP_VERSION}";
+                
+                const currentVersion = getVersion();
                 const urlParams = new URLSearchParams(window.location.search);
                 const vParam = urlParams.get('v');
 
@@ -58,29 +61,38 @@ export default function RootLayout({
                 }
 
                 const forceReload = (newVersion) => {
-                  // Si ya estamos intentando cargar esta versión, no recargar más (evita bucles)
                   if (vParam === newVersion) return;
                   
-                  console.log('Nueva versión detectada: ' + newVersion);
+                  console.log('Nueva versión detectada: ' + newVersion + '. Limpiando datos...');
+                  
+                  // Limpiar toda la memoria para asegurar un estado fresco
+                  localStorage.clear();
+                  sessionStorage.clear();
+                  
+                  // Guardar la versión para evitar bucles tras el reload
                   localStorage.setItem('app_version', newVersion);
+                  
                   window.location.href = window.location.pathname + '?v=' + newVersion + window.location.hash;
                 };
 
                 // 2. Verificar versión guardada localmente
                 const storedVersion = localStorage.getItem('app_version');
-                if (storedVersion && storedVersion !== currentVersion) {
+                if (storedVersion && currentVersion && storedVersion !== currentVersion) {
                   forceReload(currentVersion);
                   return;
                 }
 
-                // 3. Verificar contra el servidor (con protección anti-caché)
+                // 3. Verificar contra el servidor
                 fetch('/version.json?t=' + Date.now(), { cache: 'no-store' })
                   .then(res => res.json())
                   .then(data => {
-                    if (data.version && data.version !== currentVersion) {
-                      forceReload(data.version);
-                    } else {
-                      localStorage.setItem('app_version', currentVersion);
+                    const latestVersion = data.version;
+                    const pageVersion = getVersion();
+                    
+                    if (latestVersion && latestVersion !== pageVersion) {
+                      forceReload(latestVersion);
+                    } else if (pageVersion) {
+                      localStorage.setItem('app_version', pageVersion);
                     }
                   })
                   .catch(err => console.log('Check skipped'));
