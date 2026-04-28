@@ -39,4 +39,5 @@ export interface AppSettings {
   whatsappFABMessage: string;
   shippingTimeLima: string;
   shippingTimeProvincia: string;
+  galleryImages: string[];
 }
