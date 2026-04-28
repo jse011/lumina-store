@@ -40,4 +40,21 @@ export interface AppSettings {
   shippingTimeLima: string;
   shippingTimeProvincia: string;
   galleryImages: string[];
+
+  heroTitle: string;
+  heroTitleHighlight: string;
+  heroSubtitle: string;
+  heroImageUrl: string;
+  heroWhatsappText: string;
+  heroBadgeText: string;
+  heroSubBadge: string;
+}
+
+export interface HeroContent {
+  title: string;
+  titleHighlight: string;
+  subtitle: string;
+  imageUrl: string;
+  whatsappText: string;
+  badgeText: string;
 }
