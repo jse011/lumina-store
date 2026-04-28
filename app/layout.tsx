@@ -54,10 +54,14 @@ export default function RootLayout({
                 const urlParams = new URLSearchParams(window.location.search);
                 const vParam = urlParams.get('v');
 
-                // 1. Limpiar la URL si ya estamos en la versión correcta
-                if (vParam === currentVersion) {
-                  const newUrl = window.location.pathname + window.location.hash;
-                  window.history.replaceState({}, '', newUrl);
+                // 1. Si cargamos con un parámetro 'v', actualizamos el localStorage de inmediato
+                if (vParam) {
+                  localStorage.setItem('app_version', vParam);
+                  // Limpiar la URL si ya estamos en la versión correcta
+                  if (vParam === currentVersion) {
+                    const newUrl = window.location.pathname + window.location.hash;
+                    window.history.replaceState({}, '', newUrl);
+                  }
                 }
 
                 const forceReload = (newVersion) => {
@@ -65,14 +69,14 @@ export default function RootLayout({
                   
                   console.log('Nueva versión detectada: ' + newVersion + '. Limpiando datos...');
                   
-                  // Limpiar toda la memoria para asegurar un estado fresco
                   localStorage.clear();
                   sessionStorage.clear();
-                  
-                  // Guardar la versión para evitar bucles tras el reload
                   localStorage.setItem('app_version', newVersion);
                   
-                  window.location.href = window.location.pathname + '?v=' + newVersion + window.location.hash;
+                  // Pequeña pausa para asegurar que el navegador escriba en disco antes de navegar
+                  setTimeout(() => {
+                    window.location.href = window.location.pathname + '?v=' + newVersion + window.location.hash;
+                  }, 50);
                 };
 
                 // 2. Verificar versión guardada localmente
@@ -89,7 +93,7 @@ export default function RootLayout({
                     const latestVersion = data.version;
                     const pageVersion = getVersion();
                     
-                    if (latestVersion && latestVersion !== pageVersion) {
+                    if (latestVersion && latestVersion !== pageVersion && latestVersion !== vParam) {
                       forceReload(latestVersion);
                     } else if (pageVersion) {
                       localStorage.setItem('app_version', pageVersion);
