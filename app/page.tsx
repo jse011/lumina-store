@@ -1,19 +1,28 @@
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
+import Access from '@/components/Access';
 import Catalog from '@/components/Catalog';
+import Process from '@/components/Process';
 import Testimonials from '@/components/Testimonials';
 import Delivery from '@/components/Delivery';
 import Footer from '@/components/Footer';
+import WhatsAppFAB from '@/components/WhatsAppFAB';
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <Hero />
-      <Catalog />
-      <Testimonials />
-      <Delivery />
+      <main>
+        <Hero />
+        <Access />
+        <Catalog />
+        <Process />
+        <Testimonials />
+        <Delivery />
+      </main>
       <Footer />
+      <WhatsAppFAB />
     </>
   );
 }
+

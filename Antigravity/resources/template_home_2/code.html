@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+
+<html class="dark scroll-smooth" lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Lumina Recuerdos | Inmortalidad Digital</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">function changeImage(mainId, newSrc, btn, counterId, index, total) {
+            const mainImg = document.getElementById(mainId);
+
+            // Add a fade effect
+            mainImg.style.opacity = '0.4';
+
+            setTimeout(() => {
+                mainImg.src = newSrc;
+                mainImg.style.opacity = '1';
+            }, 150);
+
+            // Handle thumbnail active state
+            const container = btn.parentElement;
+            const buttons = container.getElementsByTagName('button');
+            for (let b of buttons) {
+                b.classList.remove('thumbnail-active');
+            }
+            btn.classList.add('thumbnail-active');
+
+            // Update counter
+            if (counterId) {
+                document.getElementById(counterId).innerText = `${index} / ${total}`;
+            }
+        }</script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            background-color: #050B18;
+            color: #e0e3e5;
+        }
+
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(34, 211, 238, 0.1);
+            background: rgba(16, 20, 21, 0.6);
+        }
+
+        .holographic-glow {
+            box-shadow: 0 0 30px rgba(34, 211, 238, 0.15);
+        }
+
+        .scan-line {
+            background: linear-gradient(to bottom, transparent 50%, rgba(34, 211, 238, 0.05) 50%);
+            background-size: 100% 4px;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .thumbnail-active {
+            border-color: #00dbe7 !important;
+            box-shadow: 0 0 10px rgba(0, 219, 231, 0.3);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#c0c6d9",
+                        "on-primary": "#2a303f",
+                        "secondary": "#d0bcff",
+                        "tertiary": "#00dbe7",
+                        "background": "#050B18",
+                        "surface": "#101415",
+                        "on-surface-variant": "#c6c6cc"
+                    },
+                    "fontFamily": {
+                        "display": ["Space Grotesk"],
+                        "body": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="font-body text-on-background selection:bg-tertiary selection:text-on-tertiary">
+    <!-- Header -->
+    <header
+        class="fixed top-0 w-full z-50 bg-[#050B18]/70 backdrop-blur-[20px] border-b border-cyan-500/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
+        <nav class="flex justify-between items-center w-full px-8 h-20 max-w-7xl mx-auto">
+            <div
+                class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent font-display tracking-tight">
+                Lumina Recuerdos
+            </div>
+            <div class="hidden md:flex items-center gap-8">
+                <a class="font-display uppercase tracking-[0.2em] text-xs font-bold text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all"
+                    href="#home">Inicio</a>
+                <a class="font-display uppercase tracking-[0.2em] text-xs font-bold text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all"
+                    href="#catalog">Catálogo</a>
+                <a class="font-display uppercase tracking-[0.2em] text-xs font-bold text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all"
+                    href="#process">Proceso</a>
+                <a class="font-display uppercase tracking-[0.2em] text-xs font-bold text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all"
+                    href="#stories">Historias</a>
+                <a class="font-display uppercase tracking-[0.2em] text-xs font-bold text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all"
+                    href="#delivery">Entrega</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a class="hidden sm:block font-display uppercase tracking-[0.2em] text-[10px] font-bold text-tertiary hover:text-white transition-all border border-tertiary/30 px-4 py-2 rounded-full"
+                    href="#access">Ver mi Recuerdo</a>
+                <a class="bg-gradient-to-r from-tertiary to-secondary px-6 py-2 rounded-full text-on-primary font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all active:scale-95 text-xs"
+                    href="https://wa.me/yournumber?text=Hola,%20necesito%20información%20sobre%20Lumina%20Recuerdos">
+                    Conectar
+                </a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <!-- Section #home -->
+        <section class="relative min-h-screen flex items-center pt-20 overflow-hidden" id="home">
+            <div
+                class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.1),transparent_70%)] pointer-events-none">
+            </div>
+            <div class="max-w-7xl mx-auto px-8 w-full grid md:grid-cols-2 gap-12 items-center relative z-10">
+                <div class="space-y-8">
+                    <h1 class="font-display text-5xl md:text-7xl text-white leading-none font-bold">
+                        La magia de <br /><span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-tertiary to-secondary">volver a
+                            verlos</span>
+                    </h1>
+                    <p class="text-lg text-on-surface-variant max-w-lg">
+                        Transformamos tus fotos más queridas en proyecciones eternas llenas de vida. Inmortaliza a tus
+                        seres queridos, mascotas y momentos especiales con tecnología holográfica.
+                    </p>
+                    <div class="flex flex-col gap-6">
+                        <div class="flex flex-wrap gap-4">
+                            <a class="bg-[#25D366] text-white font-bold px-10 py-4 rounded-xl flex items-center gap-2 hover:shadow-[0_0_30px_rgba(37,211,102,0.3)] transition-all uppercase tracking-widest text-xs"
+                                href="https://wa.me/yournumber?text=Hola,%20quiero%20hablar%20con%20un%20asesor%20para%20mi%20pedido">
+                                Hablar por WhatsApp <span class="material-symbols-outlined">chat</span>
+                            </a>
+                            <a class="glass-panel text-white font-bold px-8 py-4 rounded-xl border border-white/10 hover:bg-white/5 transition-all uppercase tracking-widest text-xs"
+                                href="#access">Acceder con mi Código</a>
+                        </div>
+                        <p class="text-[11px] text-slate-400 font-medium tracking-wide leading-relaxed">
+                            Atención personalizada por WhatsApp | Entrega física con tarjeta de acceso | Experiencia
+                            digital con código único
+                        </p>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <div
+                        class="absolute -inset-4 bg-gradient-to-tr from-tertiary/20 to-secondary/20 blur-3xl opacity-50 group-hover:opacity-80 transition-opacity">
+                    </div>
+                    <div
+                        class="relative rounded-3xl overflow-hidden glass-panel border border-cyan-500/30 p-4 shadow-2xl">
+                        <img alt="Cubo holográfico" class="w-full aspect-square object-cover rounded-2xl"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCizT8KMymZYFPST2bW64Blm1vPuE_ZoOIW6xL8Gi-Rg9RyqtsLkfOacffHFlCztkGAzWyNrEhUaY0PT_p4ZaYDlWcZSD4kRftvzaBQgflzQN1XvqGUCH9wTpfwGsYlGUD3hsngSabwJcm4fPZLrT9xjluP-uB8Wh6fEyYPcIpuNmTkM9fPyAC4AxFanckp6q55qB_A4jiWdtJgdx1xhOsiPQ6pYP04zjFxuXgH0UvDIiaHqOE5KzedldTaQ39-JgnGVuLCtGdTPB-h" />
+                        <div class="absolute inset-0 scan-line pointer-events-none opacity-30"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section #access -->
+        <section class="py-24 relative overflow-hidden" id="access">
+            <div
+                class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent">
+            </div>
+            <div class="max-w-4xl mx-auto px-8 relative z-10 text-center">
+                <div
+                    class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full glass-panel border-cyan-500/30">
+                    <span class="material-symbols-outlined text-tertiary text-sm">lock</span>
+                    <span class="font-display text-[10px] text-white uppercase tracking-[0.2em] font-bold">Portal de
+                        Acceso Privado</span>
+                </div>
+                <h2 class="font-display text-4xl md:text-5xl text-white font-medium mb-6">Tu recuerdo te espera</h2>
+                <p class="text-on-surface-variant max-w-xl mx-auto mb-12">
+                    Si ya cuentas con tu producto físico Lumina y tu tarjeta de acceso, ingresa el código único para
+                    activar la experiencia holográfica en tu dispositivo.
+                </p>
+                <div
+                    class="glass-panel p-2 rounded-2xl max-w-lg mx-auto flex flex-col sm:flex-row gap-2 border border-white/10 holographic-glow">
+                    <input
+                        class="flex-grow bg-transparent border-0 focus:ring-0 text-white px-6 py-4 placeholder:text-slate-500 font-display tracking-[0.2em]"
+                        placeholder="INGRESA TU CÓDIGO ÚNICO AQUÍ" type="text" />
+                    <button
+                        class="bg-gradient-to-r from-tertiary to-secondary text-on-primary font-display font-bold py-4 px-10 rounded-xl transition-all uppercase tracking-widest text-xs hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] active:scale-95">
+                        Validar
+                    </button>
+                </div>
+                <div class="max-w-lg mx-auto">
+                    <div class="flex items-center gap-4 my-8">
+                        <div class="flex-grow h-px bg-white/10"></div>
+                        <span class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-medium">O inicia sesión
+                            con tu correo</span>
+                        <div class="flex-grow h-px bg-white/10"></div>
+                    </div>
+                    <button
+                        class="w-full flex items-center justify-center gap-3 bg-white text-[#050B18] font-display font-bold py-4 px-10 rounded-xl transition-all uppercase tracking-widest text-xs hover:bg-slate-200 active:scale-[0.98] shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                        <svg class="w-5 h-5" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                fill="#4285F4"></path>
+                            <path
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                fill="#34A853"></path>
+                            <path
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                fill="#FBBC05"></path>
+                            <path
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                fill="#EA4335"></path>
+                        </svg>
+                        Continuar con Google
+                    </button>
+                </div>
+                <div class="mt-8 flex justify-center items-center gap-4">
+                    <span class="text-[10px] text-slate-500 uppercase tracking-widest">¿No tienes un código?</span>
+                    <a class="text-[10px] text-tertiary font-bold uppercase tracking-widest hover:underline"
+                        href="#catalog">Explora el Catálogo</a>
+                </div>
+            </div>
+        </section>
+        <!-- Section #catalog -->
+        <section class="py-24 max-w-7xl mx-auto px-8" id="catalog">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div class="space-y-4">
+                    <span class="font-display text-secondary uppercase tracking-[0.3em] text-xs font-bold">Catálogo de
+                        Eternidad</span>
+                    <h2 class="font-display text-4xl md:text-5xl text-white font-medium">Colección de Memorias</h2>
+                </div>
+                <div class="text-tertiary font-medium text-sm max-w-xs text-right hidden md:block">
+                    "Honramos el vínculo eterno con tu familia y tus compañeros de cuatro patas."
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Product 1: Cubo Holográfico -->
+                <div class="group relative">
+                    <div class="relative glass-panel rounded-3xl overflow-hidden p-6 space-y-6 flex flex-col h-full">
+                        <div class="space-y-4">
+                            <div class="aspect-[4/3] overflow-hidden rounded-2xl relative bg-black/40">
+                                <img alt="Cubo Holográfico Main"
+                                    class="w-full h-full object-cover transition-all duration-500" id="main-image-cube"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxowtiC15no05003R8SPedxrBvQyI7bBSTDerk26ageqF7A9UYlsErIGcGE5Y0x8bkwnR24-TIN041BjPzRxaxL8nHaXbC8fbXxpoUqgQZdBd8D2xS0BFx-pU3knAX8AyEVM-LC5n-6LeceDjGPcQ-_8kwLs6NZcDdfFf5iABbTr5NXG9QHCAJODu4XMsG9N4Al0WJbDXaWt_2Z0KOFaY3h_MrbpLPO977-DZidBb0ff-rMerkZxmVZPCtVvNwBORByR2PpJ8Ugbpm" />
+                                <div
+                                    class="absolute top-4 right-4 bg-[#050B18]/80 backdrop-blur-md border border-cyan-500/30 px-4 py-1 rounded-full text-tertiary font-bold">
+                                    Desde S/120</div>
+                            </div>
+                            <!-- Thumbnails for Cube -->
+                            <div class="relative flex items-center group/nav"><button
+                                    class="absolute -left-2 z-10 bg-[#050B18]/90 text-tertiary p-2 rounded-full border border-cyan-500/40 hover:bg-cyan-500/30 transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                                    onclick="this.nextElementSibling.scrollBy({left: -80, behavior: 'smooth'})">
+                                    <span class="material-symbols-outlined text-base">chevron_left</span>
+                                </button>
+                                <div
+                                    class="flex gap-3 overflow-x-auto no-scrollbar scroll-smooth px-10 py-2 w-full justify-start">
+                                    <button
+                                        class="thumbnail-active flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-white/10 hover:border-tertiary/50 transition-all"
+                                        onclick="changeImage('main-image-cube', this.children[0].src, this, 'cube-counter', 1, 4)">
+                                        <img class="w-full h-full object-cover"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxowtiC15no05003R8SPedxrBvQyI7bBSTDerk26ageqF7A9UYlsErIGcGE5Y0x8bkwnR24-TIN041BjPzRxaxL8nHaXbC8fbXxpoUqgQZdBd8D2xS0BFx-pU3knAX8AyEVM-LC5n-6LeceDjGPcQ-_8kwLs6NZcDdfFf5iABbTr5NXG9QHCAJODu4XMsG9N4Al0WJbDXaWt_2Z0KOFaY3h_MrbpLPO977-DZidBb0ff-rMerkZxmVZPCtVvNwBORByR2PpJ8Ugbpm" />
+                                    </button>
+                                    <button
+                                        class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-white/10 hover:border-tertiary/50 transition-all"
+                                        onclick="changeImage('main-image-cube', this.children[0].src, this, 'cube-counter', 2, 4)">
+                                        <img class="w-full h-full object-cover"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI-zzaQ30XygmncwAoaC0Fa1ZkVeR-wytTm2lFfh0bPqqz9faZ5mDKMq6X4th_OW373r5DZTRAO2EdL5swbuTr4GITy6j-jtc4_Bh4ewo0oWDSjrwrGe048-jDRlZgyBUb0F5mhvambK9P1EXNC-XEf7wpF6fZIWNHzlybGqsQvWMcTNbG39gha5gkmd83ZlbkoHZ6Ltk4NfNDQWLJp4wMiZoUbfr7G4rVd4dr2soWapBFQktitw2WdDtWG6n2ZwJQFQBo1qv5pMVf" />
+                                    </button>
+                                    <button
+                                        class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-white/10 hover:border-tertiary/50 transition-all"
+                                        onclick="changeImage('main-image-cube', this.children[0].src, this, 'cube-counter', 3, 4)">
+                                        <img class="w-full h-full object-cover"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWk62fKt9yCEEiSRR5akMaouS4nuN_ml0kHVH3HAozIjNI7ILzeLU61JumezRbnLHvLC0SGHTutDtMYWSbX69daIoqBRhFPXMYI_A6pIutSE3E6cWGAJkm3MLzMnEWSxE_pgM5j9Gz190jXGhPitF4wLiFzQwpKtoS_S8yfBOSxsguKalwvhpNVoc0iww9hJuu5kNvq1TCV6tslp1l342WI4RV70oF7uN3xYfMgRy74FT3jWarQz5hCCjZi2s7hyJxkXSPtGSTS9ID" />
+                                    </button>
+                                    <button
+                                        class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-white/10 hover:border-tertiary/50 transition-all"
+                                        onclick="changeImage('main-image-cube', this.children[0].src, this, 'cube-counter', 4, 4)">
+                                        <img class="w-full h-full object-cover"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_RTDWsCviZZMOW7-6UIPCQ4qtA8DJYsnEqUR-sClsvXbcXUpGbCBIYg9bWho_DlcGLYdSnrs6WGpBdGkMnxQ9zwQvbZjs43ckx3e9e7-6yMMC51M7TIaBELZtjiJ-isVne0PwbbDgvNu3raj1E7W6CwQuuwnmNEphMWCDGanW1WGvUOB9UEp3pwARPniZX62dOD_PMn_Up-dwr9oIXJf0SOHjGApRj9OdJHGAFTyGJX-rrpuGUDwv5Zsqso9JU6p1tBUpI2B0JsTG" />
+                                    </button>
+                                </div>
+                                <button
+                                    class="absolute -right-2 z-10 bg-[#050B18]/90 text-tertiary p-2 rounded-full border border-cyan-500/40 hover:bg-cyan-500/30 transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                                    onclick="this.previousElementSibling.scrollBy({left: 80, behavior: 'smooth'})">
+                                    <span class="material-symbols-outlined text-base">chevron_right</span>
+                                </button>
+                                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-display text-slate-500 font-bold tracking-widest bg-[#050B18] px-2"
+                                    id="cube-counter">1 / 4</div>
+                            </div>
+                        </div>
+                        <div class="space-y-4 flex-grow">
+                            <h3 class="font-display text-2xl text-white font-medium">Cubo Holográfico</h3>
+                            <p class="text-on-surface-variant text-sm">Cristal templado con proyección de 4 caras. Ideal
+                                para retratos familiares o de tus mascotas en tu lugar favorito.</p>
+                            <div class="space-y-2 pt-2 border-t border-white/5">
+                                <p class="text-xs text-cyan-400/80 leading-relaxed italic">Preserva el brillo de su
+                                    mirada para siempre.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 pt-4">
+                            <a class="bg-gradient-to-r from-tertiary to-secondary text-on-primary font-display font-bold py-4 rounded-xl transition-all uppercase tracking-widest text-xs text-center flex items-center justify-center hover:shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+                                href="https://wa.me/yournumber?text=Hola,%20quiero%20iniciar%20mi%20pedido%20del%20Cubo%20Holográfico">INICIAR
+                                PEDIDO POR WHATSAPP</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 2: Esfera de Recuerdos -->
+                <div class="group relative">
+                    <div class="relative glass-panel rounded-3xl overflow-hidden p-6 space-y-6 flex flex-col h-full">
+                        <div class="space-y-4">
+                            <div class="aspect-[4/3] overflow-hidden rounded-2xl relative bg-black/40">
+                                <img alt="Esfera de Recuerdos Main"
+                                    class="w-full h-full object-cover transition-all duration-500"
+                                    id="main-image-sphere"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMq8sXraLNG5vn8aNlPUcnF0I5y3-YWQop6qmKEu3px6suQitzgXpfb79l2tvyaugNa934ymXuZLWrOY3VvZNyIxTY_OGlfrZpNohd7684lCxyg4c94BKIqH8LfY0HmjDFSrdC2wKmZqaUzxkOvqNjaIHApyMS45ZYtelbYj8xgZttcPDuP5iSdm_8CC9C6Eu1ZuLL629_U-nH3NPGEPLwGpgljGh9g5Q4mE4bxMWyuJP65bAQyDlZyG91T_kHhDMcJ5ksm60GJWun" />
+                                <div
+                                    class="absolute top-4 right-4 bg-[#050B18]/80 backdrop-blur-md border border-cyan-500/30 px-4 py-1 rounded-full text-tertiary font-bold">
+                                    Desde S/160</div>
+                            </div>
+                            <!-- Thumbnails for Sphere -->
+                            <div class="relative flex items-center group/nav"><button
+                                    class="absolute -left-2 z-10 bg-[#050B18]/90 text-tertiary p-2 rounded-full border border-cyan-500/40 hover:bg-cyan-500/30 transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                                    onclick="this.nextElementSibling.scrollBy({left: -80, behavior: 'smooth'})">
+                                    <span class="material-symbols-outlined text-base">chevron_left</span>
+                                </button>
+                                <div
+                                    class="flex gap-3 overflow-x-auto no-scrollbar scroll-smooth px-10 py-2 w-full justify-start">
+                                    <button
+                                        class="thumbnail-active flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-white/10 hover:border-tertiary/50 transition-all"
+                                        onclick="changeImage('main-image-sphere', this.children[0].src, this, 'sphere-counter', 1, 4)">
+                                        <img class="w-full h-full object-cover"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMq8sXraLNG5vn8aNlPUcnF0I5y3-YWQop6qmKEu3px6suQitzgXpfb79l2tvyaugNa934ymXuZLWrOY3VvZNyIxTY_OGlfrZpNohd7684lCxyg4c94BKIqH8LfY0HmjDFSrdC2wKmZqaUzxkOvqNjaIHApyMS45ZYtelbYj8xgZttcPDuP5iSdm_8CC9C6Eu1ZuLL629_U-nH3NPGEPLwGpgljGh9g5Q4mE4bxMWyuJP65bAQyDlZyG91T_kHhDMcJ5ksm60GJWun" />
+                                    </button>
+                                    <button
+                                        class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-white/10 hover:border-tertiary/50 transition-all"
+                                        onclick="changeImage('main-image-sphere', this.children[0].src, this, 'sphere-counter', 2, 4)">
+                                        <img class="w-full h-full object-cover"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCizT8KMymZYFPST2bW64Blm1vPuE_ZoOIW6xL8Gi-Rg9RyqtsLkfOacffHFlCztkGAzWyNrEhUaY0PT_p4ZaYDlWcZSD4kRftvzaBQgflzQN1XvqGUCH9wTpfwGsYlGUD3hsngSabwJcm4fPZLrT9xjluP-uB8Wh6fEyYPcIpuNmTkM9fPyAC4AxFanckp6q55qB_A4jiWdtJgdx1xhOsiPQ6pYP04zjFxuXgH0UvDIiaHqOE5KzedldTaQ39-JgnGVuLCtGdTPB-h" />
+                                    </button>
+                                    <button
+                                        class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-white/10 hover:border-tertiary/50 transition-all"
+                                        onclick="changeImage('main-image-sphere', this.children[0].src, this, 'sphere-counter', 3, 4)">
+                                        <img class="w-full h-full object-cover"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkR2AGiXrMv8RF7lUnEoqasrplhOnF-ETYiwvUVZfcCVLxX0QzdYyJ0FusFu8jrzAs4kEVakitJ8nUGJSFXrv3i-w2C1CMvG9ff7Tpn-yLEeLxldtqjO48voU-5H3w6gIga7MeQc1STT5-ZVuIxX2gFJIOzoW16cVBWC4l-KE25yDQo2jeVwZmFQrJjSV73lvwht_EpY8swgu2gD4sC1s90oYVzfrmUDL6OWgm-6O-zaynk2RZShS8Nxb5RbdB0Q6-dh_lFLOR37BZ" />
+                                    </button>
+                                    <button
+                                        class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 border-white/10 hover:border-tertiary/50 transition-all"
+                                        onclick="changeImage('main-image-sphere', this.children[0].src, this, 'sphere-counter', 4, 4)">
+                                        <img class="w-full h-full object-cover"
+                                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_RTDWsCviZZMOW7-6UIPCQ4qtA8DJYsnEqUR-sClsvXbcXUpGbCBIYg9bWho_DlcGLYdSnrs6WGpBdGkMnxQ9zwQvbZjs43ckx3e9e7-6yMMC51M7TIaBELZtjiJ-isVne0PwbbDgvNu3raj1E7W6CwQuuwnmNEphMWCDGanW1WGvUOB9UEp3pwARPniZX62dOD_PMn_Up-dwr9oIXJf0SOHjGApRj9OdJHGAFTyGJX-rrpuGUDwv5Zsqso9JU6p1tBUpI2B0JsTG" />
+                                    </button>
+                                </div>
+                                <button
+                                    class="absolute -right-2 z-10 bg-[#050B18]/90 text-tertiary p-2 rounded-full border border-cyan-500/40 hover:bg-cyan-500/30 transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                                    onclick="this.previousElementSibling.scrollBy({left: 80, behavior: 'smooth'})">
+                                    <span class="material-symbols-outlined text-base">chevron_right</span>
+                                </button>
+                                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-display text-slate-500 font-bold tracking-widest bg-[#050B18] px-2"
+                                    id="sphere-counter">1 / 4</div>
+                            </div>
+                        </div>
+                        <div class="space-y-4 flex-grow">
+                            <h3 class="font-display text-2xl text-white font-medium">Esfera de Recuerdos</h3>
+                            <p class="text-on-surface-variant text-sm">Diseño orgánico con proyección envolvente de 360
+                                grados. Una pieza de arte que mantiene viva la presencia de quienes ya no están.</p>
+                            <div class="space-y-2 pt-2 border-t border-white/5">
+                                <p class="text-xs text-cyan-400/80 leading-relaxed italic">Un refugio de luz para tus
+                                    recuerdos más hermosos.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 pt-4">
+                            <a class="bg-gradient-to-r from-tertiary to-secondary text-on-primary font-display font-bold py-4 rounded-xl transition-all uppercase tracking-widest text-xs text-center flex items-center justify-center hover:shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+                                href="https://wa.me/yournumber?text=Hola,%20quiero%20iniciar%20mi%20pedido%20de%20la%20Esfera%20de%20Recuerdos">INICIAR
+                                PEDIDO POR WHATSAPP</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section #process -->
+        <section class="py-24 bg-surface/30 border-y border-cyan-500/10" id="process">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="text-center mb-16 space-y-4">
+                    <span class="font-display text-tertiary uppercase tracking-[0.3em] text-xs font-bold">Simple y
+                        Personalizado</span>
+                    <h2 class="font-display text-4xl md:text-5xl text-white font-medium">Cómo crear tu recuerdo</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Paso 1 -->
+                    <div
+                        class="glass-panel p-8 rounded-3xl space-y-4 border-l-4 border-l-tertiary relative overflow-hidden group">
+                        <div
+                            class="absolute -right-4 -top-4 text-white/5 font-display text-8xl font-bold group-hover:text-tertiary/10 transition-colors">
+                            1</div>
+                        <div
+                            class="text-tertiary font-display text-sm font-bold uppercase tracking-widest relative z-10">
+                            Paso 1</div>
+                        <h3 class="text-xl text-white font-bold relative z-10">Elige tu recuerdo</h3>
+                        <p class="text-on-surface-variant text-sm relative z-10">Explora nuestros productos y ejemplos
+                            para decidir cómo quieres inmortalizar ese momento especial.</p>
+                    </div>
+                    <!-- Paso 2 -->
+                    <div
+                        class="glass-panel p-8 rounded-3xl space-y-4 border-l-4 border-l-secondary relative overflow-hidden group">
+                        <div
+                            class="absolute -right-4 -top-4 text-white/5 font-display text-8xl font-bold group-hover:text-secondary/10 transition-colors">
+                            2</div>
+                        <div
+                            class="text-secondary font-display text-sm font-bold uppercase tracking-widest relative z-10">
+                            Paso 2</div>
+                        <h3 class="text-xl text-white font-bold relative z-10">Escríbenos</h3>
+                        <p class="text-on-surface-variant text-sm relative z-10">Háblanos por WhatsApp. Te ayudamos a
+                            elegir el mejor formato y a seleccionar la foto ideal para tu recuerdo.</p>
+                    </div>
+                    <!-- Paso 3 -->
+                    <div
+                        class="glass-panel p-8 rounded-3xl space-y-4 border-l-4 border-l-tertiary relative overflow-hidden group">
+                        <div
+                            class="absolute -right-4 -top-4 text-white/5 font-display text-8xl font-bold group-hover:text-tertiary/10 transition-colors">
+                            3</div>
+                        <div
+                            class="text-tertiary font-display text-sm font-bold uppercase tracking-widest relative z-10">
+                            Paso 3</div>
+                        <h3 class="text-xl text-white font-bold relative z-10">Recibe tu producto</h3>
+                        <p class="text-on-surface-variant text-sm relative z-10">Te entregamos el cubo o esfera listo
+                            para usar en la comodidad de tu hogar, con envío seguro a todo el Perú.</p>
+                    </div>
+                    <!-- Paso 4 -->
+                    <a class="glass-panel p-8 rounded-3xl space-y-4 border-l-4 border-l-secondary relative overflow-hidden group block hover:bg-white/5 transition-colors"
+                        href="#access">
+                        <div
+                            class="absolute -right-4 -top-4 text-white/5 font-display text-8xl font-bold group-hover:text-secondary/10 transition-colors">
+                            4</div>
+                        <div
+                            class="text-secondary font-display text-sm font-bold uppercase tracking-widest relative z-10">
+                            Paso 4</div>
+                        <h3 class="text-xl text-white font-bold relative z-10">Activa tu experiencia</h3>
+                        <p class="text-on-surface-variant text-sm relative z-10">Usa el código de tu tarjeta de acceso
+                            para ingresar y visualizar tu recuerdo holográfico en tu nuevo dispositivo.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <!-- Section #stories -->
+        <section class="py-24" id="stories">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="text-center mb-16 space-y-4">
+                    <span class="font-display text-tertiary uppercase tracking-[0.3em] text-xs font-bold">Historias de
+                        Luz</span>
+                    <h2 class="font-display text-4xl md:text-5xl text-white font-medium">Galería de Memorias</h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-24">
+                    <div class="aspect-[3/4] rounded-2xl overflow-hidden glass-panel border-cyan-500/20 group">
+                        <img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-100 group-hover:scale-105"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI-zzaQ30XygmncwAoaC0Fa1ZkVeR-wytTm2lFfh0bPqqz9faZ5mDKMq6X4th_OW373r5DZTRAO2EdL5swbuTr4GITy6j-jtc4_Bh4ewo0oWDSjrwrGe048-jDRlZgyBUb0F5mhvambK9P1EXNC-XEf7wpF6fZIWNHzlybGqsQvWMcTNbG39gha5gkmd83ZlbkoHZ6Ltk4NfNDQWLJp4wMiZoUbfr7G4rVd4dr2soWapBFQktitw2WdDtWG6n2ZwJQFQBo1qv5pMVf" />
+                    </div>
+                    <div
+                        class="aspect-[3/4] rounded-2xl overflow-hidden glass-panel border-violet-500/20 md:translate-y-8 group">
+                        <img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-100 group-hover:scale-105"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_RTDWsCviZZMOW7-6UIPCQ4qtA8DJYsnEqUR-sClsvXbcXUpGbCBIYg9bWho_DlcGLYdSnrs6WGpBdGkMnxQ9zwQvbZjs43ckx3e9e7-6yMMC51M7TIaBELZtjiJ-isVne0PwbbDgvNu3raj1E7W6CwQuuwnmNEphMWCDGanW1WGvUOB9UEp3pwARPniZX62dOD_PMn_Up-dwr9oIXJf0SOHjGApRj9OdJHGAFTyGJX-rrpuGUDwv5Zsqso9JU6p1tBUpI2B0JsTG" />
+                    </div>
+                    <div class="aspect-[3/4] rounded-2xl overflow-hidden glass-panel border-cyan-500/20 group">
+                        <img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-100 group-hover:scale-105"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWk62fKt9yCEEiSRR5akMaouS4nuN_ml0kHVH3HAozIjNI7ILzeLU61JumezRbnLHvLC0SGHTutDtMYWSbX69daIoqBRhFPXMYI_A6pIutSE3E6cWGAJkm3MLzMnEWSxE_pgM5j9Gz190jXGhPitF4wLiFzQwpKtoS_S8yfBOSxsguKalwvhpNVoc0iww9hJuu5kNvq1TCV6tslp1l342WI4RV70oF7uN3xYfMgRy74FT3jWarQz5hCCjZi2s7hyJxkXSPtGSTS9ID" />
+                    </div>
+                    <div
+                        class="aspect-[3/4] rounded-2xl overflow-hidden glass-panel border-violet-500/20 md:translate-y-8 group">
+                        <img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 scale-100 group-hover:scale-105"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkR2AGiXrMv8RF7lUnEoqasrplhOnF-ETYiwvUVZfcCVLxX0QzdYyJ0FusFu8jrzAs4kEVakitJ8nUGJSFXrv3i-w2C1CMvG9ff7Tpn-yLEeLxldtqjO48voU-5H3w6gIga7MeQc1STT5-ZVuIxX2gFJIOzoW16cVBWC4l-KE25yDQo2jeVwZmFQrJjSV73lvwht_EpY8swgu2gD4sC1s90oYVzfrmUDL6OWgm-6O-zaynk2RZShS8Nxb5RbdB0Q6-dh_lFLOR37BZ" />
+                    </div>
+                </div>
+                <h2 class="font-display text-4xl text-white mb-16 text-center font-bold italic">"Historias que siguen
+                    brillando"</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="glass-panel p-8 rounded-3xl space-y-6">
+                        <p class="text-on-surface-variant italic font-medium text-sm">"Poder ver a mi abuelo sonreír de
+                            nuevo en mi escritorio no tiene precio. Es un puente emocional que no creí posible."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-cyan-500/20"></div>
+                            <div>
+                                <p class="text-white font-bold text-sm">María R.</p>
+                                <p class="text-xs text-slate-500">Lima, Perú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-8 rounded-3xl space-y-6">
+                        <p class="text-on-surface-variant italic font-medium text-sm">"Inmortalizar a mi fiel compañero
+                            en la esfera fue sanador. Es como si una parte de su luz siguiera aquí cada noche."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-violet-500/20"></div>
+                            <div>
+                                <p class="text-white font-bold text-sm">Juan P.</p>
+                                <p class="text-xs text-slate-500">Arequipa, Perú</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-8 rounded-3xl space-y-6">
+                        <p class="text-on-surface-variant italic font-medium text-sm">"El regalo más significativo que
+                            he dado. Ver a mi esposa emocionada ante el holograma de nuestra boda fue único."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-cyan-500/20"></div>
+                            <div>
+                                <p class="text-white font-bold text-sm">Carlos M.</p>
+                                <p class="text-xs text-slate-500">Trujillo, Perú</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section #delivery -->
+        <section class="py-24" id="delivery">
+            <div class="max-w-5xl mx-auto px-8">
+                <div class="glass-panel rounded-[3rem] p-8 md:p-16 border border-cyan-500/20 relative overflow-hidden">
+                    <div class="grid md:grid-cols-2 gap-16 relative z-10">
+                        <div class="space-y-8">
+                            <div>
+                                <h2 class="font-display text-4xl text-white mb-6 font-bold">Información de Entrega</h2>
+                                <p class="text-on-surface-variant text-lg">Llevamos tus recuerdos a cualquier rincón del
+                                    país con el máximo cuidado y respeto.</p>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="flex items-center gap-6">
+                                    <div
+                                        class="w-14 h-14 rounded-2xl glass-panel flex items-center justify-center text-tertiary">
+                                        <span class="material-symbols-outlined text-3xl">local_shipping</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-bold text-xl">Lima</p>
+                                        <p class="text-sm text-tertiary font-medium">2 a 3 días hábiles</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-6">
+                                    <div
+                                        class="w-14 h-14 rounded-2xl glass-panel flex items-center justify-center text-secondary">
+                                        <span class="material-symbols-outlined text-3xl">public</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-bold text-xl">Provincias</p>
+                                        <p class="text-sm text-secondary font-medium">3 días hábiles</p>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-4 italic font-medium">* Costo de envío según
+                                    ubicación</p>
+                            </div>
+                        </div>
+                        <div class="space-y-8">
+                            <div class="bg-white/5 rounded-3xl p-8 border border-white/10 space-y-6">
+                                <h3 class="font-display text-2xl text-white font-bold">Cómo recibes tu recuerdo</h3>
+                                <div class="space-y-4">
+                                    <p class="text-sm text-on-surface-variant leading-relaxed">
+                                        Luego de coordinar tu pedido por WhatsApp, recibirás tu producto físico junto
+                                        con una <span class="text-tertiary font-bold">tarjeta de acceso única</span>.
+                                    </p>
+                                    <div class="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl">
+                                        <p class="text-xs text-cyan-200 leading-relaxed font-medium mb-3">
+                                            Con ese código podrás ingresar a la experiencia digital de Lumina Recuerdos
+                                            para activar la proyección holográfica.
+                                        </p>
+                                        <a class="inline-flex items-center gap-2 text-white font-bold text-[10px] uppercase tracking-widest hover:text-tertiary transition-colors"
+                                            href="#access">
+                                            Ir al portal de acceso <span
+                                                class="material-symbols-outlined text-sm">arrow_forward</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="w-full py-12 border-t border-slate-800/50 bg-[#050B18]">
+        <div class="flex flex-col md:flex-row justify-between items-center px-12 gap-6 max-w-7xl mx-auto">
+            <div class="text-lg font-semibold text-slate-200 font-display">Lumina Recuerdos</div>
+            <p class="font-display font-light text-sm text-slate-500 uppercase tracking-widest">© 2024 Lumina Recuerdos.
+                Digital Immortality Preserved.</p>
+            <div class="flex gap-8">
+                <a class="text-slate-500 hover:text-violet-400 transition-colors duration-300 font-display text-sm font-light uppercase tracking-widest"
+                    href="#">Privacy Policy</a>
+                <a class="text-slate-500 hover:text-violet-400 transition-colors duration-300 font-display text-sm font-light uppercase tracking-widest"
+                    href="#">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+    <!-- Floating WhatsApp FAB -->
+    <a class="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(37,211,102,0.4)] hover:scale-110 transition-all z-40 group"
+        href="https://wa.me/yournumber?text=Hola,%20quiero%20crear%20mi%20recuerdo%20holográfico">
+        <span class="material-symbols-outlined text-white text-3xl"
+            style="font-variation-settings: 'FILL' 1;">chat</span>
+        <span
+            class="absolute right-20 bg-white text-[#050B18] px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">¡Habla
+            con nosotros!</span>
+    </a>
+    <script>function changeImage(mainId, newSrc, btn, counterId, index, total) {
+            const mainImg = document.getElementById(mainId);
+
+            // Add a fade effect
+            mainImg.style.opacity = '0.4';
+
+            setTimeout(() => {
+                mainImg.src = newSrc;
+                mainImg.style.opacity = '1';
+            }, 150);
+
+            // Handle thumbnail active state
+            const container = btn.parentElement;
+            const buttons = container.getElementsByTagName('button');
+            for (let b of buttons) {
+                b.classList.remove('thumbnail-active');
+            }
+            btn.classList.add('thumbnail-active');
+
+            // Update counter
+            if (counterId) {
+                document.getElementById(counterId).innerText = `${index} / ${total}`;
+            }
+        }</script>
+</body>
+
+</html>

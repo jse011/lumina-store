@@ -2,47 +2,58 @@ import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <section id="inicio" className="relative min-h-screen flex items-center pt-xl">
-      <div className="absolute inset-0 z-0">
-        <Image
-          alt="Exhibición holográfica futurista de un recuerdo familiar"
-          className="w-full h-full object-cover opacity-40"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdINwCYrHbLyZ-7dEDE1NHVevMnmJErdNWr07wOLBLAN548td04h0BbwHZ5wsUIkrG_JdK0pwzY0m3a13SRHxiKQqxKhY8a8v750KIXpwwwPZiuo4KKv2BhpiKMiaEF1xokUxoIPnlUHgfxUwQ1mfPFfn2K1iL7o0h5C7P4ETPF9fxfOX9qBaVP2ZOwIhgBK2weLp_yD4_cMdgm637TlWj10I4fEayD53wknaYyrgDgrO-QbdIMptOW4FC6wrShBqSujWKwvH8dAfB"
-          fill
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050B18] via-transparent to-[#050B18]"></div>
-      </div>
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 grid md:grid-cols-2 gap-md items-center">
-        <div className="space-y-md text-center md:text-left mt-20 md:mt-0">
-          <h2 className="font-display text-display text-white leading-tight">
-            Revive tus momentos <span className="text-tertiary">favoritos en 3D</span>
-          </h2>
-          <p className="font-body-lg text-on-surface-variant">
-            Transformamos tus fotos y videos en recuerdos holográficos eternos. Una ventana al pasado capturada con la tecnología del futuro.
+    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden" id="home">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.1),transparent_70%)] pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto px-4 md:px-8 w-full grid md:grid-cols-2 gap-12 items-center relative z-10">
+        <div className="space-y-8 text-center md:text-left mt-10 md:mt-0">
+          <h1 className="font-display text-4xl md:text-7xl text-white leading-none font-bold">
+            La magia de <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-tertiary to-secondary">volver a verlos</span>
+          </h1>
+
+          <p className="text-base md:text-lg text-on-surface-variant max-w-lg mx-auto md:mx-0">
+            Transformamos tus fotos más queridas en proyecciones eternas llenas de vida. Inmortaliza a tus seres queridos, mascotas y momentos especiales con tecnología holográfica.
           </p>
-          <div className="pt-base flex justify-center md:justify-start">
-            <button className="px-lg py-sm md:px-xl md:py-md bg-gradient-to-r from-cyan-400 to-violet-500 text-white rounded-xl text-lg md:text-2xl font-headline-md shadow-[0_0_30px_rgba(34,211,238,0.2)] hover:scale-105 transition-all flex items-center gap-4">
-              Hablar por WhatsApp
-              <span className="material-symbols-outlined" aria-hidden="true">
-                chat
-              </span>
-            </button>
+
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+              <a
+                className="bg-[#25D366] text-white font-bold px-8 md:px-10 py-4 rounded-xl flex items-center gap-2 hover:shadow-[0_0_30px_rgba(37,211,102,0.3)] transition-all uppercase tracking-widest text-[10px] md:text-xs"
+                href="https://wa.me/yournumber?text=Hola,%20quiero%20hablar%20con%20un%20asesor%20para%20mi%20pedido"
+              >
+                Hablar por WhatsApp <span className="material-symbols-outlined">chat</span>
+              </a>
+              <a
+                className="glass-panel text-white font-bold px-6 md:px-8 py-4 rounded-xl border border-white/10 hover:bg-white/5 transition-all uppercase tracking-widest text-[10px] md:text-xs"
+                href="#access"
+              >
+                Acceder con mi Código
+              </a>
+            </div>
+
+            <p className="text-[10px] md:text-[11px] text-slate-400 font-medium tracking-wide leading-relaxed">
+              Atención personalizada por WhatsApp | Entrega física con tarjeta de acceso | Experiencia digital con código único
+            </p>
           </div>
         </div>
-        <div className="hidden md:flex justify-center">
-          <div className="relative w-[400px] h-[400px] glass-panel rounded-full flex items-center justify-center p-md shadow-[0_0_50px_rgba(0,219,231,0.15)]">
-            <div className="w-full h-full rounded-full border border-tertiary/20 animate-pulse absolute"></div>
+
+        <div className="relative group max-w-md mx-auto md:max-w-none">
+          <div className="absolute -inset-4 bg-gradient-to-tr from-tertiary/20 to-secondary/20 blur-3xl opacity-50 group-hover:opacity-80 transition-opacity"></div>
+          <div className="relative rounded-3xl overflow-hidden glass-panel border border-tertiary/30 p-4 shadow-2xl">
             <Image
-              alt="Primer plano de un prisma holográfico de cristal"
-              className="object-cover rounded-3xl mix-blend-screen"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkkaR9hpUBbDLG3INnlOXkj7t45ion6TpVrKOA_A4Z52TBpiXeQeXvsa9Jo3rxwn6x2xvPNCgQoqAmYD6ejAoDwa2w_W-pU8QVHiCzFqDyxmHZNaXYfVLxEigqqF366ZsqZ829L6KcSqSUDFkM-KceSuDrqaEX71iIm0ejJPCD9d-0T1gbtWauy_uT-2t7-qxeaYzWFdcETcWyl-PXRJV2zCWBkkpduycFY3AXbIK9mSX9ukRZD0NoOe_h29OUvLAw_mt7pwSojcVe"
-              width={320}
-              height={320}
+              alt="Cubo holográfico"
+              className="w-full aspect-square object-cover rounded-2xl"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCizT8KMymZYFPST2bW64Blm1vPuE_ZoOIW6xL8Gi-Rg9RyqtsLkfOacffHFlCztkGAzWyNrEhUaY0PT_p4ZaYDlWcZSD4kRftvzaBQgflzQN1XvqGUCH9wTpfwGsYlGUD3hsngSabwJcm4fPZLrT9xjluP-uB8Wh6fEyYPcIpuNmTkM9fPyAC4AxFanckp6q55qB_A4jiWdtJgdx1xhOsiPQ6pYP04zjFxuXgH0UvDIiaHqOE5KzedldTaQ39-JgnGVuLCtGdTPB-h"
+              width={600}
+              height={600}
+              priority
             />
+            <div className="absolute inset-0 scan-line pointer-events-none opacity-30"></div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
