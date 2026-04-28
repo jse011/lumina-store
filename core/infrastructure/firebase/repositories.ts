@@ -1,7 +1,7 @@
 import { database } from '../../../firebase/firebase';
 import { ref, get, set } from 'firebase/database';
 import { Product, NavItem, Testimonial, ProcessStep, AppSettings } from '../../domain/models';
-import { IProductRepository, INavRepository, ITestimonialRepository, IProcessRepository, ISettingsRepository } from '../../domain/repositories';
+import { IProductRepository, INavRepository, ITestimonialRepository, IProcessRepository, ISettingsRepository, IGalleryRepository } from '../../domain/repositories';
 
 const getBasePath = () => {
   return process.env.NODE_ENV === 'production' ? 'produccion' : 'prueba';
@@ -91,12 +91,29 @@ export class FirebaseSettingsRepository implements ISettingsRepository {
       whatsappProductMessage: 'Nan',
       whatsappFABMessage: 'Nan',
       shippingTimeLima: 'Nan',
-      shippingTimeProvincia: 'Nan'
+      shippingTimeProvincia: 'Nan',
+      galleryImages: []
     };
   }
 
   async updateSettings(settings: AppSettings): Promise<void> {
     const settingsRef = ref(database, `${getBasePath()}/settings`);
     await set(settingsRef, settings);
+  }
+}
+
+export class FirebaseGalleryRepository implements IGalleryRepository {
+  async getGalleryImages(): Promise<string[]> {
+    const dbRef = ref(database, `${getBasePath()}/gallery`);
+    const snapshot = await get(dbRef);
+    if (snapshot.exists()) {
+      return snapshot.val() as string[];
+    }
+    return [];
+  }
+
+  async saveGalleryImages(images: string[]): Promise<void> {
+    const dbRef = ref(database, `${getBasePath()}/gallery`);
+    await set(dbRef, images);
   }
 }

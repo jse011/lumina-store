@@ -1,5 +1,12 @@
-import { FirebaseProductRepository, FirebaseNavRepository, FirebaseTestimonialRepository, FirebaseProcessRepository, FirebaseSettingsRepository } from '../core/infrastructure/firebase/repositories';
-import { PRODUCTS, NAV_ITEMS, TESTIMONIALS, PROCESS_STEPS } from './mock';
+import { 
+  FirebaseProductRepository, 
+  FirebaseNavRepository, 
+  FirebaseTestimonialRepository, 
+  FirebaseProcessRepository, 
+  FirebaseSettingsRepository,
+  FirebaseGalleryRepository
+} from '../core/infrastructure/firebase/repositories';
+import { PRODUCTS, NAV_ITEMS, TESTIMONIALS, PROCESS_STEPS, GALLERY_IMAGES } from './mock';
 
 async function seed() {
   console.log('Starting seed...');
@@ -8,6 +15,8 @@ async function seed() {
   const navRepo = new FirebaseNavRepository();
   const testimonialRepo = new FirebaseTestimonialRepository();
   const processRepo = new FirebaseProcessRepository();
+  const settingsRepo = new FirebaseSettingsRepository();
+  const galleryRepo = new FirebaseGalleryRepository();
 
   console.log('Seeding products...');
   for (const product of PRODUCTS) {
@@ -30,16 +39,19 @@ async function seed() {
   }
 
   console.log('Seeding app settings...');
-  const settingsRepo = new FirebaseSettingsRepository();
   await settingsRepo.updateSettings({
-    whatsappNumber: '51900000000', // Reemplaza con tu número real
+    whatsappNumber: '51900000000',
     contactEmail: 'contacto@lumina.com',
     whatsappGeneralMessage: 'Hola, necesito información sobre Lumina Recuerdos',
     whatsappProductMessage: 'Hola, quiero iniciar mi pedido del {productName}',
     whatsappFABMessage: 'Hola, quiero crear mi recuerdo holográfico',
     shippingTimeLima: '2 a 3 días hábiles',
-    shippingTimeProvincia: '3 días hábiles'
+    shippingTimeProvincia: '3 días hábiles',
+    galleryImages: GALLERY_IMAGES // Also keeping it here for compatibility if needed
   });
+
+  console.log('Seeding gallery...');
+  await galleryRepo.saveGalleryImages(GALLERY_IMAGES);
 
   console.log('Seed completed successfully!');
   process.exit(0);
