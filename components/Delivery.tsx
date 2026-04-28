@@ -1,41 +1,69 @@
-import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Delivery() {
   return (
-    <section className="py-xl" id="entrega">
-      <div className="max-w-5xl mx-auto px-4 md:px-6">
-        <div className="glass-panel rounded-3xl p-md md:p-lg flex flex-col md:flex-row items-center gap-lg border-cyan-400/20 relative overflow-hidden">
-          <div className="absolute -left-12 -top-12 w-48 h-48 bg-cyan-400/10 rounded-full blur-3xl"></div>
-          <div className="md:w-1/2 relative z-10">
-            <h2 className="font-headline-lg text-white mb-md">Recibe tu magia en casa</h2>
-            <p className="font-body-lg text-on-surface-variant mb-md">
-              Entrega en 2 a 4 días en Lima y envíos a todo el Perú. Cada recuerdo es embalado con tecnología de protección premium.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-md mt-4 md:mt-0">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-tertiary" aria-hidden="true">
-                  local_shipping
-                </span>
-                <span className="font-label-sm text-white">Seguimiento Real</span>
+    <section className="py-24" id="delivery">
+      <div className="max-w-5xl mx-auto px-4 md:px-8">
+        <div className="glass-panel rounded-[2rem] md:rounded-[3rem] p-8 md:p-16 border border-tertiary/20 relative overflow-hidden">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 relative z-10">
+            <div className="space-y-8">
+              <div>
+                <h2 className="font-display text-3xl md:text-4xl text-white mb-6 font-bold">Información de Entrega</h2>
+                <p className="text-on-surface-variant text-base md:text-lg leading-relaxed">
+                  Llevamos tus recuerdos a cualquier rincón del país con el máximo cuidado y respeto.
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-tertiary" aria-hidden="true">
-                  verified
-                </span>
-                <span className="font-label-sm text-white">Seguridad Total</span>
+              
+              <div className="space-y-6">
+                <div className="flex items-center gap-6">
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl glass-panel flex items-center justify-center text-tertiary border-tertiary/30">
+                    <span className="material-symbols-outlined text-2xl md:text-3xl">local_shipping</span>
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-lg md:text-xl">Lima</p>
+                    <p className="text-xs md:text-sm text-tertiary font-medium">2 a 3 días hábiles</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-6">
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl glass-panel flex items-center justify-center text-secondary border-secondary/30">
+                    <span className="material-symbols-outlined text-2xl md:text-3xl">public</span>
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-lg md:text-xl">Provincias</p>
+                    <p className="text-xs md:text-sm text-secondary font-medium">3 días hábiles</p>
+                  </div>
+                </div>
+                
+                <p className="text-[10px] md:text-xs text-slate-500 mt-4 italic font-medium">* Costo de envío según ubicación</p>
               </div>
             </div>
-          </div>
-          <div className="md:w-1/2 w-full h-64 rounded-2xl overflow-hidden shadow-2xl relative">
-            <Image
-              alt="Primer plano de una mano enguantada sosteniendo un paquete holográfico brillante"
-              className="object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1lyVo05lYKkIO3meVufC0yR9NTTcTuWj_2jIgQUrRQcab4lGnMeEbqC6duCoeVzxClQ4O6imfsLzfljOyHBsQG4o3UmAxYuSAPyz-dqXxgtSYKm2TrzymbhfBtkO38SrVmSjZbw6gRbaBUvQI1JEitvQv2CF2VZesMpLlLhyyFqpcX2R-jtfp_2ROn1BxYSSWF5KiJzfVT8GP0FjI7oaBTrhr9_bfB3NiO0VYimZ-chMwNPCdfGr9XPYAbm9i-mV-DquDdSfK3d63"
-              fill
-            />
+
+            <div className="space-y-8">
+              <div className="bg-white/5 rounded-3xl p-6 md:p-8 border border-white/10 space-y-6">
+                <h3 className="font-display text-xl md:text-2xl text-white font-bold">Cómo recibes tu recuerdo</h3>
+                <div className="space-y-4">
+                  <p className="text-xs md:text-sm text-on-surface-variant leading-relaxed">
+                    Luego de coordinar tu pedido por WhatsApp, recibirás tu producto físico junto con una <span className="text-tertiary font-bold">tarjeta de acceso única</span>.
+                  </p>
+                  <div className="p-4 bg-tertiary/10 border border-tertiary/30 rounded-xl">
+                    <p className="text-[10px] md:text-xs text-cyan-200 leading-relaxed font-medium mb-3">
+                      Con ese código podrás ingresar a la experiencia digital de Lumina Recuerdos para activar la proyección holográfica.
+                    </p>
+                    <Link 
+                      className="inline-flex items-center gap-2 text-white font-bold text-[10px] uppercase tracking-widest hover:text-tertiary transition-colors" 
+                      href="#access"
+                    >
+                      Ir al portal de acceso <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+

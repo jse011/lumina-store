@@ -12,7 +12,7 @@ export default function Navbar() {
       let currentActiveId = 'inicio';
       
       const sectionElements = NAV_ITEMS.map(item => {
-        const targetId = item.href === '#' ? item.id : item.href.substring(1);
+        const targetId = item.href.startsWith('#') ? item.href.substring(1) : item.id;
         return {
           id: item.id,
           element: document.getElementById(targetId)
@@ -22,8 +22,7 @@ export default function Navbar() {
       for (const section of sectionElements) {
         if (section.element) {
           const rect = section.element.getBoundingClientRect();
-          // Adjust threshold to better detect when section is in view
-          if (rect.top <= 150) {
+          if (rect.top <= 100) {
             currentActiveId = section.id;
           }
         }
@@ -39,22 +38,23 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-[#050B18]/80 backdrop-blur-xl shadow-[0_0_20px_rgba(34,211,238,0.1)]">
-      <div className="flex justify-between items-center px-4 md:px-6 py-4 max-w-7xl mx-auto gap-4">
-        <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent font-display tracking-tight">
+    <header className="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-[20px] border-b border-tertiary/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
+      <nav className="flex justify-between items-center w-full px-4 md:px-8 h-20 max-w-7xl mx-auto">
+        <Link href="/" className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent font-display tracking-tight">
           Lumina Recuerdos
-        </span>
+        </Link>
+        
         <div className="hidden md:flex items-center gap-8">
           {NAV_ITEMS.map((item) => {
             const isActive = item.id === activeId;
             return (
               <Link
                 key={item.id}
-                className={
-                  isActive
-                    ? "text-cyan-400 border-b-2 border-cyan-400 pb-1 font-display tracking-tight"
-                    : "text-slate-400 hover:text-white transition-colors font-display tracking-tight"
-                }
+                className={`font-display uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold transition-all ${
+                  isActive 
+                    ? "text-tertiary drop-shadow-[0_0_8px_rgba(0,219,231,0.5)]" 
+                    : "text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]"
+                }`}
                 href={item.href}
               >
                 {item.label}
@@ -62,10 +62,23 @@ export default function Navbar() {
             );
           })}
         </div>
-        <button className="bg-gradient-to-r from-cyan-400 to-violet-500 text-white px-4 md:px-6 py-2 rounded-full font-label-sm uppercase tracking-wider hover:scale-95 transition-transform active:scale-90 shadow-[0_0_15px_rgba(34,211,238,0.3)] whitespace-nowrap">
-          WhatsApp
-        </button>
-      </div>
-    </nav>
+
+        <div className="flex items-center gap-4">
+          <Link 
+            className="hidden sm:block font-display uppercase tracking-[0.2em] text-[10px] font-bold text-tertiary hover:text-white transition-all border border-tertiary/30 px-4 py-2 rounded-full" 
+            href="#access"
+          >
+            Ver mi Recuerdo
+          </Link>
+          <a 
+            className="bg-gradient-to-r from-tertiary to-secondary px-6 py-2 rounded-full text-on-primary font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all active:scale-95 text-[10px] md:text-xs" 
+            href="https://wa.me/yournumber?text=Hola,%20necesito%20información%20sobre%20Lumina%20Recuerdos"
+          >
+            Conectar
+          </a>
+        </div>
+      </nav>
+    </header>
   );
 }
+

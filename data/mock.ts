@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.0.2';
+export const APP_VERSION = '1.0.3';
 
 export interface NavItem {
   id: string;
@@ -8,10 +8,11 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { id: 'inicio', label: 'Inicio', href: '#', isActive: true },
-  { id: 'catalogo', label: 'Catálogo', href: '#catalogo', isActive: false },
-  { id: 'historias', label: 'Historias', href: '#historias', isActive: false },
-  { id: 'entrega', label: 'Entrega', href: '#entrega', isActive: false },
+  { id: 'inicio', label: 'Inicio', href: '#home', isActive: true },
+  { id: 'catalogo', label: 'Catálogo', href: '#catalog', isActive: false },
+  { id: 'proceso', label: 'Proceso', href: '#process', isActive: false },
+  { id: 'historias', label: 'Historias', href: '#stories', isActive: false },
+  { id: 'entrega', label: 'Entrega', href: '#delivery', isActive: false },
 ];
 
 export interface Product {
@@ -19,20 +20,24 @@ export interface Product {
   name: string;
   price: string;
   description: string;
-  imageUrl: string;
-  tag?: {
-    label: string;
-    type: 'popular' | 'exclusive';
-  };
+  italicLabel: string;
+  images: string[];
 }
 
 export interface Testimonial {
   id: string;
   quote: string;
-  initial: string;
   name: string;
   location: string;
-  type: 'tertiary' | 'violet';
+  type: 'cyan' | 'violet';
+}
+
+export interface ProcessStep {
+  id: number;
+  title: string;
+  description: string;
+  color: 'tertiary' | 'secondary';
+  href?: string;
 }
 
 export const PRODUCTS: Product[] = [
@@ -40,49 +45,86 @@ export const PRODUCTS: Product[] = [
     id: 'cubo-holografico',
     name: 'Cubo Holográfico',
     price: 'Desde S/120',
-    description: 'La pieza perfecta para tu escritorio. Un prisma de cristal que proyecta profundidad cinemática.',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBZrctvOPRx0sOeg9lC-iqy8zrPgMckni-r3zPwPbO39Oi79Tnr6Ep2dlrI8sqju4h1aMhmk-bGm3_gdIwyf1bRX2s_Fr7R7QelQ8VXPAAWPt7C0Lofgw5N6JHyzQQqynbMWsGEhddx8GT22NlKoIMYdIuGYxGgFKPn-EMLOI4TFvf8eobEbfa5_r1M1cX8-qB7CXwuThm9eDUuHJGhIFGjkUSEBo2LbtmhFsmm49zBeb7xkIcSsNONVamtew7vAYChajVwLw6BLPxo',
-    tag: {
-      label: 'POPULAR',
-      type: 'popular',
-    },
+    description: 'Cristal templado con proyección de 4 caras. Ideal para retratos familiares o de tus mascotas en tu lugar favorito.',
+    italicLabel: 'Preserva el brillo de su mirada para siempre.',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAxowtiC15no05003R8SPedxrBvQyI7bBSTDerk26ageqF7A9UYlsErIGcGE5Y0x8bkwnR24-TIN041BjPzRxaxL8nHaXbC8fbXxpoUqgQZdBd8D2xS0BFx-pU3knAX8AyEVM-LC5n-6LeceDjGPcQ-_8kwLs6NZcDdfFf5iABbTr5NXG9QHCAJODu4XMsG9N4Al0WJbDXaWt_2Z0KOFaY3h_MrbpLPO977-DZidBb0ff-rMerkZxmVZPCtVvNwBORByR2PpJ8Ugbpm',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCI-zzaQ30XygmncwAoaC0Fa1ZkVeR-wytTm2lFfh0bPqqz9faZ5mDKMq6X4th_OW373r5DZTRAO2EdL5swbuTr4GITy6j-jtc4_Bh4ewo0oWDSjrwrGe048-jDRlZgyBUb0F5mhvambK9P1EXNC-XEf7wpF6fZIWNHzlybGqsQvWMcTNbG39gha5gkmd83ZlbkoHZ6Ltk4NfNDQWLJp4wMiZoUbfr7G4rVd4dr2soWapBFQktitw2WdDtWG6n2ZwJQFQBo1qv5pMVf',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAWk62fKt9yCEEiSRR5akMaouS4nuN_ml0kHVH3HAozIjNI7ILzeLU61JumezRbnLHvLC0SGHTutDtMYWSbX69daIoqBRhFPXMYI_A6pIutSE3E6cWGAJkm3MLzMnEWSxE_pgM5j9Gz190jXGhPitF4wLiFzQwpKtoS_S8yfBOSxsguKalwvhpNVoc0iww9hJuu5kNvq1TCV6tslp1l342WI4RV70oF7uN3xYfMgRy74FT3jWarQz5hCCjZi2s7hyJxkXSPtGSTS9ID',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuA_RTDWsCviZZMOW7-6UIPCQ4qtA8DJYsnEqUR-sClsvXbcXUpGbCBIYg9bWho_DlcGLYdSnrs6WGpBdGkMnxQ9zwQvbZjs43ckx3e9e7-6yMMC51M7TIaBELZtjiJ-isVne0PwbbDgvNu3raj1E7W6CwQuuwnmNEphMWCDGanW1WGvUOB9UEp3pwARPniZX62dOD_PMn_Up-dwr9oIXJf0SOHjGApRj9OdJHGAFTyGJX-rrpuGUDwv5Zsqso9JU6p1tBUpI2B0JsTG'
+    ]
   },
   {
     id: 'esfera-recuerdos',
     name: 'Esfera de Recuerdos',
     price: 'Desde S/160',
-    description: 'Visión de 360 grados. Una burbuja de tiempo que captura la esencia de tus mejores momentos.',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCWMt3CXlPSSUwDfrBKwoN9ANo1vq0LuIajQh7rGjC_NjFEAfpSP8FwgMWdXNkdquuMFeaXtuVfGqzKFVAHW0wkhFYodoTtFRo1Jr813G-eDO_FPpRDRcytAhjGI5zFXgnznlyLNmLW2ycM6hDJjE8BPd5M7dau93z5W4HemtQal0_0TaUn4MMAawr1NnaL7Dt1XgjweslNXwgP5U_hmre-U1bvDStOLnfBXkAgDJGXnR2rR79IoJ_8x14Ws7fC1MC1IuqozZ5pJFSu',
-    tag: {
-      label: 'EXCLUSIVO',
-      type: 'exclusive',
-    },
+    description: 'Diseño orgánico con proyección envolvente de 360 grados. Una pieza de arte que mantiene viva la presencia de quienes ya no están.',
+    italicLabel: 'Un refugio de luz para tus recuerdos más hermosos.',
+    images: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBMq8sXraLNG5vn8aNlPUcnF0I5y3-YWQop6qmKEu3px6suQitzgXpfb79l2tvyaugNa934ymXuZLWrOY3VvZNyIxTY_OGlfrZpNohd7684lCxyg4c94BKIqH8LfY0HmjDFSrdC2wKmZqaUzxkOvqNjaIHApyMS45ZYtelbYj8xgZttcPDuP5iSdm_8CC9C6Eu1ZuLL629_U-nH3NPGEPLwGpgljGh9g5Q4mE4bxMWyuJP65bAQyDlZyG91T_kHhDMcJ5ksm60GJWun',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCizT8KMymZYFPST2bW64Blm1vPuE_ZoOIW6xL8Gi-Rg9RyqtsLkfOacffHFlCztkGAzWyNrEhUaY0PT_p4ZaYDlWcZSD4kRftvzaBQgflzQN1XvqGUCH9wTpfwGsYlGUD3hsngSabwJcm4fPZLrT9xjluP-uB8Wh6fEyYPcIpuNmTkM9fPyAC4AxFanckp6q55qB_A4jiWdtJgdx1xhOsiPQ6pYP04zjFxuXgH0UvDIiaHqOE5KzedldTaQ39-JgnGVuLCtGdTPB-h',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDkR2AGiXrMv8RF7lUnEoqasrplhOnF-ETYiwvUVZfcCVLxX0QzdYyJ0FusFu8jrzAs4kEVakitJ8nUGJSFXrv3i-w2C1CMvG9ff7Tpn-yLEeLxldtqjO48voU-5H3w6gIga7MeQc1STT5-ZVuIxX2gFJIOzoW16cVBWC4l-KE25yDQo2jeVwZmFQrJjSV73lvwht_EpY8swgu2gD4sC1s90oYVzfrmUDL6OWgm-6O-zaynk2RZShS8Nxb5RbdB0Q6-dh_lFLOR37BZ',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuA_RTDWsCviZZMOW7-6UIPCQ4qtA8DJYsnEqUR-sClsvXbcXUpGbCBIYg9bWho_DlcGLYdSnrs6WGpBdGkMnxQ9zwQvbZjs43ckx3e9e7-6yMMC51M7TIaBELZtjiJ-isVne0PwbbDgvNu3raj1E7W6CwQuuwnmNEphMWCDGanW1WGvUOB9UEp3pwARPniZX62dOD_PMn_Up-dwr9oIXJf0SOHjGApRj9OdJHGAFTyGJX-rrpuGUDwv5Zsqso9JU6p1tBUpI2B0JsTG'
+    ]
   },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: '1',
-    quote: '"Parece que mi abuelo está aquí de nuevo. El detalle es increíble, es como tenerlo presente."',
-    initial: 'M',
+    quote: '"Poder ver a mi abuelo sonreír de nuevo en mi escritorio no tiene precio. Es un puente emocional que no creí posible."',
     name: 'María R.',
     location: 'Lima, Perú',
-    type: 'tertiary',
+    type: 'cyan',
   },
   {
     id: '2',
-    quote: '"Fue el regalo perfecto para nuestro aniversario. Ver el video de nuestra boda en 3D nos conmovió."',
-    initial: 'J',
-    name: 'Jorge P.',
+    quote: '"Inmortalizar a mi fiel compañero en la esfera fue sanador. Es como si una parte de su luz siguiera aquí cada noche."',
+    name: 'Juan P.',
     location: 'Arequipa, Perú',
     type: 'violet',
   },
   {
     id: '3',
-    quote: '"La calidad de la esfera es impresionante. El envío a Trujillo llegó perfecto y muy rápido."',
-    initial: 'S',
-    name: 'Sofía L.',
+    quote: '"El regalo más significativo que he dado. Ver a mi esposa emocionada ante el holograma de nuestra boda fue único."',
+    name: 'Carlos M.',
     location: 'Trujillo, Perú',
-    type: 'tertiary',
+    type: 'cyan',
   },
 ];
+
+export const PROCESS_STEPS: ProcessStep[] = [
+  {
+    id: 1,
+    title: 'Elige tu recuerdo',
+    description: 'Explora nuestros productos y ejemplos para decidir cómo quieres inmortalizar ese momento especial.',
+    color: 'tertiary',
+  },
+  {
+    id: 2,
+    title: 'Escríbenos',
+    description: 'Háblanos por WhatsApp. Te ayudamos a elegir el mejor formato y a seleccionar la foto ideal para tu recuerdo.',
+    color: 'secondary',
+  },
+  {
+    id: 3,
+    title: 'Recibe tu producto',
+    description: 'Te entregamos el cubo o esfera listo para usar en la comodidad de tu hogar, con envío seguro a todo el Perú.',
+    color: 'tertiary',
+  },
+  {
+    id: 4,
+    title: 'Activa tu experiencia',
+    description: 'Usa el código de tu tarjeta de acceso para ingresar y visualizar tu recuerdo holográfico en tu nuevo dispositivo.',
+    color: 'secondary',
+    href: '#access',
+  },
+];
+
+export const GALLERY_IMAGES = [
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCI-zzaQ30XygmncwAoaC0Fa1ZkVeR-wytTm2lFfh0bPqqz9faZ5mDKMq6X4th_OW373r5DZTRAO2EdL5swbuTr4GITy6j-jtc4_Bh4ewo0oWDSjrwrGe048-jDRlZgyBUb0F5mhvambK9P1EXNC-XEf7wpF6fZIWNHzlybGqsQvWMcTNbG39gha5gkmd83ZlbkoHZ6Ltk4NfNDQWLJp4wMiZoUbfr7G4rVd4dr2soWapBFQktitw2WdDtWG6n2ZwJQFQBo1qv5pMVf',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuA_RTDWsCviZZMOW7-6UIPCQ4qtA8DJYsnEqUR-sClsvXbcXUpGbCBIYg9bWho_DlcGLYdSnrs6WGpBdGkMnxQ9zwQvbZjs43ckx3e9e7-6yMMC51M7TIaBELZtjiJ-isVne0PwbbDgvNu3raj1E7W6CwQuuwnmNEphMWCDGanW1WGvUOB9UEp3pwARPniZX62dOD_PMn_Up-dwr9oIXJf0SOHjGApRj9OdJHGAFTyGJX-rrpuGUDwv5Zsqso9JU6p1tBUpI2B0JsTG',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuAWk62fKt9yCEEiSRR5akMaouS4nuN_ml0kHVH3HAozIjNI7ILzeLU61JumezRbnLHvLC0SGHTutDtMYWSbX69daIoqBRhFPXMYI_A6pIutSE3E6cWGAJkm3MLzMnEWSxE_pgM5j9Gz190jXGhPitF4wLiFzQwpKtoS_S8yfBOSxsguKalwvhpNVoc0iww9hJuu5kNvq1TCV6tslp1l342WI4RV70oF7uN3xYfMgRy74FT3jWarQz5hCCjZi2s7hyJxkXSPtGSTS9ID',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuDkR2AGiXrMv8RF7lUnEoqasrplhOnF-ETYiwvUVZfcCVLxX0QzdYyJ0FusFu8jrzAs4kEVakitJ8nUGJSFXrv3i-w2C1CMvG9ff7Tpn-yLEeLxldtqjO48voU-5H3w6gIga7MeQc1STT5-ZVuIxX2gFJIOzoW16cVBWC4l-KE25yDQo2jeVwZmFQrJjSV73lvwht_EpY8swgu2gD4sC1s90oYVzfrmUDL6OWgm-6O-zaynk2RZShS8Nxb5RbdB0Q6-dh_lFLOR37BZ',
+];
+

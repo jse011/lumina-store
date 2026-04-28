@@ -1,69 +1,25 @@
-import Image from 'next/image';
 import { PRODUCTS } from '@/data/mock';
+import ProductCard from './ProductCard';
 
 export default function Catalog() {
   return (
-    <section className="py-xl max-w-7xl mx-auto px-4 md:px-6" id="catalogo">
-      <div className="text-center mb-xl">
-        <h2 className="font-headline-lg text-white mb-base">Nuestra Colección</h2>
-        <div className="h-1 w-24 bg-gradient-to-r from-cyan-400 to-violet-500 mx-auto rounded-full mb-8"></div>
-        <button className="px-6 py-2 bg-gradient-to-r from-cyan-500/20 to-violet-500/20 border border-cyan-500/50 text-cyan-400 rounded-full font-label-sm uppercase tracking-wider hover:scale-105 transition-all flex items-center gap-2 mx-auto shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-          Ver Galería
-          <span className="material-symbols-outlined text-base" aria-hidden="true">
-            grid_view
-          </span>
-        </button>
+    <section className="py-24 max-w-7xl mx-auto px-4 md:px-8" id="catalog">
+      <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+        <div className="space-y-4 text-center md:text-left w-full md:w-auto">
+          <span className="font-display text-secondary uppercase tracking-[0.3em] text-[10px] md:text-xs font-bold block">Catálogo de Eternidad</span>
+          <h2 className="font-display text-3xl md:text-5xl text-white font-medium">Colección de Memorias</h2>
+        </div>
+        <div className="text-tertiary font-medium text-sm max-w-xs text-right hidden md:block italic">
+          "Honramos el vínculo eterno con tu familia y tus compañeros de cuatro patas."
+        </div>
       </div>
-      <div className="grid md:grid-cols-2 gap-lg">
+      
+      <div className="grid md:grid-cols-2 gap-12">
         {PRODUCTS.map((product) => (
-          <div
-            key={product.id}
-            className={`glass-panel p-md rounded-xl group transition-all ${
-              product.tag?.type === 'popular' ? 'hover:border-cyan-400/30' : 'hover:border-violet-400/30'
-            }`}
-          >
-            <div className="aspect-video mb-md overflow-hidden rounded-lg relative">
-              <Image
-                alt={product.name}
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
-                src={product.imageUrl}
-                fill
-              />
-              <div className="absolute inset-0 scan-line pointer-events-none opacity-20"></div>
-            </div>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-base gap-2">
-              <div>
-                <h3 className="font-headline-md text-white">{product.name}</h3>
-                <p className="font-body-md text-on-surface-variant">{product.price}</p>
-              </div>
-              {product.tag && (
-                <span
-                  className={`${
-                    product.tag.type === 'popular'
-                      ? 'bg-secondary-container text-on-secondary-container'
-                      : 'bg-surface-container-high text-tertiary'
-                  } px-3 py-1 rounded-full text-label-sm`}
-                >
-                  {product.tag.label}
-                </span>
-              )}
-            </div>
-            <p className="font-body-md text-on-surface-variant mb-md">{product.description}</p>
-            <button
-              className={`w-full py-md border rounded-lg font-label-sm transition-all flex justify-center items-center gap-2 ${
-                product.tag?.type === 'popular'
-                  ? 'border-cyan-400/50 text-cyan-400 hover:bg-cyan-400 hover:text-on-primary'
-                  : 'border-violet-400/50 text-violet-400 hover:bg-violet-400 hover:text-white'
-              }`}
-            >
-              Hablar por WhatsApp
-              <span className="material-symbols-outlined" aria-hidden="true">
-                send
-              </span>
-            </button>
-          </div>
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </section>
   );
 }
+
