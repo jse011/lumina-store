@@ -92,7 +92,14 @@ export class FirebaseSettingsRepository implements ISettingsRepository {
       whatsappFABMessage: 'Nan',
       shippingTimeLima: 'Nan',
       shippingTimeProvincia: 'Nan',
-      galleryImages: []
+      galleryImages: [],
+      heroTitle: 'Nan',
+      heroTitleHighlight: 'Nan',
+      heroSubtitle: 'Nan',
+      heroImageUrl: 'Nan',
+      heroWhatsappText: 'Nan',
+      heroBadgeText: 'Nan',
+      heroSubBadge: 'Nan'
     };
   }
 

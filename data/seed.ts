@@ -1,8 +1,8 @@
-import { 
-  FirebaseProductRepository, 
-  FirebaseNavRepository, 
-  FirebaseTestimonialRepository, 
-  FirebaseProcessRepository, 
+import {
+  FirebaseProductRepository,
+  FirebaseNavRepository,
+  FirebaseTestimonialRepository,
+  FirebaseProcessRepository,
   FirebaseSettingsRepository,
   FirebaseGalleryRepository
 } from '../core/infrastructure/firebase/repositories';
@@ -47,7 +47,14 @@ async function seed() {
     whatsappFABMessage: 'Hola, quiero crear mi recuerdo holográfico',
     shippingTimeLima: '2 a 3 días hábiles',
     shippingTimeProvincia: '3 días hábiles',
-    galleryImages: GALLERY_IMAGES // Also keeping it here for compatibility if needed
+    galleryImages: GALLERY_IMAGES, // Also keeping it here for compatibility if needed
+    heroTitle: 'La magia de',
+    heroTitleHighlight: 'volver a verlos',
+    heroSubtitle: 'Transformamos tus fotos más queridas en proyecciones eternas llenas de vida. Inmortaliza a tus seres queridos, mascotas y momentos especiales con tecnología holográfica.',
+    heroImageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCizT8KMymZYFPST2bW64Blm1vPuE_ZoOIW6xL8Gi-Rg9RyqtsLkfOacffHFlCztkGAzWyNrEhUaY0PT_p4ZaYDlWcZSD4kRftvzaBQgflzQN1XvqGUCH9wTpfwGsYlGUD3hsngSabwJcm4fPZLrT9xjluP-uB8Wh6fEyYPcIpuNmTkM9fPyAC4AxFanckp6q55qB_A4jiWdtJgdx1xhOsiPQ6pYP04zjFxuXgH0UvDIiaHqOE5KzedldTaQ39-JgnGVuLCtGdTPB-h',
+    heroWhatsappText: 'Hola, quiero crear mi recuerdo holográfico',
+    heroBadgeText: 'Hablar por WhatsApp',
+    heroSubBadge: 'Atención personalizada por WhatsApp | Entrega física con tarjeta de acceso | Experiencia digital con código único'
   });
 
   console.log('Seeding gallery...');

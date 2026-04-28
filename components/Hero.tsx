@@ -1,6 +1,20 @@
 import Image from 'next/image';
+import { FirebaseSettingsRepository } from '../core/infrastructure/firebase/repositories';
 
-export default function Hero() {
+
+export default async function Hero() {
+  const settingsRepo = new FirebaseSettingsRepository();
+  const settings = await settingsRepo.getSettings();
+
+  const whatsappNumber = settings.whatsappNumber;
+  const heroTitle = settings.heroTitle;
+  const heroTitleHighlight = settings.heroTitleHighlight;
+  const heroSubtitle = settings.heroSubtitle;
+  const heroImageUrl = settings.heroImageUrl;
+  const heroWhatsappText = settings.heroWhatsappText;
+  const heroBadgeText = settings.heroBadgeText;
+  const heroSubBadge = settings.heroSubBadge;
+
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden" id="home">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.1),transparent_70%)] pointer-events-none"></div>
@@ -8,21 +22,23 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 w-full grid md:grid-cols-2 gap-12 items-center relative z-10">
         <div className="space-y-8 text-center md:text-left mt-10 md:mt-0">
           <h1 className="font-display text-4xl md:text-7xl text-white leading-none font-bold">
-            La magia de <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-tertiary to-secondary">volver a verlos</span>
+            {heroTitle} <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-tertiary to-secondary">{heroTitleHighlight}</span>
           </h1>
 
           <p className="text-base md:text-lg text-on-surface-variant max-w-lg mx-auto md:mx-0">
-            Transformamos tus fotos más queridas en proyecciones eternas llenas de vida. Inmortaliza a tus seres queridos, mascotas y momentos especiales con tecnología holográfica.
+            {heroSubtitle}
           </p>
 
           <div className="flex flex-col gap-6">
             <div className="flex flex-wrap gap-4 justify-center md:justify-start">
               <a
                 className="bg-[#25D366] text-white font-bold px-8 md:px-10 py-4 rounded-xl flex items-center gap-2 hover:shadow-[0_0_30px_rgba(37,211,102,0.3)] transition-all uppercase tracking-widest text-[10px] md:text-xs"
-                href="https://wa.me/yournumber?text=Hola,%20quiero%20hablar%20con%20un%20asesor%20para%20mi%20pedido"
+                href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(heroWhatsappText)}`}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Hablar por WhatsApp <span className="material-symbols-outlined">chat</span>
+                {heroBadgeText} <span className="material-symbols-outlined">chat</span>
               </a>
               <a
                 className="glass-panel text-white font-bold px-6 md:px-8 py-4 rounded-xl border border-white/10 hover:bg-white/5 transition-all uppercase tracking-widest text-[10px] md:text-xs"
@@ -33,7 +49,7 @@ export default function Hero() {
             </div>
 
             <p className="text-[10px] md:text-[11px] text-slate-400 font-medium tracking-wide leading-relaxed">
-              Atención personalizada por WhatsApp | Entrega física con tarjeta de acceso | Experiencia digital con código único
+              {heroSubBadge}
             </p>
           </div>
         </div>
@@ -44,7 +60,7 @@ export default function Hero() {
             <Image
               alt="Cubo holográfico"
               className="w-full aspect-square object-cover rounded-2xl"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCizT8KMymZYFPST2bW64Blm1vPuE_ZoOIW6xL8Gi-Rg9RyqtsLkfOacffHFlCztkGAzWyNrEhUaY0PT_p4ZaYDlWcZSD4kRftvzaBQgflzQN1XvqGUCH9wTpfwGsYlGUD3hsngSabwJcm4fPZLrT9xjluP-uB8Wh6fEyYPcIpuNmTkM9fPyAC4AxFanckp6q55qB_A4jiWdtJgdx1xhOsiPQ6pYP04zjFxuXgH0UvDIiaHqOE5KzedldTaQ39-JgnGVuLCtGdTPB-h"
+              src={heroImageUrl}
               width={600}
               height={600}
               priority
