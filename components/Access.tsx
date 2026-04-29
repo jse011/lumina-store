@@ -3,6 +3,7 @@
 import { useState, ReactNode } from 'react';
 import CodeErrorDialog from './CodeErrorDialog';
 import CodeValidatedScreen from './CodeValidatedScreen';
+import { useAuth } from '@/core/context/AuthContext';
 
 interface AccessProps {
   hero: ReactNode;
@@ -10,10 +11,10 @@ interface AccessProps {
 }
 
 export default function Access({ hero, authorized }: AccessProps) {
+  const { isAuthorized, login } = useAuth();
   const [code, setCode] = useState('');
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [showValidated, setShowValidated] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const handleValidate = () => {
     if (!code.trim()) {
@@ -25,8 +26,7 @@ export default function Access({ hero, authorized }: AccessProps) {
 
   const handleLogin = () => {
     setShowValidated(false);
-    setIsAuthorized(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    login();
   };
 
   // Si ya está autorizado, mostrar solo Authorized
@@ -69,7 +69,7 @@ export default function Access({ hero, authorized }: AccessProps) {
           <div className="glass-panel p-2 rounded-2xl max-w-lg mx-auto flex flex-col sm:flex-row gap-2 border border-white/10 shadow-[0_0_30px_rgba(34,211,238,0.15)]">
             <input
               className="flex-grow bg-transparent border-0 focus:ring-0 text-white px-6 py-4 placeholder:text-slate-500 font-display tracking-[0.2em] text-center sm:text-left outline-none"
-              placeholder="INGRESA TU CÓDIGO ÚNICO AQUÍ"
+              placeholder="INGRESA TU CÓDIGO AQUÍ"
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value)}

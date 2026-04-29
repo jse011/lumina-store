@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { NavItem, AppSettings } from '../core/domain/models';
+import { useAuth } from '@/core/context/AuthContext';
 
 interface NavbarClientProps {
   navItems: NavItem[];
@@ -11,6 +12,7 @@ interface NavbarClientProps {
 
 export default function NavbarClient({ navItems, settings }: NavbarClientProps) {
   const [activeId, setActiveId] = useState('inicio');
+  const { isAuthorized, logout } = useAuth();
   const whatsappNumber = settings.whatsappNumber;
   const whatsappMessage = settings.whatsappGeneralMessage;
 
@@ -60,8 +62,8 @@ export default function NavbarClient({ navItems, settings }: NavbarClientProps) 
               <Link
                 key={item.id}
                 className={`font-display uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold transition-all ${isActive
-                    ? "text-tertiary drop-shadow-[0_0_8px_rgba(0,219,231,0.5)]"
-                    : "text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]"
+                  ? "text-tertiary drop-shadow-[0_0_8px_rgba(0,219,231,0.5)]"
+                  : "text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]"
                   }`}
                 href={item.href}
               >
@@ -72,13 +74,17 @@ export default function NavbarClient({ navItems, settings }: NavbarClientProps) 
         </div>
 
         <div className="flex items-center gap-4">
-
-          <a
-            className="bg-gradient-to-r from-tertiary to-secondary px-6 py-2 rounded-full text-on-primary font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all active:scale-95 text-[10px] md:text-xs"
-            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
-          >
-            Conectar
-          </a>
+          {isAuthorized ? (
+            <button
+              onClick={logout}
+              className="flex items-center gap-2 border border-red-500/40 text-red-400 hover:bg-red-500/10 px-5 py-2 rounded-full font-display font-bold uppercase tracking-widest transition-all active:scale-95 text-[10px] md:text-xs"
+            >
+              <span className="material-symbols-outlined text-sm">logout</span>
+              Cerrar Sesión
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
       </nav>
     </header>
