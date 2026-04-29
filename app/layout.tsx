@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Manrope } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/core/context/AuthContext";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -93,7 +94,9 @@ export default function RootLayout({
         className="bg-background text-on-surface font-body-md overflow-x-hidden min-h-screen"
         data-version={APP_VERSION}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
