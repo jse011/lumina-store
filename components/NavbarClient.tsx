@@ -19,7 +19,7 @@ export default function NavbarClient({ navItems, settings }: NavbarClientProps) 
 
     const handleScroll = () => {
       let currentActiveId = 'inicio';
-      
+
       const sectionElements = navItems.map(item => {
         const targetId = item.href.startsWith('#') ? item.href.substring(1) : item.id;
         return {
@@ -52,18 +52,17 @@ export default function NavbarClient({ navItems, settings }: NavbarClientProps) 
         <Link href="/" className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent font-display tracking-tight">
           Lumina Recuerdos
         </Link>
-        
+
         <div className="hidden md:flex items-center gap-8">
           {navItems.map((item) => {
             const isActive = item.id === activeId;
             return (
               <Link
                 key={item.id}
-                className={`font-display uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold transition-all ${
-                  isActive 
-                    ? "text-tertiary drop-shadow-[0_0_8px_rgba(0,219,231,0.5)]" 
+                className={`font-display uppercase tracking-[0.2em] text-[10px] md:text-xs font-bold transition-all ${isActive
+                    ? "text-tertiary drop-shadow-[0_0_8px_rgba(0,219,231,0.5)]"
                     : "text-slate-400 hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]"
-                }`}
+                  }`}
                 href={item.href}
               >
                 {item.label}
@@ -73,14 +72,9 @@ export default function NavbarClient({ navItems, settings }: NavbarClientProps) 
         </div>
 
         <div className="flex items-center gap-4">
-          <Link 
-            className="hidden sm:block font-display uppercase tracking-[0.2em] text-[10px] font-bold text-tertiary hover:text-white transition-all border border-tertiary/30 px-4 py-2 rounded-full" 
-            href="#access"
-          >
-            Ver mi Recuerdo
-          </Link>
-          <a 
-            className="bg-gradient-to-r from-tertiary to-secondary px-6 py-2 rounded-full text-on-primary font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all active:scale-95 text-[10px] md:text-xs" 
+
+          <a
+            className="bg-gradient-to-r from-tertiary to-secondary px-6 py-2 rounded-full text-on-primary font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all active:scale-95 text-[10px] md:text-xs"
             href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
           >
             Conectar

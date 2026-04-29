@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LUMINA | Mi Bóveda</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#000e0f",
+                        "on-primary": "#2a303f",
+                        "tertiary-fixed-dim": "#00dbe7",
+                        "on-tertiary": "#00363a",
+                        "on-secondary-fixed": "#23005c",
+                        "on-error": "#690005",
+                        "surface-tint": "#c0c6d9",
+                        "on-primary-fixed": "#151c29",
+                        "surface-container-lowest": "#0b0f10",
+                        "surface-container-low": "#191c1e",
+                        "primary": "#c0c6d9",
+                        "on-primary-fixed-variant": "#404756",
+                        "surface-container": "#1d2022",
+                        "secondary-container": "#571bc1",
+                        "primary-fixed-dim": "#c0c6d9",
+                        "surface-dim": "#101415",
+                        "on-background": "#e0e3e5",
+                        "on-tertiary-fixed": "#002022",
+                        "outline": "#909096",
+                        "surface-bright": "#363a3b",
+                        "surface": "#101415",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e0e3e5",
+                        "surface-container-highest": "#323537",
+                        "tertiary-fixed": "#74f5ff",
+                        "error-container": "#93000a",
+                        "on-secondary-container": "#c4abff",
+                        "on-surface-variant": "#c6c6cc",
+                        "on-primary-container": "#737a8b",
+                        "outline-variant": "#45474c",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "primary-container": "#050b18",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "background": "#101415",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed-variant": "#004f54",
+                        "inverse-primary": "#585e6e",
+                        "on-tertiary-container": "#00878f",
+                        "secondary-fixed": "#e9ddff",
+                        "inverse-on-surface": "#2d3133",
+                        "on-secondary": "#3c0091",
+                        "secondary": "#d0bcff",
+                        "surface-variant": "#323537",
+                        "surface-container-high": "#272a2c",
+                        "on-surface": "#e0e3e5",
+                        "tertiary": "#00dbe7",
+                        "primary-fixed": "#dce2f5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "lg": "48px",
+                        "xs": "4px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Space Grotesk"],
+                        "display": ["Space Grotesk"],
+                        "headline-md": ["Space Grotesk"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "display": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(5, 11, 24, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 219, 231, 0.2);
+        }
+        .scan-line {
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 219, 231, 0.05) 50%);
+            background-size: 100% 4px;
+        }
+        .glow-cyan {
+            box-shadow: 0 0 30px rgba(0, 219, 231, 0.15);
+        }
+        .glow-violet {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-[#050B18] text-on-surface font-body-md overflow-x-hidden min-h-screen">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 h-20 bg-[#050B18]/80 backdrop-blur-xl border-b border-white/10 shadow-[0_0_20px_rgba(6,182,212,0.1)]">
+<div class="text-2xl font-light tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-violet-500 font-['Space_Grotesk'] uppercase">
+            LUMINA
+        </div>
+<div class="hidden md:flex gap-8 items-center">
+<nav class="flex gap-6">
+<a class="font-['Space_Grotesk'] tracking-widest uppercase text-cyan-400 border-b-2 border-cyan-400 hover:text-cyan-300 transition-colors duration-300" href="#">Vault</a>
+<a class="font-['Space_Grotesk'] tracking-widest uppercase text-slate-500 hover:text-cyan-300 transition-colors duration-300" href="#">Atmosphere</a>
+</nav>
+<div class="flex items-center gap-4 border-l border-white/10 pl-6">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer active:scale-95 transition-transform hover:text-cyan-300">history</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer active:scale-95 transition-transform hover:text-cyan-300">settings</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-cyan-500/30">
+<img alt="User profile" data-alt="close-up portrait of a man with minimalist lighting and cinematic blue tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwuKVaFXwB7V-VjQwhMN3fCmGL8ZmJOi6T31htGivq6AGiZyqAgLJBBvjp2pxDYWFqjIKAGPIbogku1f1hpt09waG4S6uIuOClW66IJnmgwKgdoGUbzLIBINYsCQFYUiDU7BH77NkiPXyUsZ0V4-bD9gUWd1LDE5yrUOtyDEVdvu2uGO3P56BEnXanVH4_SYZWCU9VnrBu5cfEfmaHRwgyqVGSj0N2L_mPEGvFaXPQRbnJ130DGhdbZ4P7zBVoe4q1Tzq3NKuybIU"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-32 px-gutter max-w-container-max mx-auto">
+<!-- Hero Welcome Section -->
+<section class="mb-xl text-center md:text-left relative">
+<div class="absolute -top-20 -left-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+<p class="font-label-sm text-label-sm text-tertiary-fixed-dim uppercase tracking-[0.3em] mb-sm">Acceso Autorizado</p>
+<h1 class="font-display text-[48px] md:text-display text-on-surface mb-md">Hola, <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-violet-400">Julián</span></h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Bienvenido a tu santuario digital. Tus fragmentos de tiempo están siendo preservados en la eternidad del espectro lumínico.</p>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
+<!-- Active Memory Status - Bento Large -->
+<div class="lg:col-span-8 group relative overflow-hidden rounded-xl glass-panel p-lg glow-cyan flex flex-col justify-between">
+<div class="scan-line absolute inset-0 pointer-events-none opacity-20"></div>
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-start gap-md">
+<div>
+<div class="flex items-center gap-sm mb-md">
+<span class="w-3 h-3 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
+<h2 class="font-headline-md text-headline-md">Mi Memoria Activa</h2>
+</div>
+<div class="mb-lg">
+<p class="font-label-sm text-label-sm text-slate-500 uppercase mb-xs">Identificador</p>
+<p class="font-headline-lg text-headline-lg text-on-surface">LMN-9042</p>
+</div>
+</div>
+<div class="flex-shrink-0 w-48 h-48 relative">
+<!-- Holographic Representation -->
+<div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-violet-500/20 rounded-full animate-spin-slow"></div>
+<img alt="Active Memory Sphere" class="w-full h-full object-cover rounded-full mix-blend-screen opacity-80" data-alt="ethereal glass sphere with swirling internal cyan and violet lights and microchips" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2wOicjN6UwqyhEMDOlL5EA7s5_XqkNPoGHPhNR8Tkjlb9LVFIgUXv2Yi6_uAbNPqyxlTxqgesIGWpp-AEjdN3-I38BoMOGX2VZb3vdEoPK6TfQU2mE9_cHebyYgALREonNBpAg5-Y5WXdQzs4ByFj9XALDeLI6ixDEK-l2WZ3xdZYR82O80cS0g6jo9jHpEdMrV3BBRdhAdHDsZPu1BTIohrx_sZvTzqj6LaU1KkXvEvuOw2u-mYe2yYSCoGJ_G12EWezAcsfMUo"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-cyan-400" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+</div>
+</div>
+<div class="relative z-10 space-y-md mt-lg">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-body-md text-body-md text-cyan-400 font-medium">En proceso de animación</p>
+<p class="font-label-sm text-label-sm text-slate-500">Estimado: 14 horas restantes</p>
+</div>
+<span class="font-display text-headline-lg text-on-surface/50">84%</span>
+</div>
+<div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-cyan-500 to-violet-500 w-[84%] shadow-[0_0_15px_rgba(6,182,212,0.5)]"></div>
+</div>
+</div>
+</div>
+<!-- Profile/Stats - Bento Small -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="glass-panel rounded-xl p-md glow-violet flex-1">
+<h3 class="font-label-sm text-label-sm text-slate-400 uppercase tracking-widest mb-md">Estadísticas de Alma</h3>
+<div class="space-y-md">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-on-surface-variant">Memorias Totales</span>
+<span class="font-headline-md text-on-surface">12</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-md text-on-surface-variant">Espacio en Bóveda</span>
+<span class="font-body-md text-on-surface">2.4 TB / 10 TB</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-md text-on-surface-variant">Nivel de Preservación</span>
+<span class="px-sm py-1 bg-violet-500/20 text-violet-400 text-label-sm rounded-full border border-violet-500/30">Tier II - Eternal</span>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-md flex flex-col items-center justify-center text-center gap-sm overflow-hidden relative group">
+<div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-cyan-400 text-3xl">verified_user</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Tu código de seguridad es válido por:</p>
+<p class="font-headline-md text-headline-md font-bold tracking-tighter">04:12:55</p>
+</div>
+</div>
+</div>
+<!-- Prominent CTA Section -->
+<section class="mt-xl text-center">
+<button class="relative group inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium rounded-xl group bg-gradient-to-br from-cyan-400 to-violet-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-800 active:scale-95 transition-all duration-300">
+<span class="relative px-12 py-6 transition-all ease-in duration-75 bg-[#050B18] rounded-[10px] group-hover:bg-opacity-0 flex items-center gap-md">
+<span class="font-display text-headline-md tracking-wide uppercase">Ver Mi Bóveda de Memorias</span>
+<span class="material-symbols-outlined text-3xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</span>
+<!-- Background glow -->
+<div class="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-violet-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
+</button>
+<p class="mt-md text-on-surface-variant font-body-md italic opacity-60">Explora tus recuerdos en 4D y revive la esencia de cada momento.</p>
+</section>
+<!-- Quick Access Memories -->
+<section class="mt-xl">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-headline-md text-headline-md">Recuerdos Recientes</h3>
+<a class="font-label-sm text-label-sm text-cyan-400 hover:underline" href="#">Ver Todo</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<div class="glass-panel rounded-xl overflow-hidden group cursor-pointer border-white/5 hover:border-cyan-500/40 transition-all">
+<div class="h-48 overflow-hidden relative">
+<img alt="Atardecer en los Alpes" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="scenic mountain lake at sunset with soft purple and orange sky reflecting on water" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4XauYNKv1mWPOlJMRlxmFOm9m8p2xHqO44P-_TjzQQD2AuNJCoFu3VMPquS0CnwW4vu92VKEE25MDhVtoltVfljqHA6E-tO2yVybDbuLv0-S_j2hdXaZTS01gibUTy8M7C4-BWjBCBsfeJ0RBT4aI7vWgGNuNWUypHye6qatZ9OYK1rvnYiVDlqJUI9mhDks3YmhKwn93FTqvrvSBpPtkUGg1YoR-U2nGkPxtBdnNy0TTUNUAVOSLc5zUEM2AkbB1en-v_k6ki1E"/>
+<div class="absolute top-4 right-4">
+<span class="bg-violet-500/80 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full uppercase tracking-tighter">Holograma</span>
+</div>
+</div>
+<div class="p-md">
+<p class="font-label-sm text-label-sm text-slate-500 mb-xs">Mayo 24, 2024</p>
+<h4 class="font-body-lg text-body-lg font-medium text-on-surface">Atardecer en los Alpes</h4>
+</div>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden group cursor-pointer border-white/5 hover:border-cyan-500/40 transition-all">
+<div class="h-48 overflow-hidden relative">
+<img alt="Boda de Sofía" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="elegant wedding ceremony reception with white flowers and soft bokeh lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOlwrS1NZ_OTIolK6nmvmgrC2-p8Dt-R2DHlKpJmG1z4b05BuoYoeIIYM9TTmbV9V8EPhHEx6tAFj8SIqlkNMvLrI6RZ6IaT8DDNqaLKXhsmNf-k4uqglgCbnTC5re32MfBNKx51yfnhBoboku15D0bP2BKoPLCRTjOwuxoxpAmT_i3RcyIEedOk0xHEhvedO4aCKC16X_xvd5R-dmlFjy41RA8CDl5Lv_sjB9HX-AFZpHQLuVw2cvdsZPGz3VsMDwjYmRfYg3ffA"/>
+<div class="absolute top-4 right-4">
+<span class="bg-cyan-500/80 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full uppercase tracking-tighter">Binaural</span>
+</div>
+</div>
+<div class="p-md">
+<p class="font-label-sm text-label-sm text-slate-500 mb-xs">Junio 12, 2024</p>
+<h4 class="font-body-lg text-body-lg font-medium text-on-surface">Celebración de Unión</h4>
+</div>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden group cursor-pointer border-white/5 hover:border-cyan-500/40 transition-all">
+<div class="h-48 overflow-hidden relative">
+<img alt="Sesión de Jazz" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="close-up of a vintage record player spinning a vinyl with warm analog light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuY2ml9_FYulIgrHi6zvEspmPIEW5ElhVO7XajPwz84dCAIPIiUduB5ThTPyPeUqBzQSDsPRqVvLL8LpEhwYjDmRJKpsXxRh5ep0di9iwad__qtgmv5SdhbvjKIVRNZn5-C8pQ720TK18Rc9D3_0-FcfQOR0ZXUJx7UJbhGXymdi5utJHAZEycqmnWH_8C6FFhffEYLGDVcVJEMOqPZwa4YzC8ySnUtqUrA2RuuG8x7hlDzz6razvqtglDMGJJfGlj4gCeVqZFWzU"/>
+<div class="absolute top-4 right-4">
+<span class="bg-violet-500/80 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full uppercase tracking-tighter">Full Core</span>
+</div>
+</div>
+<div class="p-md">
+<p class="font-label-sm text-label-sm text-slate-500 mb-xs">Agosto 05, 2024</p>
+<h4 class="font-body-lg text-body-lg font-medium text-on-surface">Ritmo de Verano</h4>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4 bg-[#050B18]/90 backdrop-blur-2xl border-t border-violet-500/20 shadow-[0_-10px_40px_rgba(139,92,246,0.15)]">
+<div class="flex flex-col items-center justify-center text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] font-['Space_Grotesk'] text-[10px] font-medium tracking-tight">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome_mosaic</span>
+<span>Vault</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 opacity-60 font-['Space_Grotesk'] text-[10px] font-medium tracking-tight hover:opacity-100 transition-opacity active:scale-90 duration-300">
+<span class="material-symbols-outlined">add_circle</span>
+<span>Create</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 opacity-60 font-['Space_Grotesk'] text-[10px] font-medium tracking-tight hover:opacity-100 transition-opacity active:scale-90 duration-300">
+<span class="material-symbols-outlined">blur_on</span>
+<span>Atmosphere</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 opacity-60 font-['Space_Grotesk'] text-[10px] font-medium tracking-tight hover:opacity-100 transition-opacity active:scale-90 duration-300">
+<span class="material-symbols-outlined">person</span>
+<span>Profile</span>
+</div>
+</nav>
+<!-- Contextual FAB (Only for Home/Dashboard) -->
+<button class="fixed bottom-24 right-8 w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-400 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+</body></html>

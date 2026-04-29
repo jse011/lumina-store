@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .inner-glow-cyan {
+            box-shadow: inset 0 0 20px rgba(34, 211, 238, 0.1);
+        }
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(34, 211, 238, 0.1);
+        }
+        .scan-line {
+            background: linear-gradient(to bottom, transparent 50%, rgba(34, 211, 238, 0.02) 50%);
+            background-size: 100% 4px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#c4abff",
+                        "on-tertiary-container": "#00878f",
+                        "surface-container-lowest": "#0b0f10",
+                        "inverse-on-surface": "#2d3133",
+                        "surface-variant": "#323537",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "inverse-primary": "#585e6e",
+                        "background": "#050B18",
+                        "tertiary": "#00dbe7",
+                        "on-surface": "#e0e3e5",
+                        "on-surface-variant": "#c6c6cc",
+                        "tertiary-fixed-dim": "#00dbe7",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#191c1e",
+                        "surface-container-high": "#272a2c",
+                        "primary-container": "#050b18",
+                        "tertiary-container": "#000e0f",
+                        "on-background": "#e0e3e5",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#571bc1",
+                        "surface-tint": "#c0c6d9",
+                        "primary-fixed": "#dce2f5",
+                        "on-secondary-fixed": "#23005c",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#323537",
+                        "surface": "#101415",
+                        "on-primary-fixed-variant": "#404756",
+                        "inverse-surface": "#e0e3e5",
+                        "outline": "#909096",
+                        "on-primary": "#2a303f",
+                        "on-primary-container": "#737a8b",
+                        "primary-fixed-dim": "#c0c6d9",
+                        "surface-container": "#1d2022",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-bright": "#363a3b",
+                        "primary": "#c0c6d9",
+                        "on-tertiary-fixed-variant": "#004f54",
+                        "on-primary-fixed": "#151c29",
+                        "tertiary-fixed": "#74f5ff",
+                        "outline-variant": "#45474c",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "on-secondary": "#3c0091",
+                        "surface-dim": "#101415",
+                        "secondary": "#d0bcff",
+                        "on-tertiary-fixed": "#002022",
+                        "on-tertiary": "#00363a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "base": "8px",
+                        "sm": "12px",
+                        "lg": "48px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Space Grotesk"],
+                        "headline-md": ["Space Grotesk"],
+                        "display": ["Space Grotesk"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                        "display": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-12 h-20 bg-[#050B18]/70 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] inner-glow-cyan">
+<div class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-violet-500 font-headline-md">
+            Lumina Recuerdos
+        </div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-['Space_Grotesk'] tracking-tight uppercase text-xs font-semibold text-slate-400 hover:text-white transition-all duration-500" href="#">Gallery</a>
+<a class="font-['Space_Grotesk'] tracking-tight uppercase text-xs font-semibold text-slate-400 hover:text-white transition-all duration-500" href="#">Chronology</a>
+<a class="font-['Space_Grotesk'] tracking-tight uppercase text-xs font-semibold text-slate-400 hover:text-white transition-all duration-500" href="#">The Tech</a>
+<a class="font-['Space_Grotesk'] tracking-tight uppercase text-xs font-semibold text-slate-400 hover:text-white transition-all duration-500" href="#">Philosophy</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-400 hover:text-cyan-400 transition-colors">account_circle</button>
+<button class="bg-gradient-to-r from-cyan-500 to-violet-600 px-6 py-2 rounded-full font-label-sm text-white hover:scale-105 transition-transform">
+                Preserve Now
+            </button>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center pt-24 pb-xl px- gutter relative">
+<!-- Background Elements -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+<div class="absolute -top-[20%] -left-[10%] w-[50%] h-[60%] bg-cyan-500/10 blur-[120px] rounded-full"></div>
+<div class="absolute -bottom-[20%] -right-[10%] w-[50%] h-[60%] bg-violet-500/10 blur-[120px] rounded-full"></div>
+</div>
+<div class="w-full max-w-[600px] relative z-10 flex flex-col items-center">
+<!-- Holographic Validation Card -->
+<div class="glass-panel scan-line w-full rounded-xl p-lg bg-white/5 relative overflow-hidden flex flex-col items-center text-center shadow-[0_0_50px_rgba(34,211,238,0.1)]">
+<!-- Success Aura -->
+<div class="w-24 h-24 rounded-full bg-cyan-400/20 flex items-center justify-center mb-md border border-cyan-400/30 animate-pulse">
+<span class="material-symbols-outlined text-5xl text-cyan-400" data-weight="fill">verified</span>
+</div>
+<div class="space-y-base mb-lg">
+<h1 class="font-headline-lg text-headline-lg text-white">¡Código Validado!</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[420px]">
+                        Ahora, vincula tu cuenta para proteger tu recuerdo para siempre.
+                    </p>
+</div>
+<!-- Verified Code Chip -->
+<div class="bg-cyan-900/30 border border-cyan-500/30 px-6 py-3 rounded-lg mb-lg">
+<span class="font-['Space_Grotesk'] text-xl tracking-[0.5em] text-cyan-300 font-bold">LMN-992-ARC</span>
+</div>
+<!-- Google Link Action -->
+<button class="w-full group relative flex items-center justify-center gap-4 bg-white hover:bg-slate-100 text-slate-900 font-label-sm py-4 rounded-xl transition-all duration-300 transform active:scale-95 shadow-xl">
+<img alt="Google Logo" class="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDac4v5p23H78joc2iKZXMSsagP79RXI91VvF-aWsyxVC9lqoU6K0WsXhm6yPcXp9Wpkm7DzAslSiCuWJi3ZYFVQwox-c8csHHrZODQ_AbsE6sygun-am8OgPM8BjJr1d7Yb78cUQOZ19XMIaUZS0x-Bc6D1t-ur4JChakFbbtXNKqnF4DbyZAIgV3tQ9qR4cHkFmvoC9hsmpaURSQc4LYRALqLgKGHwqHvsAYVFyUsMHPbrQ-HuDZT1EMsFpnNELn4cIRYA86NJI4"/>
+<span class="text-lg font-semibold">Continuar con Google</span>
+</button>
+<div class="mt-lg grid grid-cols-2 gap-4 w-full">
+<!-- Benefit 1 -->
+<div class="flex flex-col items-center p-md rounded-lg bg-white/5 border border-white/5 text-center transition-all hover:bg-white/10">
+<span class="material-symbols-outlined text-violet-400 mb-2">devices</span>
+<p class="font-label-sm text-[10px] uppercase text-violet-300">Acceso desde cualquier dispositivo</p>
+</div>
+<!-- Benefit 2 -->
+<div class="flex flex-col items-center p-md rounded-lg bg-white/5 border border-white/5 text-center transition-all hover:bg-white/10">
+<span class="material-symbols-outlined text-cyan-400 mb-2">shield_lock</span>
+<p class="font-label-sm text-[10px] uppercase text-cyan-300">Seguridad total de datos</p>
+</div>
+</div>
+<!-- Security Note -->
+</div>
+<!-- Contextual Image Placeholder (Abstract) -->
+<div class="mt-lg w-full h-[120px] rounded-xl overflow-hidden glass-panel opacity-50 relative group">
+<div class="absolute inset-0 bg-gradient-to-t from-[#050B18] to-transparent z-10"></div>
+<img class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110" data-alt="abstract digital light particles flowing in a dark blue void representing secure data transmission and digital immortality" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm3cdD-jySgW5HXb8YZCmF7A6xY-NDoIFUO0tzCgLen3AvJOQr5OXoB7hGvGD-2tI0LTu0sm42sHZxJOOkEpfybUlIetYK1CzwcUEK3Ty__opC9F8N9wsKxQSCnh7pntnxTye36j9FBI9_PENki2GUMTAnqUhfuautex-gqKanqmiS4mPq_8-BZ-j0hcsBLfNGRHVsNIwlY6BogkoRdYfSMdWUjzKQOgFrDbxGTGAmwVxRoIFMbcYnVXxgbnsUuEMPKNOiteasVo4"/>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-[#050B18] border-t border-cyan-500/10 py-16">
+<div class="flex flex-col items-center gap-8 w-full max-w-7xl mx-auto px-8">
+<div class="text-lg font-medium text-cyan-400 font-headline-md uppercase tracking-widest">
+                Lumina Recuerdos
+            </div>
+<div class="flex gap-12 font-['Space_Grotesk'] text-sm tracking-wide">
+<a class="text-slate-500 hover:text-violet-300 transition-colors opacity-80 hover:opacity-100" href="#">Essence Privacy</a>
+<a class="text-slate-500 hover:text-violet-300 transition-colors opacity-80 hover:opacity-100" href="#">Artifact Protocol</a>
+<a class="text-slate-500 hover:text-violet-300 transition-colors opacity-80 hover:opacity-100" href="#">Support</a>
+</div>
+<p class="text-slate-500 font-body-md text-sm opacity-60">
+                © 2024 Lumina Recuerdos. The bridge to digital immortality.
+            </p>
+</div>
+</footer>
+</body></html>
