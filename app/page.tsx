@@ -1,28 +1,35 @@
-import Navbar from '@/components/Navbar';
-import Hero from '@/components/Hero';
-import Access from '@/components/Access';
-import Catalog from '@/components/Catalog';
-import Gallery from '@/components/Gallery';
-import Process from '@/components/Process';
-import Testimonials from '@/components/Testimonials';
-import Delivery from '@/components/Delivery';
-import Footer from '@/components/Footer';
-import WhatsAppFAB from '@/components/WhatsAppFAB';
-import Authorized from '@/components/Authorized';
+import dynamic from 'next/dynamic';
+import Navbar from "@/modules/home/components/layout/Navbar";
+import AccessCard from "@/modules/home/components/features/AccessCard";
+import Hero from "@/modules/home/components/features/Hero";
+import Authorized from "@/modules/home/components/features/Authorized";
+import Catalog from "@/modules/home/components/features/Catalog";
+import Process from "@/modules/home/components/features/Process";
+import Delivery from "@/modules/home/components/features/Delivery";
+import Footer from "@/components/layout/Footer";
+import WhatsAppFAB from "@/modules/home/components/common/WhatsAppFAB";
 
-export default function Home() {
+// Lazy loading heavy components below the fold for better performance
+const DynamicGallery = dynamic(() => import("@/modules/home/components/features/Gallery"), {
+  loading: () => <div className="py-24 text-center text-white/50">Cargando Galería...</div>,
+});
+const DynamicTestimonials = dynamic(() => import("@/modules/home/components/features/Testimonials"), {
+  loading: () => <div className="py-24 text-center text-white/50">Cargando Testimonios...</div>,
+});
+
+export default function HomePage() {
   return (
     <>
       <Navbar />
       <main>
-        <Access
+        <AccessCard
           hero={<Hero />}
           authorized={<Authorized />}
         />
         <Catalog />
         <Process />
-        <Gallery />
-        <Testimonials />
+        <DynamicGallery />
+        <DynamicTestimonials />
         <Delivery />
       </main>
       <Footer />
