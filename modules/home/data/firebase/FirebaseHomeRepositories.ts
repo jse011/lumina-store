@@ -26,6 +26,15 @@ export class FirebaseProductRepository implements IProductRepository {
     return [];
   }
 
+  async getProductById(id: string): Promise<Product | null> {
+    const dbRef = ref(database, `${getBasePath()}/products/${id}`);
+    const snapshot = await get(dbRef);
+    if (snapshot.exists()) {
+      return snapshot.val() as Product;
+    }
+    return null;
+  }
+
   async saveProduct(product: Product): Promise<void> {
     const dbRef = ref(database, `${getBasePath()}/products/${product.id}`);
     await set(dbRef, product);
