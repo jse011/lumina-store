@@ -79,4 +79,10 @@ export class FirebaseCodeRepository implements ICodeRepository {
     const snapshot = await get(dbRef);
     return snapshot.exists();
   }
+
+  async isUserRegistered(userId: string): Promise<boolean> {
+    const dbRef = ref(database, `${getBasePath()}/users/${userId}`);
+    const snapshot = await get(dbRef);
+    return snapshot.exists();
+  }
 }

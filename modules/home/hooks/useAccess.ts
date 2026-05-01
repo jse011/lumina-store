@@ -11,7 +11,7 @@ export function useAccess(
   const [isValidating, setIsValidating] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [showValidated, setShowValidated] = useState(false);
-  const [errorType, setErrorType] = useState<'empty' | 'invalid' | 'used' | 'none'>('none');
+  const [errorType, setErrorType] = useState<'empty' | 'invalid' | 'used' | 'not_registered' | 'none'>('none');
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -88,6 +88,7 @@ export function useAccess(
     setShowValidated,
     errorType,
     handleValidate,
-    handleLinkUser
+    handleLinkUser,
+    setErrorType
   };
 }
