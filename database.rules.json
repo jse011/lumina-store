@@ -42,14 +42,14 @@
           },
           "resources": {
             ".read": "auth != null",
-            ".write": "auth != null && root.child('produccion/code').child($code).child('ownerEmail').val() === auth.token.email"
+            ".write": "auth != null && newData.parent().child('ownerEmail').val() === auth.token.email"
           }
         }
       },
       "users": {
-        "$userEmail": {
-          ".read": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
-          ".write": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
+        "$userId": {
+          ".read": "auth != null && $userId === auth.uid",
+          ".write": "auth != null && $userId === auth.uid",
           "credits": {
             ".validate": "
               (
