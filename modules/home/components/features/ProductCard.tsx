@@ -45,6 +45,33 @@ export default function ProductCard({ product, whatsappNumber, whatsappMessageTe
     setIsMuted(!isMuted);
   };
 
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const shareUrl = `${window.location.origin}/p/${product.id}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Lumina - ${product.name}`,
+          text: product.description,
+          url: shareUrl,
+        });
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        // Podríamos usar un toast aquí en el futuro
+        alert('Enlace copiado al portapapeles');
+      } catch (err) {
+        console.error('Error al copiar:', err);
+      }
+    }
+  };
+
   return (
     <div className="relative w-full h-[100dvh] md:h-[650px] md:max-w-[360px] md:mx-auto md:rounded-[2rem] md:shadow-2xl overflow-hidden bg-black group">
       
@@ -54,7 +81,7 @@ export default function ProductCard({ product, whatsappNumber, whatsappMessageTe
           <video
             ref={videoRef}
             src={resolveUrl(currentMedia)}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
             loop
             muted={isMuted}
             playsInline
@@ -102,7 +129,10 @@ export default function ProductCard({ product, whatsappNumber, whatsappMessageTe
           </span>
         </button>
         
-        <button className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white border-white/20 hover:scale-110 transition-transform">
+        <button 
+          onClick={handleShare}
+          className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white border-white/20 hover:scale-110 transition-transform"
+        >
           <span className="material-symbols-outlined text-2xl">share</span>
         </button>
       </div>

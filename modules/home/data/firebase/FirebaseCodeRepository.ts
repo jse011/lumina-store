@@ -1,27 +1,81 @@
 import { database } from '@/core/lib/firebase';
-import { ref, get, set } from 'firebase/database';
+import { ref, get, update } from 'firebase/database';
 import { ICodeRepository } from '../../repositories';
+
+const getBasePath = () => {
+  return process.env.NODE_ENV === 'production' ? 'produccion' : 'prueba';
+};
 
 export class FirebaseCodeRepository implements ICodeRepository {
   async validateCode(code: string): Promise<boolean> {
-    const dbRef = ref(database, `produccion/${code}`);
+    const dbRef = ref(database, `${getBasePath()}/code/${code}`);
     const snapshot = await get(dbRef);
     return snapshot.exists();
   }
 
   async assignCodeToUser(code: string, email: string): Promise<void> {
-    const dbRef = ref(database, `produccion/${code}/ownerEmail`);
-    await set(dbRef, email);
+    const basePath = getBasePath();
+    const sanitizedEmail = email.replace(/\./g, ',');
+
+    // 1. Obtener datos del código (para saber cuántos créditos vale)
+    const codeRef = ref(database, `${basePath}/code/${code}`);
+    const codeSnapshot = await get(codeRef);
+    const codeData = codeSnapshot.val();
     
-    const resourcesRef = ref(database, `produccion/${code}/resources`);
-    const resourcesSnapshot = await get(resourcesRef);
-    if (!resourcesSnapshot.exists()) {
-      await set(resourcesRef, { initialized: true, createdAt: new Date().toISOString() });
+    if (!codeSnapshot.exists()) {
+      throw new Error("El código no existe.");
     }
+
+    const creditsToAdd = codeData?.credits || 0;
+    const existingOwner = codeData?.ownerEmail;
+
+    // 2. Validar si el código ya fue usado por alguien más
+    if (existingOwner && existingOwner !== email) {
+      throw new Error("El código ya ha sido utilizado por otro usuario.");
+    }
+
+    // 3. Verificar si el usuario ya tiene este código activado
+    const userCodeRef = ref(database, `${basePath}/users/${sanitizedEmail}/codes/${code}`);
+    const userCodeSnapshot = await get(userCodeRef);
+    if (userCodeSnapshot.exists()) {
+      return; // Ya lo tiene, no hacemos nada
+    }
+
+    // 4. Preparar actualización atómica
+    const userCreditsRef = ref(database, `${basePath}/users/${sanitizedEmail}/credits`);
+    const userCreditsSnapshot = await get(userCreditsRef);
+    const currentCredits = userCreditsSnapshot.val() || 0;
+
+    const updates: any = {};
+    
+    // Asignar dueño al código
+    updates[`code/${code}/ownerEmail`] = email;
+    
+    // Inicializar recursos si no existen
+    updates[`code/${code}/resources`] = {
+      initialized: true,
+      activatedAt: new Date().toISOString()
+    };
+
+    // Actualizar créditos del usuario
+    updates[`users/${sanitizedEmail}/credits`] = currentCredits + creditsToAdd;
+    
+    // Registrar el código en el historial del usuario
+    updates[`users/${sanitizedEmail}/codes/${code}`] = {
+      activatedAt: new Date().toISOString(),
+      creditsEarned: creditsToAdd
+    };
+
+    // Campo auxiliar para que las Security Rules validen que el incremento es correcto
+    updates[`users/${sanitizedEmail}/lastCodeRedeemed`] = code;
+
+    // Ejecutar todo de forma atómica
+    await update(ref(database, basePath), updates);
   }
 
+
   async isCodeAssigned(code: string): Promise<boolean> {
-    const dbRef = ref(database, `produccion/${code}/ownerEmail`);
+    const dbRef = ref(database, `${getBasePath()}/code/${code}/ownerEmail`);
     const snapshot = await get(dbRef);
     return snapshot.exists();
   }

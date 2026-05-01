@@ -90,3 +90,45 @@ yarn dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la aplicación.
+
+---
+
+## 🔐 Seguridad (Firebase Realtime Database)
+
+El proyecto implementa un sistema de seguridad robusto basado en **Security Rules** para prevenir fraudes, especialmente en el sistema de créditos.
+
+### Lógica de Protección de Créditos
+Para evitar que un usuario manipule su saldo de créditos manualmente desde la consola o herramientas externas, se han implementado las siguientes medidas:
+
+1.  **Actualización Atómica**: La redención de un código se realiza mediante una operación `update()` atómica que vincula el código, el usuario y el saldo en un solo paso.
+2.  **Validación Cruzada**: Las reglas de seguridad detectan qué código se está redimiendo (mediante el campo `lastCodeRedeemed`) y verifican en tiempo real que el incremento de créditos sea **exactamente igual** al valor configurado para ese código en la base de datos maestra.
+3.  **Aislamiento de Usuario**: Cada usuario solo tiene permisos de lectura y escritura sobre su propio nodo, identificado por su email sanitizado (reemplazando `.` por `,`), validado contra su token de autenticación.
+
+### Reglas de Seguridad Actuales
+
+```json
+{
+  "rules": {
+    "produccion": {
+      "code": {
+        "$code": {
+          ".read": true,
+          "ownerEmail": {
+            ".write": "auth != null && (!data.exists() || data.val() === auth.token.email)"
+          },
+          "credits": { ".write": false }
+        }
+      },
+      "users": {
+        "$userEmail": {
+          ".read": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
+          ".write": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
+          "credits": {
+            ".validate": "((data.exists() && newData.val() === data.val() + root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val()) || (!data.exists() && newData.val() === root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val())) && newData.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists()"
+          }
+        }
+      }
+    }
+  }
+}
+```
