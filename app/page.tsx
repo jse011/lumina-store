@@ -27,13 +27,13 @@ export default function HomePage() {
           authorized={<Authorized />}
         />
         <Catalog />
-        <Process />
+        {/*<Process />*/}
         <DynamicGallery />
         <DynamicTestimonials />
         <Delivery />
       </main>
       <Footer />
-      <WhatsAppFAB />
+      {/*<WhatsAppFAB />*/}
     </>
   );
 }

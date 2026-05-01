@@ -26,7 +26,7 @@ export default async function Authorized() {
                 <section className="mt-16 md:mt-24 text-center">
                     <button className="relative group inline-flex items-center justify-center p-0.5 overflow-hidden rounded-2xl bg-gradient-to-br from-tertiary to-secondary active:scale-95 transition-all duration-300">
                         <span className="relative px-10 py-5 transition-all ease-in duration-75 bg-[#050B18] rounded-[14px] group-hover:bg-opacity-0 flex items-center gap-4">
-                            <span className="font-display text-xl md:text-2xl text-white font-bold tracking-wide uppercase">Ver Mi Bóveda</span>
+                            <span className="font-display text-xl md:text-2xl text-white font-bold tracking-wide uppercase">Ver mis hologramas</span>
                             <span className="material-symbols-outlined text-2xl text-white group-hover:translate-x-2 transition-transform">arrow_forward</span>
                         </span>
                         {/* Background glow */}
