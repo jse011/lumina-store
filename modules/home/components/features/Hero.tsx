@@ -55,23 +55,83 @@ export default async function Hero() {
           </div>
         </div>
 
-        <div className="relative group max-w-md mx-auto md:max-w-none">
-          <div className="absolute -inset-4 bg-gradient-to-tr from-tertiary/20 to-secondary/20 blur-3xl opacity-50 group-hover:opacity-80 transition-opacity"></div>
-          <div className="relative rounded-3xl overflow-hidden glass-panel border border-tertiary/30 p-4 shadow-2xl">
-            {heroImageUrl ? (
-              <Image
-                alt="Cubo holográfico"
-                className="w-full aspect-square object-cover rounded-2xl"
-                src={heroImageUrl}
-                width={600}
-                height={600}
-                priority
-              />
-            ) : (
-               <div className="w-full aspect-square rounded-2xl bg-slate-800 animate-pulse"></div>
-            )}
-            <div className="absolute inset-0 scan-line pointer-events-none opacity-30"></div>
+        <div className="relative group max-w-md mx-auto md:max-w-none hidden md:block">
+          <div className="absolute -inset-10 bg-gradient-to-tr from-tertiary/20 to-secondary/20 blur-[80px] opacity-40 group-hover:opacity-60 transition-opacity"></div>
+          
+          {/* Phone Frame */}
+          <div className="relative w-[300px] h-[600px] mx-auto border-[12px] border-slate-900 rounded-[3rem] bg-slate-900 shadow-2xl overflow-hidden ring-1 ring-white/10 group-hover:scale-[1.02] transition-transform duration-500">
+            {/* Camera/Notch */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-900 rounded-b-2xl z-20 flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-slate-800 mr-2"></div>
+              <div className="w-12 h-1 rounded-full bg-slate-800"></div>
+            </div>
+
+            {/* Video Content */}
+            <div className="relative w-full h-full rounded-[2.2rem] overflow-hidden bg-black">
+              {heroImageUrl && heroImageUrl.includes('drive.google.com') ? (
+                <iframe
+                  src={heroImageUrl.replace(/\/view.*$/, '/preview').replace(/\/edit.*$/, '/preview') + '?autoplay=1&mute=1&loop=1'}
+                  className="w-full h-[120%] -mt-[10%] object-cover pointer-events-none border-none"
+                  allow="autoplay"
+                />
+              ) : heroImageUrl ? (
+                <Image
+                  alt="Hero Visual"
+                  className="w-full h-full object-cover"
+                  src={heroImageUrl}
+                  width={600}
+                  height={1200}
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full bg-slate-800 animate-pulse"></div>
+              )}
+
+              {/* YouTube Shorts UI Overlays */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+              
+              {/* Bottom Info */}
+              <div className="absolute bottom-6 left-4 right-12 text-white">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-tertiary to-secondary p-[1px]">
+                    <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-xs">store</span>
+                    </div>
+                  </div>
+                  <span className="text-sm font-bold tracking-tight">@lumina_oficial</span>
+                </div>
+                <p className="text-xs line-clamp-2 opacity-90 leading-relaxed font-medium">
+                  {heroSubtitle}
+                </p>
+              </div>
+
+              {/* Action Icons */}
+              <div className="absolute right-3 bottom-10 flex flex-col gap-5 items-center text-white">
+                <div className="flex flex-col items-center">
+                  <div className="p-2 rounded-full bg-white/10 backdrop-blur-md mb-1 border border-white/5">
+                    <span className="material-symbols-outlined text-xl">favorite</span>
+                  </div>
+                  <span className="text-[10px] font-bold">12.5k</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="p-2 rounded-full bg-white/10 backdrop-blur-md mb-1 border border-white/5">
+                    <span className="material-symbols-outlined text-xl">chat</span>
+                  </div>
+                  <span className="text-[10px] font-bold">482</span>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="p-2 rounded-full bg-white/10 backdrop-blur-md mb-1 border border-white/5">
+                    <span className="material-symbols-outlined text-xl">share</span>
+                  </div>
+                  <span className="text-[10px] font-bold">Compartir</span>
+                </div>
+                <div className="w-8 h-8 rounded-lg bg-slate-800 border-2 border-white/20 animate-spin-slow">
+                   <div className="w-full h-full bg-gradient-to-tr from-tertiary to-secondary opacity-50"></div>
+                </div>
+              </div>
+            </div>
           </div>
+          <div className="absolute inset-0 scan-line pointer-events-none opacity-10"></div>
         </div>
       </div>
     </section>
