@@ -16,7 +16,7 @@ interface AccessCardProps {
 }
 
 export default function AccessCard({ hero, authorized }: AccessCardProps) {
-  const { isAuthorized, login } = useAuth();
+  const { isAuthorized, login, logout } = useAuth();
 
   const codeRepository = useMemo(() => new FirebaseCodeRepository(), []);
 
@@ -29,6 +29,7 @@ export default function AccessCard({ hero, authorized }: AccessCardProps) {
     setShowErrorDialog,
     showValidated,
     setShowValidated,
+    errorType,
     handleValidate,
     handleLinkUser
   } = useAccess(codeRepository, () => { });
@@ -37,7 +38,13 @@ export default function AccessCard({ hero, authorized }: AccessCardProps) {
     try {
       const loggedUser = await login();
       if (loggedUser && loggedUser.email) {
-        await handleLinkUser(loggedUser.email, async () => { });
+        try {
+          await handleLinkUser(loggedUser.email, async () => { });
+        } catch (error) {
+          console.error("Linking failed, logging out:", error);
+          setShowValidated(false);
+          await logout();
+        }
       }
     } catch (error) {
       console.error(error);
@@ -53,6 +60,17 @@ export default function AccessCard({ hero, authorized }: AccessCardProps) {
       <CodeErrorDialog
         open={showErrorDialog}
         onClose={() => setShowErrorDialog(false)}
+        lockoutTime={lockoutTime}
+        title={
+          errorType === 'empty' ? "Código Requerido" : 
+          errorType === 'used' ? "Código ya utilizado" : 
+          undefined
+        }
+        description={
+          errorType === 'empty' ? "Por favor, ingresa tu código de acceso para continuar con la validación." : 
+          errorType === 'used' ? "Este código ya ha sido vinculado a otra cuenta. Si crees que es un error, contacta a soporte." : 
+          undefined
+        }
       />
 
       {showValidated && (

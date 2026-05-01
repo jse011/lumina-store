@@ -1,34 +1,23 @@
 "use client";
 
-import { useEffect, useState } from 'react';
 import { formatTimeMMSS } from '../../utils/formatTime';
 
 interface CodeErrorDialogProps {
   open: boolean;
   onClose: () => void;
+  lockoutTime: number;
+  title?: string;
+  description?: string;
 }
 
-export default function CodeErrorDialog({ open, onClose }: CodeErrorDialogProps) {
-  const [countdown, setCountdown] = useState(299); // 4:59
-
-  useEffect(() => {
-    if (!open) {
-      setCountdown(299);
-      return;
-    }
-    const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 0) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [open]);
-
-  const formattedTime = formatTimeMMSS(countdown);
+export default function CodeErrorDialog({ 
+  open, 
+  onClose, 
+  lockoutTime,
+  title = "Código Incorrecto o No Válido",
+  description = "El código ingresado no se encuentra en nuestro sistema o ya ha sido utilizado. Por seguridad, se ha limitado el número de intentos."
+}: CodeErrorDialogProps) {
+  const formattedTime = formatTimeMMSS(lockoutTime);
 
   if (!open) return null;
 
@@ -50,21 +39,22 @@ export default function CodeErrorDialog({ open, onClose }: CodeErrorDialogProps)
           </div>
 
           <h3 className="font-display text-2xl text-white font-bold mb-4">
-            Código Incorrecto o No Válido
+            {title}
           </h3>
           <p className="text-on-surface-variant text-sm leading-relaxed mb-6">
-            El código ingresado no se encuentra en nuestro sistema o ya ha sido
-            utilizado. Por seguridad, se ha limitado el número de intentos.
+            {description}
           </p>
 
-          <div className="bg-red-500/5 border border-red-500/10 rounded-xl p-4 mb-8">
-            <p className="text-red-400 font-display text-xs uppercase tracking-widest font-bold">
-              Reintento disponible en:
-            </p>
-            <p className="text-white font-display text-2xl font-bold mt-1 tracking-tighter">
-              {formattedTime}
-            </p>
-          </div>
+          {lockoutTime > 0 && (
+            <div className="bg-red-500/5 border border-red-500/10 rounded-xl p-4 mb-8">
+              <p className="text-red-400 font-display text-xs uppercase tracking-widest font-bold">
+                Reintento disponible en:
+              </p>
+              <p className="text-white font-display text-2xl font-bold mt-1 tracking-tighter">
+                {formattedTime}
+              </p>
+            </div>
+          )}
 
           <button
             onClick={onClose}

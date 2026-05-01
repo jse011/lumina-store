@@ -11,6 +11,7 @@ export function useAccess(
   const [isValidating, setIsValidating] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [showValidated, setShowValidated] = useState(false);
+  const [errorType, setErrorType] = useState<'empty' | 'invalid' | 'used' | 'none'>('none');
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -26,6 +27,7 @@ export function useAccess(
     if (lockoutTime > 0) return;
 
     if (!code.trim()) {
+      setErrorType('empty');
       setShowErrorDialog(true);
       return;
     }
@@ -41,10 +43,12 @@ export function useAccess(
         const nextAttempts = attempts + 1;
         setAttempts(nextAttempts);
         setLockoutTime(10 * nextAttempts);
+        setErrorType('invalid');
         setShowErrorDialog(true);
       }
     } catch (error) {
       console.error("Error validating code:", error);
+      setErrorType('invalid');
       setShowErrorDialog(true);
     } finally {
       setIsValidating(false);
@@ -57,9 +61,18 @@ export function useAccess(
       if (code && email) {
         await codeRepository.assignCodeToUser(code, email);
         onAuthorized();
+        setCode("");
+        setShowValidated(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error linking user:", error);
+      if (error.message?.includes("utilizado")) {
+        setErrorType('used');
+      } else {
+        setErrorType('invalid');
+      }
+      setShowErrorDialog(true);
+      throw error;
     }
   };
 
@@ -73,6 +86,7 @@ export function useAccess(
     setShowErrorDialog,
     showValidated,
     setShowValidated,
+    errorType,
     handleValidate,
     handleLinkUser
   };
