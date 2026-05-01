@@ -14,6 +14,8 @@ export default async function Catalog() {
     <section className="md:py-24 md:max-w-7xl md:mx-auto md:px-8" id="catalog">
       {/* Header ajustado al contenido en móvil */}
       <div className="w-full py-12 md:py-0 md:h-auto flex flex-col px-4 md:px-0 md:mb-16 relative">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+
         <div className="space-y-4 text-center md:text-left">
           <span className="font-display text-secondary uppercase tracking-[0.3em] text-[10px] md:text-xs font-bold block">Catálogo de Eternidad</span>
           <h2 className="font-display text-3xl md:text-5xl text-white font-medium">Colección de Memorias</h2>
