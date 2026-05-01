@@ -13,9 +13,8 @@ export class FirebaseCodeRepository implements ICodeRepository {
     return snapshot.exists();
   }
 
-  async assignCodeToUser(code: string, email: string): Promise<void> {
+  async assignCodeToUser(code: string, userId: string, email: string): Promise<void> {
     const basePath = getBasePath();
-    const sanitizedEmail = email.replace(/\./g, ',');
 
     // 1. Obtener datos del código (para saber cuántos créditos vale)
     const codeRef = ref(database, `${basePath}/code/${code}`);
@@ -35,14 +34,14 @@ export class FirebaseCodeRepository implements ICodeRepository {
     }
 
     // 3. Verificar si el usuario ya tiene este código activado
-    const userCodeRef = ref(database, `${basePath}/users/${sanitizedEmail}/codes/${code}`);
+    const userCodeRef = ref(database, `${basePath}/users/${userId}/codes/${code}`);
     const userCodeSnapshot = await get(userCodeRef);
     if (userCodeSnapshot.exists()) {
       return; // Ya lo tiene, no hacemos nada
     }
 
     // 4. Preparar actualización atómica
-    const userCreditsRef = ref(database, `${basePath}/users/${sanitizedEmail}/credits`);
+    const userCreditsRef = ref(database, `${basePath}/users/${userId}/credits`);
     const userCreditsSnapshot = await get(userCreditsRef);
     const currentCredits = userCreditsSnapshot.val() || 0;
 
@@ -57,17 +56,18 @@ export class FirebaseCodeRepository implements ICodeRepository {
       activatedAt: new Date().toISOString()
     };
 
-    // Actualizar créditos del usuario
-    updates[`users/${sanitizedEmail}/credits`] = currentCredits + creditsToAdd;
+    // Actualizar datos del usuario
+    updates[`users/${userId}/email`] = email;
+    updates[`users/${userId}/credits`] = currentCredits + creditsToAdd;
     
     // Registrar el código en el historial del usuario
-    updates[`users/${sanitizedEmail}/codes/${code}`] = {
+    updates[`users/${userId}/codes/${code}`] = {
       activatedAt: new Date().toISOString(),
       creditsEarned: creditsToAdd
     };
 
     // Campo auxiliar para que las Security Rules validen que el incremento es correcto
-    updates[`users/${sanitizedEmail}/lastCodeRedeemed`] = code;
+    updates[`users/${userId}/lastCodeRedeemed`] = code;
 
     // Ejecutar todo de forma atómica
     await update(ref(database, basePath), updates);

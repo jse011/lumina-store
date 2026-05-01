@@ -5,6 +5,30 @@
       ".write": true
     },
     "produccion": {
+      "products": {
+        ".read": true,
+        ".write": false
+      },
+      "settings": {
+        ".read": true,
+        ".write": false
+      },
+      "testimonials": {
+        ".read": true,
+        ".write": false
+      },
+      "processSteps": {
+        ".read": true,
+        ".write": false
+      },
+      "navItems": {
+        ".read": true,
+        ".write": false
+      },
+      "gallery": {
+        ".read": true,
+        ".write": false
+      },
       "code": {
         "$code": {
           ".read": true,
@@ -18,16 +42,14 @@
           },
           "resources": {
             ".read": "auth != null",
-            ".write": "auth != null && root.child('produccion/code').child($code).child('ownerEmail').val() === auth.token.email"
+            ".write": "auth != null && newData.parent().child('ownerEmail').val() === auth.token.email"
           }
         }
       },
-
       "users": {
-        "$userEmail": {
-          ".read": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
-          ".write": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
-
+        "$userId": {
+          ".read": "auth != null && $userId === auth.uid",
+          ".write": "auth != null && $userId === auth.uid",
           "credits": {
             ".validate": "
               (
@@ -37,7 +59,6 @@
               newData.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists()
             "
           },
-
           "codes": {
             "$codeId": {
               "creditsEarned": {
@@ -45,7 +66,6 @@
               }
             }
           },
-
           "lastCodeRedeemed": {
             ".validate": "root.child('produccion/code').child(newData.val()).exists()"
           }

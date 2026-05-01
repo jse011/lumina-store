@@ -55,11 +55,11 @@ export function useAccess(
     }
   };
 
-  const handleLinkUser = async (email: string, loginAction: () => Promise<any>) => {
+  const handleLinkUser = async (userId: string, email: string, loginAction: () => Promise<any>) => {
     try {
       await loginAction();
-      if (code && email) {
-        await codeRepository.assignCodeToUser(code, email);
+      if (code && userId && email) {
+        await codeRepository.assignCodeToUser(code, userId, email);
         onAuthorized();
         setCode("");
         setShowValidated(false);
