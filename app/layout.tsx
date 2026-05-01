@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Manrope } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/core/context/AuthContext";
+import { AuthProvider } from "@/core/providers/AuthContext";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",

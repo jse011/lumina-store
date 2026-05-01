@@ -5,8 +5,17 @@
       ".write": true
     },
     "produccion": {
-      ".read": true,
-      ".write": false
+      "$code": {
+        ".read": "auth != null && data.child('ownerEmail').val() === auth.token.email",
+        "ownerEmail": {
+          ".read": true,
+          ".write": "auth != null && (!data.exists() || data.val() === auth.token.email)"
+        },
+        "resources": {
+          ".read": "auth != null && data.parent().child('ownerEmail').val() === auth.token.email",
+          ".write": "auth != null && data.parent().child('ownerEmail').val() === auth.token.email"
+        }
+      }
     }
   }
 }
