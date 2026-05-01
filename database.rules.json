@@ -5,6 +5,30 @@
       ".write": true
     },
     "produccion": {
+      "products": {
+        ".read": true,
+        ".write": false
+      },
+      "settings": {
+        ".read": true,
+        ".write": false
+      },
+      "testimonials": {
+        ".read": true,
+        ".write": false
+      },
+      "processSteps": {
+        ".read": true,
+        ".write": false
+      },
+      "navItems": {
+        ".read": true,
+        ".write": false
+      },
+      "gallery": {
+        ".read": true,
+        ".write": false
+      },
       "code": {
         "$code": {
           ".read": true,
@@ -22,12 +46,10 @@
           }
         }
       },
-
       "users": {
         "$userEmail": {
           ".read": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
           ".write": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
-
           "credits": {
             ".validate": "
               (
@@ -37,7 +59,6 @@
               newData.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists()
             "
           },
-
           "codes": {
             "$codeId": {
               "creditsEarned": {
@@ -45,7 +66,6 @@
               }
             }
           },
-
           "lastCodeRedeemed": {
             ".validate": "root.child('produccion/code').child(newData.val()).exists()"
           }
