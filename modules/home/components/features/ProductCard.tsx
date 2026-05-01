@@ -46,7 +46,7 @@ export default function ProductCard({ product, whatsappNumber, whatsappMessageTe
   };
 
   return (
-    <div className="relative w-full h-[100dvh] md:h-[850px] md:max-w-[480px] md:mx-auto md:rounded-[3rem] md:shadow-2xl overflow-hidden bg-black group">
+    <div className="relative w-full h-[100dvh] md:h-[650px] md:max-w-[360px] md:mx-auto md:rounded-[2rem] md:shadow-2xl overflow-hidden bg-black group">
       
       {/* Media Layer */}
       <div className="absolute inset-0 z-0" onClick={togglePlay}>
@@ -108,7 +108,7 @@ export default function ProductCard({ product, whatsappNumber, whatsappMessageTe
       </div>
 
       {/* Bottom Overlay: Info and Main Button */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 pb-12 md:pb-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-20">
+      <div className="absolute bottom-0 left-0 right-0 p-6 pb-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-20">
         <div className="space-y-4">
           
           {/* Thumbnails superpuestos */}

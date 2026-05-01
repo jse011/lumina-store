@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AppSettings } from '../../models';
 import { NavItem } from '../../types';
 import { useAuth } from '@/core/providers/AuthContext';
@@ -14,15 +14,26 @@ interface NavbarClientProps {
 export default function NavbarClient({ navItems, settings }: NavbarClientProps) {
   const [activeId, setActiveId] = useState('inicio');
   const { isAuthorized, logout } = useAuth();
-  const whatsappNumber = settings.whatsappNumber;
-  const whatsappMessage = settings.whatsappGeneralMessage;
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    if (navItems.length === 0) return;
-
     const handleScroll = () => {
-      let currentActiveId = 'inicio';
+      const currentScrollY = window.scrollY;
+      
+      // Umbral de 5px para evitar micro-movimientos
+      if (Math.abs(currentScrollY - lastScrollY.current) < 5) return;
 
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setIsVisible(false); // Bajando
+      } else {
+        setIsVisible(true); // Subiendo
+      }
+      
+      lastScrollY.current = currentScrollY;
+
+      // Lógica de Active Section
+      let currentActiveId = 'inicio';
       const sectionElements = navItems.map(item => {
         const targetId = item.href.startsWith('#') ? item.href.substring(1) : item.id;
         return {
@@ -39,18 +50,15 @@ export default function NavbarClient({ navItems, settings }: NavbarClientProps) 
           }
         }
       }
-
       setActiveId(currentActiveId);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [navItems]);
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-[20px] border-b border-tertiary/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]">
+    <header className={`fixed top-0 w-full z-50 bg-background/70 backdrop-blur-[20px] border-b border-tertiary/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] transition-transform duration-500 ease-in-out md:translate-y-0 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
       <nav className="flex justify-between items-center w-full px-4 md:px-8 h-20 max-w-7xl mx-auto">
         <Link href="/" className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent font-display tracking-tight">
           Lumina Recuerdos
