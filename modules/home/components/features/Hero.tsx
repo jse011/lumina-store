@@ -57,7 +57,7 @@ export default async function Hero() {
 
         <div className="relative group max-w-md mx-auto md:max-w-none hidden md:block">
           <div className="absolute -inset-10 bg-gradient-to-tr from-tertiary/20 to-secondary/20 blur-[80px] opacity-40 group-hover:opacity-60 transition-opacity"></div>
-          
+
           {/* Phone Frame */}
           <div className="relative w-[300px] h-[600px] mx-auto border-[12px] border-slate-900 rounded-[3rem] bg-slate-900 shadow-2xl overflow-hidden ring-1 ring-white/10 group-hover:scale-[1.02] transition-transform duration-500">
             {/* Camera/Notch */}
@@ -89,7 +89,7 @@ export default async function Hero() {
 
               {/* YouTube Shorts UI Overlays */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
-              
+
               {/* Bottom Info */}
               <div className="absolute bottom-6 left-4 right-12 text-white">
                 <div className="flex items-center gap-2 mb-3">
@@ -126,7 +126,7 @@ export default async function Hero() {
                   <span className="text-[10px] font-bold">Compartir</span>
                 </div>
                 <div className="w-8 h-8 rounded-lg bg-slate-800 border-2 border-white/20 animate-spin-slow">
-                   <div className="w-full h-full bg-gradient-to-tr from-tertiary to-secondary opacity-50"></div>
+                  <div className="w-full h-full bg-gradient-to-tr from-tertiary to-secondary opacity-50"></div>
                 </div>
               </div>
             </div>

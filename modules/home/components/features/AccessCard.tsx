@@ -17,9 +17,9 @@ interface AccessCardProps {
 
 export default function AccessCard({ hero, authorized }: AccessCardProps) {
   const { isAuthorized, login } = useAuth();
-  
+
   const codeRepository = useMemo(() => new FirebaseCodeRepository(), []);
-  
+
   const {
     code,
     setCode,
@@ -31,13 +31,13 @@ export default function AccessCard({ hero, authorized }: AccessCardProps) {
     setShowValidated,
     handleValidate,
     handleLinkUser
-  } = useAccess(codeRepository, () => {});
+  } = useAccess(codeRepository, () => { });
 
   const handleLogin = async () => {
     try {
       const loggedUser = await login();
       if (loggedUser && loggedUser.email) {
-        await handleLinkUser(loggedUser.email, async () => {});
+        await handleLinkUser(loggedUser.email, async () => { });
       }
     } catch (error) {
       console.error(error);
