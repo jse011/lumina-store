@@ -95,36 +95,53 @@ Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la 
 
 ## 🔐 Seguridad (Firebase Realtime Database)
 
-El proyecto implementa un sistema de seguridad robusto basado en **Security Rules** para prevenir fraudes, especialmente en el sistema de créditos.
+El proyecto implementa un sistema de seguridad avanzado basado en **Firebase Security Rules** para garantizar la integridad de los datos, la privacidad de los usuarios y prevenir fraudes en el sistema de créditos.
 
-### Lógica de Protección de Créditos
-Para evitar que un usuario manipule su saldo de créditos manualmente desde la consola o herramientas externas, se han implementado las siguientes medidas:
+### Arquitectura de Seguridad
 
-1.  **Actualización Atómica**: La redención de un código se realiza mediante una operación `update()` atómica que vincula el código, el usuario y el saldo en un solo paso.
-2.  **Validación Cruzada**: Las reglas de seguridad detectan qué código se está redimiendo (mediante el campo `lastCodeRedeemed`) y verifican en tiempo real que el incremento de créditos sea **exactamente igual** al valor configurado para ese código en la base de datos maestra.
-3.  **Aislamiento de Usuario**: Cada usuario solo tiene permisos de lectura y escritura sobre su propio nodo, identificado por su email sanitizado (reemplazando `.` por `,`), validado contra su token de autenticación.
+1.  **Aislamiento por UID**: A diferencia de versiones anteriores basadas en email, ahora utilizamos el `uid` único de Firebase Auth para identificar los nodos de usuario en `/produccion/users/$userId`. Esto proporciona una capa extra de seguridad y es compatible con múltiples proveedores de autenticación.
+2.  **Protección de Contenido Estático**: Los nodos como `products`, `settings`, `testimonials` y `gallery` son de **solo lectura** para el público. Nadie puede modificarlos desde el cliente, protegiendo la integridad del catálogo.
+3.  **Sistema de Créditos Anti-Fraude**:
+    - **Validación Cruzada**: Las reglas verifican que el incremento de créditos en el perfil del usuario coincida exactamente con el valor del código en el nodo maestro `/produccion/code`.
+    - **Inmutabilidad de Códigos**: Una vez que un código tiene un valor de créditos, este no puede ser modificado por ningún usuario.
+    - **Propiedad de Recursos**: Los recursos digitales asociados a un código solo son accesibles para el usuario que haya reclamado la propiedad (`ownerEmail`) de dicho código.
 
-### Reglas de Seguridad Actuales
+### Reglas de Seguridad (Resumen)
 
 ```json
 {
   "rules": {
     "produccion": {
+      "products": { ".read": true, ".write": false },
+      "settings": { ".read": true, ".write": false },
+      "gallery": { ".read": true, ".write": false },
       "code": {
         "$code": {
           ".read": true,
           "ownerEmail": {
-            ".write": "auth != null && (!data.exists() || data.val() === auth.token.email)"
+            ".write": "auth != null && !data.exists()"
           },
-          "credits": { ".write": false }
+          "credits": { ".read": true, ".write": false },
+          "resources": {
+            ".read": "auth != null",
+            ".write": "auth != null && newData.parent().child('ownerEmail').val() === auth.token.email"
+          }
         }
       },
       "users": {
-        "$userEmail": {
-          ".read": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
-          ".write": "auth != null && $userEmail === auth.token.email.replace('.', ',')",
+        "$userId": {
+          ".read": "auth != null && $userId === auth.uid",
+          ".write": "auth != null && $userId === auth.uid",
           "credits": {
-            ".validate": "((data.exists() && newData.val() === data.val() + root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val()) || (!data.exists() && newData.val() === root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val())) && newData.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists()"
+            ".validate": "( (data.exists() && newData.val() === data.val() + root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val()) || (!data.exists() && newData.val() === root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val()) ) && newData.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists() && !data.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists()"
+          },
+          "codes": {
+            "$codeId": {
+              ".validate": "!data.exists()",
+              "creditsEarned": {
+                ".validate": "newData.val() === root.child('produccion/code').child($codeId).child('credits').val()"
+              }
+            }
           }
         }
       }
@@ -132,3 +149,5 @@ Para evitar que un usuario manipule su saldo de créditos manualmente desde la c
   }
 }
 ```
+
+

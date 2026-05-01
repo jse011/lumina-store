@@ -34,7 +34,7 @@
           ".read": true,
           "ownerEmail": {
             ".read": true,
-            ".write": "auth != null && (!data.exists() || data.val() === auth.token.email)"
+            ".write": "auth != null && !data.exists()"
           },
           "credits": {
             ".read": true,
@@ -56,11 +56,13 @@
                 (data.exists() && newData.val() === data.val() + root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val()) ||
                 (!data.exists() && newData.val() === root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val())
               ) &&
-              newData.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists()
+              newData.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists() &&
+              !data.parent().child('codes').child(newData.parent().child('lastCodeRedeemed').val()).exists()
             "
           },
           "codes": {
             "$codeId": {
+              ".validate": "!data.exists()",
               "creditsEarned": {
                 ".validate": "newData.val() === root.child('produccion/code').child($codeId).child('credits').val()"
               }
