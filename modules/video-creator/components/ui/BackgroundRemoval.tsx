@@ -2,6 +2,7 @@
 
 import { useState, ChangeEvent } from 'react';
 import { removeBackground } from '@imgly/background-removal';
+import imageCompression from 'browser-image-compression';
 
 export default function BackgroundRemoval() {
     const [loading, setLoading] = useState(false);
@@ -12,19 +13,31 @@ export default function BackgroundRemoval() {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // Show original image preview
-        const origUrl = URL.createObjectURL(file);
-        setOriginalUrl(origUrl);
         setLoading(true);
         setResultUrl(null);
 
         try {
-            // Remove background
-            const blob = await removeBackground(file);
+            // Options for compression
+            const options = {
+                maxSizeMB: 2, // Max size 2MB
+                maxWidthOrHeight: 1920, // Max dimension 1920px
+                useWebWorker: true,
+                preserveExif: true, // Preserve orientation and metadata
+            };
+
+            // Compress image before processing
+            const compressedFile = await imageCompression(file, options);
+            
+            // Show compressed image preview (as it represents what will be processed)
+            const previewUrl = URL.createObjectURL(compressedFile);
+            setOriginalUrl(previewUrl);
+
+            // Remove background using the compressed file
+            const blob = await removeBackground(compressedFile);
             const url = URL.createObjectURL(blob);
             setResultUrl(url);
         } catch (error) {
-            console.error('Error al remover el fondo:', error);
+            console.error('Error al procesar la imagen:', error);
             alert('Ocurrió un error al procesar la imagen. Asegúrate de que sea un formato compatible.');
         } finally {
             setLoading(false);
