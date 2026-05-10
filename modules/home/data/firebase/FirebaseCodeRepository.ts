@@ -20,7 +20,7 @@ export class FirebaseCodeRepository implements ICodeRepository {
     const codeRef = ref(database, `${basePath}/code/${code}`);
     const codeSnapshot = await get(codeRef);
     const codeData = codeSnapshot.val();
-    
+
     if (!codeSnapshot.exists()) {
       throw new Error("El código no existe.");
     }
@@ -46,10 +46,10 @@ export class FirebaseCodeRepository implements ICodeRepository {
     const currentCredits = userCreditsSnapshot.val() || 0;
 
     const updates: any = {};
-    
+
     // Asignar dueño al código
     updates[`code/${code}/ownerEmail`] = email;
-    
+
     // Inicializar recursos si no existen
     updates[`code/${code}/resources`] = {
       initialized: true,
@@ -59,7 +59,7 @@ export class FirebaseCodeRepository implements ICodeRepository {
     // Actualizar datos del usuario
     updates[`users/${userId}/email`] = email;
     updates[`users/${userId}/credits`] = currentCredits + creditsToAdd;
-    
+
     // Registrar el código en el historial del usuario
     updates[`users/${userId}/codes/${code}`] = {
       activatedAt: new Date().toISOString(),
