@@ -150,4 +150,25 @@ El proyecto implementa un sistema de seguridad avanzado basado en **Firebase Sec
 }
 ```
 
+---
+
+## 🛠 Herramientas de IA (Background Removal)
+
+El proyecto incluye una herramienta avanzada de eliminación de fondo impulsada por IA utilizando la librería `@imgly/background-removal`.
+
+### Funcionamiento y Requisitos de Internet
+
+Es importante entender cómo opera esta herramienta para gestionar las expectativas de rendimiento y conectividad:
+
+1.  **Descarga Inicial de Modelos (Requiere Internet)**: La primera vez que un usuario intenta eliminar el fondo de una imagen, la librería necesita descargar los modelos de redes neuronales (archivos `.onnx`) y binarios de WebAssembly (`.wasm`).
+    *   **¿Por qué?**: Estos modelos son pesados (aprox. 40MB+) y no se incluyen en el bundle principal para mantener la carga inicial de la web ligera.
+    *   **Caché**: Una vez descargados, el navegador los almacena en caché. Las ejecuciones posteriores serán instantáneas y no requerirán internet.
+
+2.  **Procesamiento 100% Local (Privacidad)**: Aunque se requiere internet para descargar los modelos, el **procesamiento de la imagen ocurre íntegramente en el dispositivo del usuario**. 
+    *   La imagen **nunca** se sube a un servidor externo.
+    *   Utiliza la potencia del navegador (WebGPU/WASM) para realizar el recorte.
+
+3.  **Configuración de Carga Local (Opcional)**: Si se requiere que la herramienta funcione en entornos sin conexión o bajo políticas de seguridad estrictas, los modelos pueden alojarse en la carpeta `/public` del proyecto configurando el `publicPath` en el componente.
+
+
 
