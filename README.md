@@ -156,19 +156,36 @@ El proyecto implementa un sistema de seguridad avanzado basado en **Firebase Sec
 
 El proyecto incluye una herramienta avanzada de eliminación de fondo impulsada por IA utilizando la librería `@imgly/background-removal`.
 
-### Funcionamiento y Requisitos de Internet
+### Funcionamiento y Gestión de Modelos
 
-Es importante entender cómo opera esta herramienta para gestionar las expectativas de rendimiento y conectividad:
+Para equilibrar el rendimiento y la experiencia de usuario, hemos implementado la siguiente estrategia:
 
-1.  **Descarga Inicial de Modelos (Requiere Internet)**: La primera vez que un usuario intenta eliminar el fondo de una imagen, la librería necesita descargar los modelos de redes neuronales (archivos `.onnx`) y binarios de WebAssembly (`.wasm`).
-    *   **¿Por qué?**: Estos modelos son pesados (aprox. 40MB+) y no se incluyen en el bundle principal para mantener la carga inicial de la web ligera.
-    *   **Caché**: Una vez descargados, el navegador los almacena en caché. Las ejecuciones posteriores serán instantáneas y no requerirán internet.
+1.  **Descarga vía CDN + Caché Local (IndexedDB)**:
+    *   La primera vez que se usa la herramienta, los modelos de IA se descargan desde el CDN oficial de IMG.LY.
+    *   **¿Por qué no están en la carpeta `public`?**: Para evitar subir archivos binarios pesados (40MB+) al repositorio de Git y mantener el despliegue rápido.
+    *   **Caché Inteligente**: Una vez descargados, la librería los guarda automáticamente en el **IndexedDB** del navegador del usuario. Esto significa que en visitas posteriores, los modelos se cargan desde el disco duro local, funcionando incluso sin conexión.
 
-2.  **Procesamiento 100% Local (Privacidad)**: Aunque se requiere internet para descargar los modelos, el **procesamiento de la imagen ocurre íntegramente en el dispositivo del usuario**. 
-    *   La imagen **nunca** se sube a un servidor externo.
-    *   Utiliza la potencia del navegador (WebGPU/WASM) para realizar el recorte.
+2.  **Procesamiento y Privacidad**:
+    *   El procesamiento es **100% local**. La imagen nunca sale del navegador del usuario.
+    *   Utiliza WebAssembly (WASM) para maximizar la velocidad de cálculo en el dispositivo.
 
-3.  **Configuración de Carga Local (Opcional)**: Si se requiere que la herramienta funcione en entornos sin conexión o bajo políticas de seguridad estrictas, los modelos pueden alojarse en la carpeta `/public` del proyecto configurando el `publicPath` en el componente.
+3.  **Optimización Automática de Imágenes**:
+    *   Hemos integrado un sistema de compresión previo al procesamiento.
+    *   Si un usuario sube una imagen pesada (ej. fotos de 10MB+ de cámaras móviles), el sistema la comprime automáticamente a un tamaño manejable preservando la orientación (EXIF) y la calidad necesaria para el recorte. Esto evita bloqueos del navegador en dispositivos móviles.
+
+4.  **Configuración para Entornos Aislados (Self-hosting)**:
+    Si se requiere que la app funcione en una red totalmente aislada o sin acceso al CDN de IMG.LY, sigue estos pasos:
+    
+    1.  **Instalar los datos**: `npm install @imgly/background-removal-data`.
+    2.  **Copiar binarios**: Copia el contenido de `node_modules/@imgly/background-removal-data/dist/` a `public/models/background-removal/`.
+    3.  **Configurar el componente**:
+        ```typescript
+        const config = {
+          publicPath: '/models/background-removal/' // Ruta relativa a public
+        };
+        const blob = await removeBackground(imageSource, config);
+        ```
+    4.  **Limpiar**: Puedes desinstalar el paquete de datos después de la copia para mantener el `package.json` limpio.
 
 
 
