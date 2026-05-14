@@ -6,6 +6,7 @@ export interface CreatorState {
     actions: string[];
     image: File | null;
     preparedImage: string | null;
+    originalPreviewUrl: string | null;
     music: string;
     name: string;
 }
@@ -16,6 +17,7 @@ export const INITIAL_CREATOR_STATE: CreatorState = {
     actions: [],
     image: null,
     preparedImage: null,
+    originalPreviewUrl: null,
     music: 'Sin música',
     name: ''
 };

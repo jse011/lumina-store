@@ -2,6 +2,8 @@
 
 import React, { useRef, useState } from 'react';
 import { CreatorState } from '../../../../types/CreatorState';
+import imageCompression from 'browser-image-compression';
+import { removeBackground } from '@imgly/background-removal';
 
 interface Props {
     onNext: () => void;
@@ -9,11 +11,21 @@ interface Props {
     onUpdate: (updates: Partial<CreatorState>) => void;
     image: File | null;
     preparedImage: string | null;
+    originalPreviewUrl: string | null;
 }
 
-export default function StepUpload({ onNext, onBack, onUpdate, image, preparedImage }: Props) {
+export default function StepUpload({ onNext, onBack, onUpdate, image, preparedImage, originalPreviewUrl }: Props) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isPreparing, setIsPreparing] = useState(false);
+    const [processingMessage, setProcessingMessage] = useState('Analizando imagen...');
+
+    const messages = [
+        'Analizando rasgos faciales...',
+        'Eliminando fondo original...',
+        'Generando mapa de profundidad...',
+        'Optimizando para holograma...',
+        'Finalizando preparación...'
+    ];
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -23,17 +35,42 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
         }
     };
 
-    const simulatePreparation = (file: File) => {
+    const simulatePreparation = async (file: File) => {
         setIsPreparing(true);
-        // Simular procesamiento de imagen (recorte, fondo, etc)
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            setTimeout(() => {
-                onUpdate({ preparedImage: e.target?.result as string });
-                setIsPreparing(false);
-            }, 1500);
-        };
-        reader.readAsDataURL(file);
+        let msgIndex = 0;
+        const interval = setInterval(() => {
+            setProcessingMessage(messages[msgIndex % messages.length]);
+            msgIndex++;
+        }, 3000);
+
+        try {
+            // Options for compression
+            const options = {
+                maxSizeMB: 2, // Max size 2MB
+                maxWidthOrHeight: 1920, // Max dimension 1920px
+                useWebWorker: true,
+                preserveExif: true, // Preserve orientation and metadata
+            };
+
+            // Compress image before processing
+            const compressedFile = await imageCompression(file, options);
+
+            // Show compressed image preview (as it represents what will be processed)
+            const previewUrl = URL.createObjectURL(compressedFile);
+            onUpdate({ originalPreviewUrl: previewUrl });
+
+            // Remove background using the compressed file
+            const blob = await removeBackground(compressedFile);
+            const url = URL.createObjectURL(blob);
+
+            onUpdate({ preparedImage: url });
+        } catch (error) {
+            console.error('Error al procesar la imagen:', error);
+            alert('Ocurrió un error al procesar la imagen. Asegúrate de que sea un formato compatible.');
+        } finally {
+            setIsPreparing(false);
+            clearInterval(interval);
+        }
     };
 
     return (
@@ -46,34 +83,66 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
             </p>
 
             {!preparedImage ? (
-                <div 
-                    onClick={() => fileInputRef.current?.click()}
-                    className="aspect-square w-full rounded-3xl border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-4 cursor-pointer hover:bg-white/5 transition-all mb-8 p-8 text-center"
+                <div
+                    onClick={() => !isPreparing && fileInputRef.current?.click()}
+                    className={`aspect-square w-full rounded-3xl border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-4 transition-all mb-8 p-8 text-center relative overflow-hidden ${isPreparing ? 'cursor-wait bg-surface-container-low border-tertiary/20' : 'cursor-pointer hover:bg-white/5'
+                        }`}
                 >
-                    <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        onChange={handleFileChange} 
-                        className="hidden" 
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
                         accept="image/*"
+                        disabled={isPreparing}
                     />
-                    <div className="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center text-tertiary">
-                        <span className="material-symbols-outlined text-4xl">cloud_upload</span>
-                    </div>
-                    <div>
-                        <p className="text-sm font-bold text-white mb-1">Arrastra tu foto aquí</p>
-                        <p className="text-xs text-on-surface-variant">o selecciona desde tu galería</p>
-                    </div>
-                    <button className="mt-4 px-6 py-2 rounded-xl border border-outline-variant/50 text-xs text-white">
-                        Seleccionar foto
-                    </button>
+
+                    {isPreparing ? (
+                        <div className="flex flex-col items-center gap-6 w-full animate-in fade-in duration-500">
+                            <div className="relative w-48 h-64 rounded-2xl overflow-hidden border border-tertiary/30 shadow-[0_0_30px_rgba(0,219,231,0.1)]">
+                                {image && (
+                                    <img
+                                        src={URL.createObjectURL(image)}
+                                        alt="Processing"
+                                        className="w-full h-full object-cover opacity-40 grayscale"
+                                    />
+                                )}
+                                {/* Scanning Line Animation */}
+                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-tertiary/20 to-transparent h-1/2 w-full animate-[scan_2s_ease-in-out_infinite] border-b border-tertiary/50 shadow-[0_4px_10px_rgba(0,219,231,0.3)]"></div>
+                                {/* Particles/Dots */}
+                                <div className="absolute inset-0 scan-line opacity-20"></div>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2 justify-center">
+                                    <div className="w-2 h-2 bg-tertiary rounded-full animate-pulse"></div>
+                                    <p className="text-sm font-bold text-white uppercase tracking-widest">Procesando IA</p>
+                                </div>
+                                <p className="text-[10px] text-on-surface-variant max-w-[200px] animate-pulse">
+                                    {processingMessage}
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center text-tertiary">
+                                <span className="material-symbols-outlined text-4xl">cloud_upload</span>
+                            </div>
+                            <div>
+                                <p className="text-sm font-bold text-white mb-1">Arrastra tu foto aquí</p>
+                                <p className="text-xs text-on-surface-variant">o selecciona desde tu galería</p>
+                            </div>
+                            <button className="mt-4 px-6 py-2 rounded-xl border border-outline-variant/50 text-xs text-white">
+                                Seleccionar foto
+                            </button>
+                        </>
+                    )}
                 </div>
             ) : (
                 <div className="flex flex-col gap-6 mb-8">
                     <div className="flex gap-4 items-center justify-center">
                         <div className="flex flex-col items-center gap-2">
                             <div className="w-36 h-48 rounded-2xl bg-surface-container-highest overflow-hidden border border-outline-variant/30">
-                                {image && <img src={URL.createObjectURL(image)} alt="Original" className="w-full h-full object-cover" />}
+                                {originalPreviewUrl && <img src={originalPreviewUrl} alt="Original" className="w-full h-full object-cover" />}
                             </div>
                             <span className="text-xs text-on-surface-variant uppercase">Original</span>
                         </div>
@@ -107,13 +176,13 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
             )}
 
             <div className="flex gap-3">
-                <button 
-                    onClick={() => onUpdate({ preparedImage: null, image: null })}
+                <button
+                    onClick={() => onUpdate({ preparedImage: null, originalPreviewUrl: null, image: null })}
                     className="flex-1 py-4 rounded-2xl border border-outline-variant/30 text-white font-bold text-sm"
                 >
                     {preparedImage ? 'Cambiar foto' : 'Cancelar'}
                 </button>
-                <button 
+                <button
                     onClick={onNext}
                     disabled={!preparedImage || isPreparing}
                     className="flex-[2] py-4 rounded-2xl bg-secondary text-on-secondary font-bold disabled:opacity-50 disabled:grayscale transition-all flex items-center justify-center"
