@@ -1,6 +1,7 @@
 "use client";
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useAuth } from '@/core/providers/AuthContext';
 
 export default function Authorized() {
@@ -32,14 +33,14 @@ export default function Authorized() {
 
                 {/* Prominent CTA Section */}
                 <section className="mt-16 md:mt-24 text-center">
-                    <button className="relative group inline-flex items-center justify-center p-0.5 overflow-hidden rounded-2xl bg-gradient-to-br from-tertiary to-secondary active:scale-95 transition-all duration-300">
+                    <Link href="/console" className="relative group inline-flex items-center justify-center p-0.5 overflow-hidden rounded-2xl bg-gradient-to-br from-tertiary to-secondary active:scale-95 transition-all duration-300">
                         <span className="relative px-10 py-5 transition-all ease-in duration-75 bg-[#050B18] rounded-[14px] group-hover:bg-opacity-0 flex items-center gap-4">
                             <span className="font-display text-xl md:text-2xl text-white font-bold tracking-wide uppercase">Ver mis hologramas</span>
                             <span className="material-symbols-outlined text-2xl text-white group-hover:translate-x-2 transition-transform">arrow_forward</span>
                         </span>
                         {/* Background glow */}
                         <div className="absolute -inset-1 bg-gradient-to-r from-tertiary to-secondary rounded-2xl blur opacity-20 group-hover:opacity-60 transition duration-500"></div>
-                    </button>
+                    </Link>
                     <p className="mt-6 text-on-surface-variant text-sm md:text-base italic opacity-60">
                         Explora tus recuerdos y revive la esencia de cada momento.
                     </p>
