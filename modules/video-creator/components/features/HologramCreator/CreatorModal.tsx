@@ -22,33 +22,33 @@ export default function CreatorModal({ onClose }: Props) {
             case 'type':
                 return <StepType onNext={() => nextStep('actions')} onUpdate={updateState} value={state.type} />;
             case 'actions':
-                return <StepActions 
-                    onNext={() => nextStep('upload')} 
-                    onBack={() => nextStep('type')} 
-                    onUpdate={updateState} 
-                    values={state.actions} 
-                    type={state.type || 'persona'} 
+                return <StepActions
+                    onNext={() => nextStep('upload')}
+                    onBack={() => nextStep('type')}
+                    onUpdate={updateState}
+                    values={state.actions}
+                    type={state.type || 'persona'}
                 />;
             case 'upload':
-                return <StepUpload 
-                    onNext={() => nextStep('music')} 
-                    onBack={() => nextStep('actions')} 
-                    onUpdate={updateState} 
-                    image={state.image} 
+                return <StepUpload
+                    onNext={() => nextStep('music')}
+                    onBack={() => nextStep('actions')}
+                    onUpdate={updateState}
+                    image={state.image}
                     preparedImage={state.preparedImage}
                 />;
             case 'music':
-                return <StepMusic 
-                    onNext={() => nextStep('review')} 
-                    onBack={() => nextStep('upload')} 
-                    onUpdate={updateState} 
-                    value={state.music} 
+                return <StepMusic
+                    onNext={() => nextStep('review')}
+                    onBack={() => nextStep('upload')}
+                    onUpdate={updateState}
+                    value={state.music}
                 />;
             case 'review':
-                return <StepReview 
-                    onNext={generateHologram} 
-                    onBack={() => nextStep('music')} 
-                    state={state} 
+                return <StepReview
+                    onNext={generateHologram}
+                    onBack={() => nextStep('music')}
+                    state={state}
                 />;
             case 'generating':
                 return <StepGenerating />;
@@ -62,7 +62,7 @@ export default function CreatorModal({ onClose }: Props) {
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
-            <div 
+            <div
                 className="absolute inset-0 bg-background/80 backdrop-blur-md"
                 onClick={state.step !== 'generating' ? onClose : undefined}
             ></div>
@@ -74,15 +74,14 @@ export default function CreatorModal({ onClose }: Props) {
                     <div className="px-8 pt-8 pb-4 flex items-center justify-between">
                         <div className="flex gap-1.5">
                             {['type', 'actions', 'upload', 'music', 'review'].map((s, idx) => (
-                                <div 
-                                    key={s} 
-                                    className={`h-1 rounded-full transition-all duration-500 ${
-                                        state.step === s ? 'w-8 bg-tertiary' : idx < ['type', 'actions', 'upload', 'music', 'review'].indexOf(state.step) ? 'w-4 bg-tertiary/40' : 'w-4 bg-surface-container-highest'
-                                    }`}
+                                <div
+                                    key={s}
+                                    className={`h-1 rounded-full transition-all duration-500 ${state.step === s ? 'w-8 bg-tertiary' : idx < ['type', 'actions', 'upload', 'music', 'review'].indexOf(state.step) ? 'w-4 bg-tertiary/40' : 'w-4 bg-surface-container-highest'
+                                        }`}
                                 ></div>
                             ))}
                         </div>
-                        <button 
+                        <button
                             onClick={onClose}
                             className="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center hover:bg-white/10 transition-colors"
                         >
