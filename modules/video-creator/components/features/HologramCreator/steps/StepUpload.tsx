@@ -72,17 +72,17 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
                 <div className="flex flex-col gap-6 mb-8">
                     <div className="flex gap-4 items-center justify-center">
                         <div className="flex flex-col items-center gap-2">
-                            <div className="w-24 h-32 rounded-xl bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+                            <div className="w-36 h-48 rounded-2xl bg-surface-container-highest overflow-hidden border border-outline-variant/30">
                                 {image && <img src={URL.createObjectURL(image)} alt="Original" className="w-full h-full object-cover" />}
                             </div>
-                            <span className="text-[10px] text-on-surface-variant uppercase">Original</span>
+                            <span className="text-xs text-on-surface-variant uppercase">Original</span>
                         </div>
                         <span className="material-symbols-outlined text-tertiary">arrow_forward</span>
                         <div className="flex flex-col items-center gap-2">
-                            <div className="w-24 h-32 rounded-xl bg-surface-container-highest overflow-hidden border border-tertiary/50 shadow-lg shadow-tertiary/10">
+                            <div className="w-36 h-48 rounded-2xl bg-surface-container-highest overflow-hidden border border-tertiary/50 shadow-lg shadow-tertiary/10">
                                 <img src={preparedImage} alt="Preparada" className="w-full h-full object-cover" />
                             </div>
-                            <span className="text-[10px] text-tertiary uppercase font-bold">Preparada</span>
+                            <span className="text-xs text-tertiary uppercase font-bold">Preparada</span>
                         </div>
                     </div>
 
