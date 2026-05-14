@@ -36,6 +36,7 @@ export default function CreatorModal({ onClose }: Props) {
                     onUpdate={updateState}
                     image={state.image}
                     preparedImage={state.preparedImage}
+                    originalPreviewUrl={state.originalPreviewUrl}
                 />;
             case 'music':
                 return <StepMusic

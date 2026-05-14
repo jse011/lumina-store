@@ -2,6 +2,8 @@
 
 import React, { useRef, useState } from 'react';
 import { CreatorState } from '../../../../types/CreatorState';
+import imageCompression from 'browser-image-compression';
+import { removeBackground } from '@imgly/background-removal';
 
 interface Props {
     onNext: () => void;
@@ -9,9 +11,10 @@ interface Props {
     onUpdate: (updates: Partial<CreatorState>) => void;
     image: File | null;
     preparedImage: string | null;
+    originalPreviewUrl: string | null;
 }
 
-export default function StepUpload({ onNext, onBack, onUpdate, image, preparedImage }: Props) {
+export default function StepUpload({ onNext, onBack, onUpdate, image, preparedImage, originalPreviewUrl }: Props) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isPreparing, setIsPreparing] = useState(false);
     const [processingMessage, setProcessingMessage] = useState('Analizando imagen...');
@@ -32,7 +35,7 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
         }
     };
 
-    const simulatePreparation = (file: File) => {
+    const simulatePreparation = async (file: File) => {
         setIsPreparing(true);
         let msgIndex = 0;
         const interval = setInterval(() => {
@@ -40,16 +43,34 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
             msgIndex++;
         }, 3000);
 
-        // Simular procesamiento de imagen (recorte, fondo, etc)
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            setTimeout(() => {
-                onUpdate({ preparedImage: e.target?.result as string });
-                setIsPreparing(false);
-                clearInterval(interval);
-            }, 20000);
-        };
-        reader.readAsDataURL(file);
+        try {
+            // Options for compression
+            const options = {
+                maxSizeMB: 2, // Max size 2MB
+                maxWidthOrHeight: 1920, // Max dimension 1920px
+                useWebWorker: true,
+                preserveExif: true, // Preserve orientation and metadata
+            };
+
+            // Compress image before processing
+            const compressedFile = await imageCompression(file, options);
+
+            // Show compressed image preview (as it represents what will be processed)
+            const previewUrl = URL.createObjectURL(compressedFile);
+            onUpdate({ originalPreviewUrl: previewUrl });
+
+            // Remove background using the compressed file
+            const blob = await removeBackground(compressedFile);
+            const url = URL.createObjectURL(blob);
+
+            onUpdate({ preparedImage: url });
+        } catch (error) {
+            console.error('Error al procesar la imagen:', error);
+            alert('Ocurrió un error al procesar la imagen. Asegúrate de que sea un formato compatible.');
+        } finally {
+            setIsPreparing(false);
+            clearInterval(interval);
+        }
     };
 
     return (
@@ -64,9 +85,8 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
             {!preparedImage ? (
                 <div
                     onClick={() => !isPreparing && fileInputRef.current?.click()}
-                    className={`aspect-square w-full rounded-3xl border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-4 transition-all mb-8 p-8 text-center relative overflow-hidden ${
-                        isPreparing ? 'cursor-wait bg-surface-container-low border-tertiary/20' : 'cursor-pointer hover:bg-white/5'
-                    }`}
+                    className={`aspect-square w-full rounded-3xl border-2 border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-4 transition-all mb-8 p-8 text-center relative overflow-hidden ${isPreparing ? 'cursor-wait bg-surface-container-low border-tertiary/20' : 'cursor-pointer hover:bg-white/5'
+                        }`}
                 >
                     <input
                         type="file"
@@ -76,15 +96,15 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
                         accept="image/*"
                         disabled={isPreparing}
                     />
-                    
+
                     {isPreparing ? (
                         <div className="flex flex-col items-center gap-6 w-full animate-in fade-in duration-500">
                             <div className="relative w-48 h-64 rounded-2xl overflow-hidden border border-tertiary/30 shadow-[0_0_30px_rgba(0,219,231,0.1)]">
                                 {image && (
-                                    <img 
-                                        src={URL.createObjectURL(image)} 
-                                        alt="Processing" 
-                                        className="w-full h-full object-cover opacity-40 grayscale" 
+                                    <img
+                                        src={URL.createObjectURL(image)}
+                                        alt="Processing"
+                                        className="w-full h-full object-cover opacity-40 grayscale"
                                     />
                                 )}
                                 {/* Scanning Line Animation */}
@@ -122,7 +142,7 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
                     <div className="flex gap-4 items-center justify-center">
                         <div className="flex flex-col items-center gap-2">
                             <div className="w-36 h-48 rounded-2xl bg-surface-container-highest overflow-hidden border border-outline-variant/30">
-                                {image && <img src={URL.createObjectURL(image)} alt="Original" className="w-full h-full object-cover" />}
+                                {originalPreviewUrl && <img src={originalPreviewUrl} alt="Original" className="w-full h-full object-cover" />}
                             </div>
                             <span className="text-xs text-on-surface-variant uppercase">Original</span>
                         </div>
@@ -157,7 +177,7 @@ export default function StepUpload({ onNext, onBack, onUpdate, image, preparedIm
 
             <div className="flex gap-3">
                 <button
-                    onClick={() => onUpdate({ preparedImage: null, image: null })}
+                    onClick={() => onUpdate({ preparedImage: null, originalPreviewUrl: null, image: null })}
                     className="flex-1 py-4 rounded-2xl border border-outline-variant/30 text-white font-bold text-sm"
                 >
                     {preparedImage ? 'Cambiar foto' : 'Cancelar'}
