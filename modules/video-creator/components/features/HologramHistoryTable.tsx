@@ -1,7 +1,8 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Hologram } from '../../models/Hologram';
+import ConfirmDialog from '../common/ConfirmDialog';
 
 interface Props {
     holograms: Hologram[];
@@ -9,6 +10,19 @@ interface Props {
 }
 
 export default function HologramHistoryTable({ holograms, onDelete }: Props) {
+    const [hologramToDelete, setHologramToDelete] = useState<{ id: string, name: string } | null>(null);
+
+    const handleDeleteClick = (id: string, name: string) => {
+        setHologramToDelete({ id, name });
+    };
+
+    const handleConfirmDelete = () => {
+        if (hologramToDelete) {
+            onDelete(hologramToDelete.id);
+            setHologramToDelete(null);
+        }
+    };
+
     return (
         <div className="w-full overflow-x-auto">
             {/* Desktop Table */}
@@ -78,7 +92,7 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                             <td className="px-6 py-4 text-on-surface-variant text-sm">
                                 {new Date(hologram.createdAt).toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })}
                                 <div className="text-[10px] opacity-60">
-                                     {new Date(hologram.createdAt).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}
+                                    {new Date(hologram.createdAt).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}
                                 </div>
                             </td>
                             <td className="px-6 py-4 text-center">
@@ -88,29 +102,41 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                             </td>
                             <td className="px-6 py-4">
                                 <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button 
-                                        className="p-2 hover:bg-white/10 rounded-lg text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed" 
+                                    <button
+                                        className="p-2 hover:bg-white/10 rounded-lg text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                                         title="Reproducir"
                                         disabled={hologram.status !== 'ready'}
                                     >
                                         <span className="material-symbols-outlined">play_circle</span>
                                     </button>
-                                    <button 
-                                        className="p-2 hover:bg-white/10 rounded-lg text-on-surface-variant transition-colors disabled:opacity-30 disabled:cursor-not-allowed" 
+                                    <button
+                                        className="p-2 hover:bg-white/10 rounded-lg text-on-surface-variant transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                                         title="Descargar"
                                         disabled={hologram.status !== 'ready'}
                                     >
                                         <span className="material-symbols-outlined">download</span>
                                     </button>
-                                    <button 
-                                        onClick={() => onDelete(hologram.id)}
-                                        disabled={hologram.status === 'pending' || hologram.status === 'processing'}
-                                        className="p-2 hover:bg-error/20 rounded-lg text-error transition-colors disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed" 
-                                        title={hologram.status === 'pending' || hologram.status === 'processing' ? "No se puede eliminar mientras se procesa" : "Eliminar"}
+                                    {hologram.status === 'error' && (
+                                        <a
+                                            href={`https://wa.me/51900000000?text=${encodeURIComponent(`Hola, tengo un problema con el procesamiento de mi holograma: ${hologram.name} (ID: ${hologram.id})`)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-2 hover:bg-[#25D366]/20 rounded-lg text-[#25D366] transition-colors flex items-center justify-center"
+                                            title="Reclamar vía WhatsApp"
+                                        >
+                                            <span className="material-symbols-outlined">chat</span>
+                                        </a>
+                                    )}
+                                    <button
+                                        onClick={() => handleDeleteClick(hologram.id, hologram.name)}
+                                        disabled={hologram.status !== 'ready'}
+                                        className="p-2 hover:bg-error/20 rounded-lg text-error transition-colors disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed"
+                                        title={hologram.status === 'ready' ? "Eliminar" : "No se puede eliminar en este estado"}
                                     >
                                         <span className="material-symbols-outlined">delete</span>
                                     </button>
                                 </div>
+
                             </td>
                         </tr>
                     ))}
@@ -164,15 +190,26 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                                 <span className="text-tertiary text-xs font-bold">{hologram.creditsUsed}</span>
                             </div>
                             <div className="flex gap-1">
-                                <button className="p-2 bg-surface-container-high rounded-xl text-white">
+                                <button className="p-2 bg-surface-container-high rounded-xl text-white disabled:opacity-30" disabled={hologram.status !== 'ready'}>
                                     <span className="material-symbols-outlined text-xl">play_arrow</span>
                                 </button>
-                                <button className="p-2 bg-surface-container-high rounded-xl text-on-surface-variant">
+                                <button className="p-2 bg-surface-container-high rounded-xl text-on-surface-variant disabled:opacity-30" disabled={hologram.status !== 'ready'}>
                                     <span className="material-symbols-outlined text-xl">download</span>
                                 </button>
-                                <button 
-                                    onClick={() => onDelete(hologram.id)}
-                                    disabled={hologram.status === 'pending' || hologram.status === 'processing'}
+                                {hologram.status === 'error' && (
+                                    <a
+                                        href={`https://wa.me/51900000000?text=${encodeURIComponent(`Hola, tengo un problema con el procesamiento de mi holograma: ${hologram.name} (ID: ${hologram.id})`)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="p-2 bg-[#25D366] rounded-xl text-white flex items-center justify-center shadow-[0_0_15px_rgba(37,211,102,0.3)]"
+                                        title="Reclamar vía WhatsApp"
+                                    >
+                                        <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
+                                    </a>
+                                )}
+                                <button
+                                    onClick={() => handleDeleteClick(hologram.id, hologram.name)}
+                                    disabled={hologram.status !== 'ready'}
                                     className="p-2 bg-error/10 rounded-xl text-error disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed"
                                 >
                                     <span className="material-symbols-outlined text-xl">delete</span>
@@ -183,6 +220,15 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                 ))}
             </div>
 
+            <ConfirmDialog
+                isOpen={!!hologramToDelete}
+                onClose={() => setHologramToDelete(null)}
+                onConfirm={handleConfirmDelete}
+                title="¿Eliminar Holograma?"
+                message={`¿Estás seguro de que deseas eliminar "${hologramToDelete?.name}"? Esta acción no se puede deshacer.`}
+                confirmText="Eliminar"
+                cancelText="Cancelar"
+            />
         </div>
     );
 }
