@@ -43,7 +43,7 @@ export default function AccessCard({ hero, authorized }: AccessCardProps) {
         setIsVerifying(true);
         if (code) {
           try {
-            await handleLinkUser(loggedUser.uid, loggedUser.email, async () => { });
+            await handleLinkUser(loggedUser.uid, loggedUser.email, loggedUser.displayName, async () => { });
           } catch (error) {
             console.error("Linking failed, logging out:", error);
             setShowValidated(false);

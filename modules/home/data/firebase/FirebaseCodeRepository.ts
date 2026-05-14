@@ -13,7 +13,7 @@ export class FirebaseCodeRepository implements ICodeRepository {
     return snapshot.exists();
   }
 
-  async assignCodeToUser(code: string, userId: string, email: string): Promise<void> {
+  async assignCodeToUser(code: string, userId: string, email: string, displayName: string | null): Promise<void> {
     const basePath = getBasePath();
 
     // 1. Obtener datos del código (para saber cuántos créditos vale)
@@ -58,6 +58,9 @@ export class FirebaseCodeRepository implements ICodeRepository {
 
     // Actualizar datos del usuario
     updates[`users/${userId}/email`] = email;
+    if (displayName) {
+      updates[`users/${userId}/name`] = displayName;
+    }
     updates[`users/${userId}/credits`] = currentCredits + creditsToAdd;
 
     // Registrar el código en el historial del usuario

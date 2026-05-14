@@ -1,6 +1,14 @@
-import Image from 'next/image';
+"use client";
 
-export default async function Authorized() {
+import Image from 'next/image';
+import { useAuth } from '@/core/providers/AuthContext';
+
+export default function Authorized() {
+    const { user } = useAuth();
+    
+    // Extraer solo el primer nombre para un saludo más personal
+    const firstName = user?.displayName ? user.displayName.split(' ')[0] : 'Explorador';
+
     return (
         <section className="py-24 md:py-32 relative overflow-hidden" id="authorized">
             {/* Background elements to match home style */}
@@ -14,7 +22,7 @@ export default async function Authorized() {
                         Acceso Autorizado
                     </p>
                     <h1 className="font-display text-4xl md:text-7xl text-white leading-tight font-bold mb-6">
-                        Hola, <span className="text-transparent bg-clip-text bg-gradient-to-r from-tertiary to-secondary">Julián</span>
+                        Hola, <span className="text-transparent bg-clip-text bg-gradient-to-r from-tertiary to-secondary">{firstName}</span>
                     </h1>
                     <p className="text-on-surface-variant text-base md:text-lg max-w-2xl leading-relaxed">
                         Bienvenido a tu santuario digital. Tus fragmentos de tiempo están
