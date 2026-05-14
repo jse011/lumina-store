@@ -47,8 +47,8 @@ export class FirebaseHologramRepository implements HologramRepository {
 
         if (snapshot.exists()) {
             const data = snapshot.val();
-            if (data.status === 'pending' || data.status === 'processing') {
-                throw new Error("No se puede eliminar un holograma mientras se está procesando");
+            if (data.status !== 'ready') {
+                throw new Error("Solo se pueden eliminar hologramas que ya están listos (ready)");
             }
         }
 
