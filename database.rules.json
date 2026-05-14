@@ -80,7 +80,13 @@
           "holograms": {
             ".read": "auth != null && $userId === auth.uid",
             "$hologramId": {
-              ".write": "auth != null && $userId === auth.uid && newData.exists()",
+              ".write": "
+                auth != null && $userId === auth.uid && newData.exists() && 
+                (
+                  newData.child('deleted').val() !== true || 
+                  (data.child('status').val() !== 'pending' && data.child('status').val() !== 'processing')
+                )
+              ",
               ".validate": "
                 newData.hasChildren(['name', 'type', 'status', 'creditsUsed', 'createdAt']) &&
                 newData.child('name').isString() &&

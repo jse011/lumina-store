@@ -36,7 +36,7 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                                             <span className="material-symbols-outlined text-on-surface-variant">image</span>
                                         </div>
                                     )}
-                                    {hologram.status === 'processing' && (
+                                    {(hologram.status === 'processing' || hologram.status === 'pending') && (
                                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                                             <div className="w-4 h-4 border-2 border-tertiary border-t-transparent rounded-full animate-spin"></div>
                                         </div>
@@ -44,7 +44,27 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                                 </div>
                             </td>
                             <td className="px-6 py-4">
-                                <span className="text-white font-medium">{hologram.name}</span>
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-white font-medium">{hologram.name}</span>
+                                    {hologram.status === 'pending' && (
+                                        <span className="text-[10px] text-tertiary flex items-center gap-1 font-bold uppercase tracking-wider">
+                                            <span className="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
+                                            En cola
+                                        </span>
+                                    )}
+                                    {hologram.status === 'processing' && (
+                                        <span className="text-[10px] text-tertiary flex items-center gap-1 font-bold uppercase tracking-wider">
+                                            <span className="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
+                                            Procesando
+                                        </span>
+                                    )}
+                                    {hologram.status === 'error' && (
+                                        <span className="text-[10px] text-error flex items-center gap-1 font-bold uppercase tracking-wider">
+                                            <span className="material-symbols-outlined text-[12px]">error</span>
+                                            Error
+                                        </span>
+                                    )}
+                                </div>
                             </td>
                             <td className="px-6 py-4">
                                 <div className="flex items-center gap-2 text-on-surface-variant text-sm">
@@ -68,16 +88,25 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                             </td>
                             <td className="px-6 py-4">
                                 <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button className="p-2 hover:bg-white/10 rounded-lg text-white transition-colors" title="Reproducir">
+                                    <button 
+                                        className="p-2 hover:bg-white/10 rounded-lg text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed" 
+                                        title="Reproducir"
+                                        disabled={hologram.status !== 'ready'}
+                                    >
                                         <span className="material-symbols-outlined">play_circle</span>
                                     </button>
-                                    <button className="p-2 hover:bg-white/10 rounded-lg text-on-surface-variant transition-colors" title="Descargar">
+                                    <button 
+                                        className="p-2 hover:bg-white/10 rounded-lg text-on-surface-variant transition-colors disabled:opacity-30 disabled:cursor-not-allowed" 
+                                        title="Descargar"
+                                        disabled={hologram.status !== 'ready'}
+                                    >
                                         <span className="material-symbols-outlined">download</span>
                                     </button>
                                     <button 
                                         onClick={() => onDelete(hologram.id)}
-                                        className="p-2 hover:bg-error/20 rounded-lg text-error transition-colors" 
-                                        title="Eliminar"
+                                        disabled={hologram.status === 'pending' || hologram.status === 'processing'}
+                                        className="p-2 hover:bg-error/20 rounded-lg text-error transition-colors disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed" 
+                                        title={hologram.status === 'pending' || hologram.status === 'processing' ? "No se puede eliminar mientras se procesa" : "Eliminar"}
                                     >
                                         <span className="material-symbols-outlined">delete</span>
                                     </button>
@@ -93,7 +122,7 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                 {holograms.map((hologram) => (
                     <div key={hologram.id} className="p-4 flex flex-col gap-4">
                         <div className="flex gap-4">
-                            <div className="w-24 h-16 rounded-xl bg-surface-container-highest overflow-hidden shrink-0">
+                            <div className="w-24 h-16 rounded-xl bg-surface-container-highest overflow-hidden shrink-0 relative">
                                 {hologram.thumbnailUrl ? (
                                     <img src={hologram.thumbnailUrl} alt={hologram.name} className="w-full h-full object-cover" />
                                 ) : (
@@ -101,15 +130,31 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                                         <span className="material-symbols-outlined text-on-surface-variant">image</span>
                                     </div>
                                 )}
+                                {(hologram.status === 'processing' || hologram.status === 'pending') && (
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                        <div className="w-4 h-4 border-2 border-tertiary border-t-transparent rounded-full animate-spin"></div>
+                                    </div>
+                                )}
                             </div>
                             <div className="flex flex-col justify-center">
-                                <h4 className="text-white font-bold">{hologram.name}</h4>
+                                <div className="flex items-center gap-2">
+                                    <h4 className="text-white font-bold">{hologram.name}</h4>
+                                    {hologram.status === 'error' && <span className="material-symbols-outlined text-error text-sm">error</span>}
+                                </div>
                                 <div className="flex items-center gap-2 text-on-surface-variant text-xs mt-1">
                                     <span className="material-symbols-outlined text-sm">music_note</span>
                                     {hologram.musicName} • {hologram.duration}
                                 </div>
-                                <div className="text-[10px] text-on-surface-variant/60 mt-0.5">
-                                    {new Date(hologram.createdAt).toLocaleDateString()}
+                                <div className="flex items-center gap-2 mt-1">
+                                    <div className="text-[10px] text-on-surface-variant/60">
+                                        {new Date(hologram.createdAt).toLocaleDateString()}
+                                    </div>
+                                    {hologram.status === 'pending' && (
+                                        <span className="text-[9px] text-tertiary font-bold uppercase tracking-wider px-1.5 py-0.5 bg-tertiary/10 rounded-full">En cola</span>
+                                    )}
+                                    {hologram.status === 'processing' && (
+                                        <span className="text-[9px] text-tertiary font-bold uppercase tracking-wider px-1.5 py-0.5 bg-tertiary/10 rounded-full">Procesando</span>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -127,7 +172,8 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                                 </button>
                                 <button 
                                     onClick={() => onDelete(hologram.id)}
-                                    className="p-2 bg-error/10 rounded-xl text-error"
+                                    disabled={hologram.status === 'pending' || hologram.status === 'processing'}
+                                    className="p-2 bg-error/10 rounded-xl text-error disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed"
                                 >
                                     <span className="material-symbols-outlined text-xl">delete</span>
                                 </button>
@@ -136,6 +182,7 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                     </div>
                 ))}
             </div>
+
         </div>
     );
 }
