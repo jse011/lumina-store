@@ -43,6 +43,15 @@ export class FirebaseHologramRepository implements HologramRepository {
 
     async deleteHologram(userId: string, hologramId: string): Promise<void> {
         const hologramRef = ref(database, `${this.basePath}/${userId}/holograms/${hologramId}`);
+        const snapshot = await get(hologramRef);
+
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            if (data.status === 'pending' || data.status === 'processing') {
+                throw new Error("No se puede eliminar un holograma mientras se está procesando");
+            }
+        }
+
         await update(hologramRef, { deleted: true });
     }
 
