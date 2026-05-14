@@ -1,15 +1,20 @@
 import { ref, get, set, push, onValue, remove, serverTimestamp } from "firebase/database";
 import { database } from "@/core/lib/firebase";
 import { Hologram } from "../../models/Hologram";
+import { HologramAction } from "../../models/HologramAction";
 import { HologramRepository } from "../../repositories/HologramRepository";
 
+const getBasePath = () => {
+    return process.env.NODE_ENV === 'production' ? 'produccion' : 'prueba';
+};
+
 export class FirebaseHologramRepository implements HologramRepository {
-    private basePath = "produccion/users";
+    private basePath = getBasePath() + "/users";
 
     async getHologramsByUserId(userId: string): Promise<Hologram[]> {
         const hologramsRef = ref(database, `${this.basePath}/${userId}/holograms`);
         const snapshot = await get(hologramsRef);
-        
+
         if (!snapshot.exists()) return [];
 
         const data = snapshot.val();
@@ -22,7 +27,7 @@ export class FirebaseHologramRepository implements HologramRepository {
     async createHologram(userId: string, hologram: Omit<Hologram, 'id' | 'createdAt' | 'status'>): Promise<string> {
         const hologramsRef = ref(database, `${this.basePath}/${userId}/holograms`);
         const newHologramRef = push(hologramsRef);
-        
+
         const data = {
             ...hologram,
             status: 'pending',
@@ -40,7 +45,7 @@ export class FirebaseHologramRepository implements HologramRepository {
 
     onHologramsChange(userId: string, callback: (holograms: Hologram[]) => void): () => void {
         const hologramsRef = ref(database, `${this.basePath}/${userId}/holograms`);
-        
+
         const unsubscribe = onValue(hologramsRef, (snapshot) => {
             if (!snapshot.exists()) {
                 callback([]);
@@ -52,10 +57,26 @@ export class FirebaseHologramRepository implements HologramRepository {
                 id: key,
                 ...data[key]
             })).sort((a, b) => b.createdAt - a.createdAt);
-            
+
             callback(holograms);
         });
 
         return unsubscribe;
+    }
+
+    async getActionsByType(type: 'persona' | 'mascota'): Promise<HologramAction[]> {
+        const actionsRef = ref(database, `${getBasePath()}/settings/hologramActions/${type}`);
+        const snapshot = await get(actionsRef);
+
+        if (!snapshot.exists()) {
+            // Default actions in case Firebase is not configured yet
+            if (type === 'mascota') {
+                return [];
+            } else {
+                return [];
+            }
+        }
+
+        return snapshot.val() as HologramAction[];
     }
 }

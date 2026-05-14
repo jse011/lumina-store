@@ -5,6 +5,10 @@
       ".write": true
     },
     "produccion": {
+      "hologramActions": {
+        ".read": true,
+        ".write": false
+      },
       "products": {
         ".read": true,
         ".write": false
@@ -70,6 +74,10 @@
           },
           "lastCodeRedeemed": {
             ".validate": "root.child('produccion/code').child(newData.val()).exists()"
+          },
+          "holograms": {
+            ".read": "auth != null && $userId === auth.uid",
+            ".write": "auth != null && $userId === auth.uid"
           }
         }
       }

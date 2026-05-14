@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CreatorState } from '../../../../types/CreatorState';
+import { HOLOGRAM_ACTIONS } from '../../../../mocks/mock';
 
 interface Props {
     onNext: () => void;
@@ -11,25 +12,8 @@ interface Props {
     type: 'persona' | 'mascota';
 }
 
-const PET_ACTIONS = [
-    { id: 'mueve-cola', label: 'Mueve la cola' },
-    { id: 'respira', label: 'Respira' },
-    { id: 'come', label: 'Le das comida' },
-    { id: 'salta', label: 'Salta' },
-    { id: 'jadea', label: 'Jadea' },
-    { id: 'acuesta', label: 'Se acuesta' }
-];
-
-const PERSON_ACTIONS = [
-    { id: 'sonrie', label: 'Sonríe' },
-    { id: 'saluda', label: 'Saluda' },
-    { id: 'habla', label: 'Habla' },
-    { id: 'guina', label: 'Guiña el ojo' },
-    { id: 'respira', label: 'Respira' }
-];
-
 export default function StepActions({ onNext, onBack, onUpdate, values, type }: Props) {
-    const actions = type === 'mascota' ? PET_ACTIONS : PERSON_ACTIONS;
+    const actions = HOLOGRAM_ACTIONS[type] || [];
 
     const toggleAction = (id: string) => {
         if (values.includes(id)) {
@@ -51,18 +35,16 @@ export default function StepActions({ onNext, onBack, onUpdate, values, type }: 
                 </div>
             </header>
 
-            <div className="flex flex-col gap-2 mb-8 max-h-[300px] overflow-y-auto no-scrollbar pr-1">
+            <div className="flex flex-col gap-2 mb-8 max-h-[300px] overflow-y-auto pr-1">
                 {actions.map((action) => (
                     <button
                         key={action.id}
                         onClick={() => toggleAction(action.id)}
-                        className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${
-                            values.includes(action.id) ? 'border-tertiary bg-tertiary/5' : 'border-outline-variant/30 hover:border-outline-variant'
-                        }`}
+                        className={`flex items-center gap-4 p-4 rounded-xl border transition-all ${values.includes(action.id) ? 'border-tertiary bg-tertiary/5' : 'border-outline-variant/30 hover:border-outline-variant'
+                            }`}
                     >
-                        <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${
-                            values.includes(action.id) ? 'bg-tertiary border-tertiary' : 'border-outline-variant/50'
-                        }`}>
+                        <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${values.includes(action.id) ? 'bg-tertiary border-tertiary' : 'border-outline-variant/50'
+                            }`}>
                             {values.includes(action.id) && <span className="material-symbols-outlined text-background text-[16px] font-bold">check</span>}
                         </div>
                         <span className="text-sm font-medium text-on-surface">{action.label}</span>
@@ -76,7 +58,7 @@ export default function StepActions({ onNext, onBack, onUpdate, values, type }: 
                 </span>
             </div>
 
-            <button 
+            <button
                 onClick={onNext}
                 disabled={values.length === 0}
                 className="w-full py-4 rounded-2xl bg-secondary text-on-secondary font-bold disabled:opacity-50 disabled:grayscale transition-all"
@@ -86,3 +68,4 @@ export default function StepActions({ onNext, onBack, onUpdate, values, type }: 
         </div>
     );
 }
+
