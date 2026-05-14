@@ -35,11 +35,22 @@ export function useHologramCreator() {
         updateState({ step: 'generating' });
 
         try {
+            // Generar nombre automático estratégico
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+            const typeStr = state.type === 'persona' ? 'Humano' : 'Mascota';
+            const actionStr = state.actions.length > 0 
+                ? ` ${state.actions[0].charAt(0).toUpperCase() + state.actions[0].slice(1)}` 
+                : '';
+            
+            // Ejemplo: "Mascota Saludo (14 may.)"
+            const autoName = `${typeStr}${actionStr} (${dateStr})`;
+
             // Simular generación de holograma
             await new Promise(resolve => setTimeout(resolve, 3000));
 
             const hologramId = await repository.createHologram(user.uid, {
-                name: state.name || "Nuevo Holograma",
+                name: state.name || autoName,
                 thumbnailUrl: state.preparedImage || "",
                 musicName: state.music,
                 duration: "10 seg",
