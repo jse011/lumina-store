@@ -53,8 +53,8 @@
       "users": {
         "$userId": {
           ".read": "auth != null && $userId === auth.uid",
-          ".write": "auth != null && $userId === auth.uid",
           "credits": {
+            ".write": "auth != null && $userId === auth.uid",
             ".validate": "
               (
                 (data.exists() && newData.val() === data.val() + root.child('produccion/code').child(newData.parent().child('lastCodeRedeemed').val()).child('credits').val()) ||
@@ -65,6 +65,7 @@
             "
           },
           "codes": {
+            ".write": "auth != null && $userId === auth.uid",
             "$codeId": {
               ".validate": "!data.exists()",
               "creditsEarned": {
@@ -73,11 +74,23 @@
             }
           },
           "lastCodeRedeemed": {
+            ".write": "auth != null && $userId === auth.uid",
             ".validate": "root.child('produccion/code').child(newData.val()).exists()"
           },
           "holograms": {
             ".read": "auth != null && $userId === auth.uid",
-            ".write": "auth != null && $userId === auth.uid"
+            "$hologramId": {
+              ".write": "auth != null && $userId === auth.uid && newData.exists()",
+              ".validate": "
+                newData.hasChildren(['name', 'type', 'status', 'creditsUsed', 'createdAt']) &&
+                newData.child('name').isString() &&
+                (newData.child('type').val() === 'persona' || newData.child('type').val() === 'mascota') &&
+                (newData.child('status').val() === 'pending' || newData.child('status').val() === 'processing' || newData.child('status').val() === 'ready' || newData.child('status').val() === 'error') &&
+                newData.child('creditsUsed').isNumber() &&
+                newData.child('creditsUsed').val() >= 0 &&
+                (!data.exists() || newData.child('createdAt').val() === data.child('createdAt').val())
+              "
+            }
           }
         }
       }

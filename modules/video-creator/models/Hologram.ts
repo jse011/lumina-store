@@ -10,4 +10,5 @@ export interface Hologram {
     status: 'pending' | 'processing' | 'ready' | 'error';
     type: 'persona' | 'mascota';
     actions: string[];
+    deleted?: boolean;
 }

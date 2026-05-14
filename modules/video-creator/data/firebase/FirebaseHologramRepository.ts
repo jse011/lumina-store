@@ -1,4 +1,4 @@
-import { ref, get, set, push, onValue, remove, serverTimestamp } from "firebase/database";
+import { ref, get, set, push, onValue, update, serverTimestamp } from "firebase/database";
 import { database } from "@/core/lib/firebase";
 import { Hologram } from "../../models/Hologram";
 import { HologramAction } from "../../models/HologramAction";
@@ -18,10 +18,13 @@ export class FirebaseHologramRepository implements HologramRepository {
         if (!snapshot.exists()) return [];
 
         const data = snapshot.val();
-        return Object.keys(data).map(key => ({
-            id: key,
-            ...data[key]
-        })).sort((a, b) => b.createdAt - a.createdAt);
+        return Object.keys(data)
+            .map(key => ({
+                id: key,
+                ...data[key]
+            } as Hologram))
+            .filter(h => !h.deleted)
+            .sort((a, b) => b.createdAt - a.createdAt);
     }
 
     async createHologram(userId: string, hologram: Omit<Hologram, 'id' | 'createdAt' | 'status'>): Promise<string> {
@@ -40,7 +43,7 @@ export class FirebaseHologramRepository implements HologramRepository {
 
     async deleteHologram(userId: string, hologramId: string): Promise<void> {
         const hologramRef = ref(database, `${this.basePath}/${userId}/holograms/${hologramId}`);
-        await remove(hologramRef);
+        await update(hologramRef, { deleted: true });
     }
 
     onHologramsChange(userId: string, callback: (holograms: Hologram[]) => void): () => void {
@@ -53,16 +56,20 @@ export class FirebaseHologramRepository implements HologramRepository {
             }
 
             const data = snapshot.val();
-            const holograms = Object.keys(data).map(key => ({
-                id: key,
-                ...data[key]
-            })).sort((a, b) => b.createdAt - a.createdAt);
+            const holograms = Object.keys(data)
+                .map(key => ({
+                    id: key,
+                    ...data[key]
+                } as Hologram))
+                .filter(h => !h.deleted)
+                .sort((a, b) => b.createdAt - a.createdAt);
 
             callback(holograms);
         });
 
         return unsubscribe;
     }
+
 
     async getActionsByType(type: 'persona' | 'mascota'): Promise<HologramAction[]> {
         const actionsRef = ref(database, `${getBasePath()}/settings/hologramActions/${type}`);
