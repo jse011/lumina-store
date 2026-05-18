@@ -5,6 +5,8 @@ export interface CreatorState {
     type: 'persona' | 'mascota' | null;
     actions: string[];
     image: File | null;
+    compressedBlob: Blob | null;
+    preparedBlob: Blob | null;
     preparedImage: string | null;
     originalPreviewUrl: string | null;
     music: string;
@@ -16,8 +18,11 @@ export const INITIAL_CREATOR_STATE: CreatorState = {
     type: null,
     actions: [],
     image: null,
+    compressedBlob: null,
+    preparedBlob: null,
     preparedImage: null,
     originalPreviewUrl: null,
     music: 'Sin música',
     name: ''
 };
+
