@@ -38,19 +38,15 @@ export function useHologramCreator() {
         updateState({ step: 'generating' });
 
         try {
+            const hologramId = repository.generateHologramId(user.uid);
+            const env = process.env.NODE_ENV === 'production' ? 'produccion' : 'prueba';
+
             // 1. Subir imágenes a Storage si existen
             let finalPreparedUrl = state.preparedImage || "";
             
-            if (state.preparedBlob && state.compressedBlob) {
-                const timestamp = Date.now();
-                
-                // Subir original comprimido
-                const originalRef = ref(storage, `holograms/${user.uid}/${timestamp}_original.webp`);
-                await uploadBytes(originalRef, state.compressedBlob);
-                // (Opcional: podrías guardar esta URL también en el registro si fuera necesario)
-
+            if (state.preparedBlob) {
                 // Subir preparado (este es el que se usa como thumbnail)
-                const preparedRef = ref(storage, `holograms/${user.uid}/${timestamp}_prepared.png`);
+                const preparedRef = ref(storage, `${env}/${user.uid}/${hologramId}/prepared.png`);
                 await uploadBytes(preparedRef, state.preparedBlob);
                 finalPreparedUrl = await getDownloadURL(preparedRef);
             }
@@ -68,7 +64,7 @@ export function useHologramCreator() {
             // Simular un poco más de tiempo para que parezca que está "creando" el video
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            const hologramId = await repository.createHologram(user.uid, {
+            await repository.createHologramWithId(user.uid, hologramId, {
                 name: state.name || autoName,
                 thumbnailUrl: finalPreparedUrl,
                 musicName: state.music,
