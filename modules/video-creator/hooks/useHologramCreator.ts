@@ -11,19 +11,14 @@ import { httpsCallable } from "firebase/functions";
 
 const repository = new FirebaseHologramRepository();
 
-export function useHologramCreator() {
+interface Props {
+    onClose: () => void;
+}
+
+export function useHologramCreator({ onClose }: Props) {
     const { user } = useAuth();
     const [state, setState] = useState<CreatorState>(INITIAL_CREATOR_STATE);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const openCreator = () => {
-        setState(INITIAL_CREATOR_STATE);
-        setIsModalOpen(true);
-    };
-
-    const closeCreator = () => {
-        setIsModalOpen(false);
-    };
 
     const nextStep = (next: CreationStep) => {
         setState(prev => ({ ...prev, step: next }));
@@ -62,16 +57,6 @@ export function useHologramCreator() {
 
             const autoName = `${typeStr}${actionStr} (${dateStr})`;
 
-            await repository.createHologramWithId(user.uid, hologramId, {
-                name: state.name || autoName,
-                thumbnailUrl: finalPreparedUrl,
-                musicName: state.music,
-                duration: "10 seg",
-                creditsUsed: 1,
-                type: state.type,
-                actions: state.actions
-            });
-
             // 3. Invocar la Cloud Function para llamar a Runway y guardar en DB
             const generateRunwayTask = httpsCallable(functions, 'generateRunwayTask');
             await generateRunwayTask({
@@ -87,20 +72,17 @@ export function useHologramCreator() {
                 env: env
             });
 
-            closeCreator();
+            onClose();
+
         } catch (error) {
             console.error("Error generating hologram:", error);
             updateState({ step: 'review' });
-            closeCreator();
+
         }
     };
 
-
     return {
         state,
-        isModalOpen,
-        openCreator,
-        closeCreator,
         nextStep,
         updateState,
         generateHologram

@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function CreatorModal({ onClose }: Props) {
-    const { state, nextStep, updateState, generateHologram } = useHologramCreator();
+    const { state, nextStep, updateState, generateHologram } = useHologramCreator({ onClose });
 
     const renderStep = () => {
         switch (state.step) {
