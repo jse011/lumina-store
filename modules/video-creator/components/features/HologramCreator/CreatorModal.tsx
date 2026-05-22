@@ -8,7 +8,6 @@ import StepUpload from './steps/StepUpload';
 import StepMusic from './steps/StepMusic';
 import StepReview from './steps/StepReview';
 import StepGenerating from './steps/StepGenerating';
-import StepReady from './steps/StepReady';
 
 interface Props {
     onClose: () => void;
@@ -53,8 +52,6 @@ export default function CreatorModal({ onClose }: Props) {
                 />;
             case 'generating':
                 return <StepGenerating />;
-            case 'ready':
-                return <StepReady onClose={onClose} />;
             default:
                 return null;
         }

@@ -1,5 +1,9 @@
 {
   "rules": {
+    "config": {
+      ".read": false,
+      ".write": false
+    },
     "prueba": {
       ".read": true,
       ".write": true
@@ -86,9 +90,9 @@
                   newData.child('deleted').val() !== true || 
                   data.child('status').val() === 'ready'
                 )
-              ",
-              ".validate": "
-                newData.hasChildren(['name', 'type', 'status', 'creditsUsed', 'createdAt']) &&
+              ",".validate": "
+                newData.hasChildren(['name', 'type', 'status', 'creditsUsed', 'createdAt'
+              ]) &&
                 newData.child('name').isString() &&
                 (newData.child('type').val() === 'persona' || newData.child('type').val() === 'mascota') &&
                 (newData.child('status').val() === 'pending' || newData.child('status').val() === 'processing' || newData.child('status').val() === 'ready' || newData.child('status').val() === 'error') &&

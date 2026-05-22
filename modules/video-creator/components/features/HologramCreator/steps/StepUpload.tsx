@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { CreatorState } from '../../../../types/CreatorState';
-import imageCompression from 'browser-image-compression';
-import { removeBackground } from '@imgly/background-removal';
+import { useImageUpload } from '../../../../hooks/useImageUpload';
 
 interface Props {
     onNext: () => void;
@@ -16,64 +15,18 @@ interface Props {
 
 export default function StepUpload({ onNext, onBack, onUpdate, image, preparedImage, originalPreviewUrl }: Props) {
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [isPreparing, setIsPreparing] = useState(false);
-    const [processingMessage, setProcessingMessage] = useState('Analizando imagen...');
-
-    const messages = [
-        'Analizando rasgos faciales...',
-        'Eliminando fondo original...',
-        'Generando mapa de profundidad...',
-        'Optimizando para holograma...',
-        'Finalizando preparación...'
-    ];
+    const { isPreparing, processingMessage, processAndUpload } = useImageUpload({ onUpdate });
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             onUpdate({ image: file, preparedImage: null });
-            simulatePreparation(file);
-        }
-    };
-
-    const simulatePreparation = async (file: File) => {
-        setIsPreparing(true);
-        let msgIndex = 0;
-        const interval = setInterval(() => {
-            setProcessingMessage(messages[msgIndex % messages.length]);
-            msgIndex++;
-        }, 3000);
-
-        try {
-            // Options for compression
-            const options = {
-                maxSizeMB: 2, // Max size 2MB
-                maxWidthOrHeight: 1920, // Max dimension 1920px
-                useWebWorker: true,
-                preserveExif: true, // Preserve orientation and metadata
-            };
-
-            // Compress image before processing
-            const compressedFile = await imageCompression(file, options);
-
-            // Show compressed image preview (as it represents what will be processed)
-            const previewUrl = URL.createObjectURL(compressedFile);
-            onUpdate({ originalPreviewUrl: previewUrl });
-
-            // Remove background using the compressed file
-            const blob = await removeBackground(compressedFile);
-            const url = URL.createObjectURL(blob);
-
-            onUpdate({ preparedImage: url });
-        } catch (error) {
-            console.error('Error al procesar la imagen:', error);
-            alert('Ocurrió un error al procesar la imagen. Asegúrate de que sea un formato compatible.');
-        } finally {
-            setIsPreparing(false);
-            clearInterval(interval);
+            processAndUpload(file);
         }
     };
 
     return (
+
         <div className="flex flex-col">
             <h2 className="text-xl font-bold text-white mb-2">
                 {preparedImage ? '3. Prepara tu imagen' : '2. Sube tu foto'}

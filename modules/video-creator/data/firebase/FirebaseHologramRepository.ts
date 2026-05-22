@@ -28,8 +28,19 @@ export class FirebaseHologramRepository implements HologramRepository {
     }
 
     async createHologram(userId: string, hologram: Omit<Hologram, 'id' | 'createdAt' | 'status'>): Promise<string> {
+        const id = this.generateHologramId(userId);
+        await this.createHologramWithId(userId, id, hologram);
+        return id;
+    }
+
+    generateHologramId(userId: string): string {
         const hologramsRef = ref(database, `${this.basePath}/${userId}/holograms`);
         const newHologramRef = push(hologramsRef);
+        return newHologramRef.key as string;
+    }
+
+    async createHologramWithId(userId: string, hologramId: string, hologram: Omit<Hologram, 'id' | 'createdAt' | 'status'>): Promise<void> {
+        const hologramRef = ref(database, `${this.basePath}/${userId}/holograms/${hologramId}`);
 
         const data = {
             ...hologram,
@@ -37,8 +48,7 @@ export class FirebaseHologramRepository implements HologramRepository {
             createdAt: serverTimestamp()
         };
 
-        await set(newHologramRef, data);
-        return newHologramRef.key as string;
+        await set(hologramRef, data);
     }
 
     async deleteHologram(userId: string, hologramId: string): Promise<void> {

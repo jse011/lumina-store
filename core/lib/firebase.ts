@@ -1,7 +1,8 @@
-// Importar Firebase
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getStorage } from "firebase/storage";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,7 +18,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
+const functions = getFunctions(app);
 const googleProvider = new GoogleAuthProvider();
 
-export { app, database, auth, googleProvider };
+// Conectar con el emulador en desarrollo
+// if (process.env.NODE_ENV === 'development') {
+//     try {
+//         connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+//     } catch (e) {
+//         console.warn("Functions emulator already connected or failed:", e);
+//     }
+// }
+
+export { app, database, auth, storage, functions, googleProvider };
 export default app;
