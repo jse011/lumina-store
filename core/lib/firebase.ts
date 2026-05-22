@@ -14,12 +14,14 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+console.log(firebaseConfig);
+
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
-const functions = getFunctions(app);
+const functions = getFunctions(app, "us-central1");
 const googleProvider = new GoogleAuthProvider();
 
 // Conectar con el emulador en desarrollo
