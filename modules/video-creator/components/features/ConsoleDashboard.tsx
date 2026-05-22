@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useHolograms } from '../../hooks/useHolograms';
 import { useHologramCreator } from '../../hooks/useHologramCreator';
@@ -9,13 +9,21 @@ import CreatorModal from './HologramCreator/CreatorModal';
 
 export default function ConsoleDashboard() {
     const { holograms, loading, deleteHologram } = useHolograms();
-    const { isModalOpen, openCreator, closeCreator } = useHologramCreator();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openCreator = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeCreator = () => {
+        setIsModalOpen(false);
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-12 md:py-20">
             {/* Back to Home */}
-            <Link 
-                href="/" 
+            <Link
+                href="/"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-white/5 transition-all mb-8 group"
             >
                 <span className="material-symbols-outlined text-xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
@@ -40,8 +48,8 @@ export default function ConsoleDashboard() {
                             <span className="material-symbols-outlined text-xl">chat_bubble</span>
                             <span className="font-semibold text-sm">Solicitar más créditos</span>
                         </button>
-                        
-                        <button 
+
+                        <button
                             onClick={openCreator}
                             className="flex items-center gap-2 px-5 py-3 rounded-xl bg-secondary text-on-secondary hover:brightness-110 transition-all shadow-lg shadow-secondary/20"
                         >
@@ -70,7 +78,7 @@ export default function ConsoleDashboard() {
                         <p className="text-on-surface-variant max-w-md mb-8">
                             Comienza a crear tus propios recuerdos digitales y dales vida en el espectro lumínico.
                         </p>
-                        <button 
+                        <button
                             onClick={openCreator}
                             className="px-8 py-4 rounded-2xl bg-gradient-to-r from-tertiary to-secondary text-on-primary font-bold"
                         >

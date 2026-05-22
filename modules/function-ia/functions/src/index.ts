@@ -23,9 +23,6 @@ async function pollRunwayTask(env: string, userId: string, hologramId: string, t
 
     // Note: in local emulator, the functions emulator runs on http://127.0.0.1:5001/<project-id>/us-central1/runwayWebhook
     // So we can hit our own webhook handler function directly instead of making an HTTP call, to avoid networking issues!
-    await updateHologramStatus(env, userId, hologramId, {
-        status: "processing"
-    });
     if (isMock) {
         console.log(`[Poller] Running in Mock Mode for task ${taskId}. Waiting 30s...`);
         await new Promise((resolve) => setTimeout(resolve, 30000));
@@ -118,6 +115,20 @@ export const generateRunwayTask = onCall(async (request) => {
     const secretSnapshot = await db.ref('config/runwaySecret').once('value');
     const runwaySecret = secretSnapshot.val() || "";
 
+
+    const hologramRef = db.ref(`${env}/users/${userId}/holograms/${hologramId}`);
+    await hologramRef.update({
+        name: name,
+        thumbnailUrl: thumbnailUrl,
+        musicName: musicName,
+        duration: "10 seg",
+        creditsUsed: 1,
+        type: type,
+        actions: actions,
+        status: "pending",
+        updateAt: Date.now()
+    });
+
     // Determine if we should run in mock mode
     const isMock = !runwaySecret ||
         runwaySecret === "your_runway_api_secret_here" ||
@@ -178,7 +189,7 @@ export const generateRunwayTask = onCall(async (request) => {
         const hologramRef = db.ref(`${env}/users/${userId}/holograms/${hologramId}`);
         await hologramRef.update({
             runwayTaskId: taskId,
-            status: "ready",
+            status: "processing",
             updateAt: Date.now()
         });
         console.log(`[generateRunwayTask] Hologram record saved in database with ID: ${hologramId}`);
