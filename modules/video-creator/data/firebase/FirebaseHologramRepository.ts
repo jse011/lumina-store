@@ -48,7 +48,7 @@ export class FirebaseHologramRepository implements HologramRepository {
             createdAt: serverTimestamp()
         };
 
-        await set(hologramRef, data);
+        await update(hologramRef, data);
     }
 
     async deleteHologram(userId: string, hologramId: string): Promise<void> {
