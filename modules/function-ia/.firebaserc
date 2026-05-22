@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "lumina-store-8409e197",
+    "luminia": "lumina-store-8409e197"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

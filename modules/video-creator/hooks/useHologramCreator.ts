@@ -5,8 +5,9 @@ import { CreatorState, INITIAL_CREATOR_STATE, CreationStep } from "../types/Crea
 import { useAuth } from "@/core/providers/AuthContext";
 import { FirebaseHologramRepository } from "../data/firebase/FirebaseHologramRepository";
 
-import { storage } from "@/core/lib/firebase";
+import { storage, functions } from "@/core/lib/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { httpsCallable } from "firebase/functions";
 
 const repository = new FirebaseHologramRepository();
 
@@ -43,7 +44,7 @@ export function useHologramCreator() {
 
             // 1. Subir imágenes a Storage si existen
             let finalPreparedUrl = state.preparedImage || "";
-            
+
             if (state.preparedBlob) {
                 // Subir preparado (este es el que se usa como thumbnail)
                 const preparedRef = ref(storage, `${env}/${user.uid}/${hologramId}/prepared.png`);
@@ -55,14 +56,12 @@ export function useHologramCreator() {
             const now = new Date();
             const dateStr = now.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
             const typeStr = state.type === 'persona' ? 'Humano' : 'Mascota';
-            const actionStr = state.actions.length > 0 
-                ? ` ${state.actions[0].charAt(0).toUpperCase() + state.actions[0].slice(1)}` 
+            const actionStr = state.actions.length > 0
+                ? ` ${state.actions[0].charAt(0).toUpperCase() + state.actions[0].slice(1)}`
                 : '';
-            
+
             const autoName = `${typeStr}${actionStr} (${dateStr})`;
 
-            // Simular un poco más de tiempo para que parezca que está "creando" el video
-            await new Promise(resolve => setTimeout(resolve, 2000));
 
             await repository.createHologramWithId(user.uid, hologramId, {
                 name: state.name || autoName,
@@ -74,7 +73,24 @@ export function useHologramCreator() {
                 actions: state.actions
             });
 
-            updateState({ step: 'ready' });
+            // 3. Invocar la Cloud Function para llamar a Runway y guardar en DB
+            const generateRunwayTask = httpsCallable(functions, 'generateRunwayTask');
+            await generateRunwayTask({
+                userId: user.uid,
+                hologramId,
+                name: state.name || autoName,
+                thumbnailUrl: finalPreparedUrl,
+                musicName: state.music,
+                duration: "10 seg",
+                creditsUsed: 1,
+                type: state.type,
+                actions: state.actions,
+                env: env
+            });
+
+
+
+            closeCreator();
         } catch (error) {
             console.error("Error generating hologram:", error);
             updateState({ step: 'review' });

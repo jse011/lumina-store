@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Hologram } from '../../models/Hologram';
 import ConfirmDialog from '../common/ConfirmDialog';
+import HologramPlayerModal from './HologramPlayerModal';
 
 interface Props {
     holograms: Hologram[];
@@ -11,6 +12,8 @@ interface Props {
 
 export default function HologramHistoryTable({ holograms, onDelete }: Props) {
     const [hologramToDelete, setHologramToDelete] = useState<{ id: string, name: string } | null>(null);
+    const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+    const [selectedHologram, setSelectedHologram] = useState<Hologram | null>(null);
 
     const handleDeleteClick = (id: string, name: string) => {
         setHologramToDelete({ id, name });
@@ -106,6 +109,7 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                                         className="p-2 hover:bg-white/10 rounded-lg text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                                         title="Reproducir"
                                         disabled={hologram.status !== 'ready'}
+                                        onClick={() => { setSelectedHologram(hologram); setIsPlayerOpen(true); }}
                                     >
                                         <span className="material-symbols-outlined">play_circle</span>
                                     </button>
@@ -229,6 +233,9 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                 confirmText="Eliminar"
                 cancelText="Cancelar"
             />
+            {isPlayerOpen && selectedHologram && (
+                <HologramPlayerModal hologram={selectedHologram} onClose={() => setIsPlayerOpen(false)} />
+            )}
         </div>
     );
 }

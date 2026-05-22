@@ -11,4 +11,5 @@ export interface Hologram {
     type: 'persona' | 'mascota';
     actions: string[];
     deleted?: boolean;
+    runwayTaskId?: string;
 }
