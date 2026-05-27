@@ -7,7 +7,7 @@ export interface Hologram {
     duration: string;
     createdAt: number;
     creditsUsed: number;
-    status: 'pending' | 'processing' | 'ready' | 'error';
+    status: 'pending' | 'processing' | 'ready' | 'error' | 'stopped';
     type: 'persona' | 'mascota';
     actions: string[];
     deleted?: boolean;

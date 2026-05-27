@@ -148,6 +148,8 @@ export const generateRunwayTask = onCall(async (request) => {
             const callbackUrl = `https://${region}-${projectId}.cloudfunctions.net/runwayWebhook?userId=${userId}&hologramId=${hologramId}&env=${env}`;
             console.log(`[generateRunwayTask] Submitting task to Runway API for url ${callbackUrl}`);
 
+            const promptText = `Realistic full-body pet centered and visible, soft breathing, subtle head and ear movement, gentle blinking, calm behavior, pure black background, no floor or objects, floating appearance, ultra realistic cinematic premium Pawai-style hologram, centered medium shot, soft front studio lighting, controlled reflections, no excessive shine, optimized for transparent hologram display, emotional holographic atmosphere for transparent 12x12 cm cube using Pepper’s Ghost reflection with smartphone screen, fixed camera, deep blacks, high contrast, natural colors, reduced glare, 4K ultra detailed, realistic proportions, smooth motion, stable clean image, optimized for premium transparent hologram.`;
+
             const response = await fetch("https://api.dev.runwayml.com/v1/image_to_video", {
                 method: "POST",
                 headers: {
@@ -156,11 +158,11 @@ export const generateRunwayTask = onCall(async (request) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: "gen3a_turbo",
+                    model: "gen4.5",
                     promptImage: thumbnailUrl,
-                    promptText: "Hola! Este es un video con un saludo de una persona. Este video se replicara en bucle. este video tendra el fondo negro.",
-                    ratio: "1280:768",
-                    duration: 5// pass the callbackUrl parameter
+                    promptText: promptText,
+                    ratio: "720:1280",
+                    duration: 10// pass the callbackUrl parameter
                 })
             });
 
