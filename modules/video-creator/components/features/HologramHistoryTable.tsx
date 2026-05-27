@@ -169,7 +169,7 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                             <div className="flex flex-col justify-center">
                                 <div className="flex items-center gap-2">
                                     <h4 className="text-white font-bold">{hologram.name}</h4>
-                                    {hologram.status === 'error' || hologram.status === 'stopped' && <span className="material-symbols-outlined text-error text-sm">error</span>}
+                                    {(hologram.status === 'error' || hologram.status === 'stopped') && <span className="material-symbols-outlined text-error text-sm">error</span>}
                                 </div>
                                 <div className="flex items-center gap-2 text-on-surface-variant text-xs mt-1">
                                     <span className="material-symbols-outlined text-sm">music_note</span>
