@@ -81,6 +81,12 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                                             Error
                                         </span>
                                     )}
+                                    {hologram.status === 'stopped' && (
+                                        <span className="text-[10px] text-error flex items-center gap-1 font-bold uppercase tracking-wider">
+                                            <span className="material-symbols-outlined text-[12px]">pause_circle</span>
+                                            Detenido
+                                        </span>
+                                    )}
                                 </div>
                             </td>
                             <td className="px-6 py-4">
@@ -180,10 +186,22 @@ export default function HologramHistoryTable({ holograms, onDelete }: Props) {
                                         {new Date(hologram.createdAt).toLocaleDateString()}
                                     </div>
                                     {hologram.status === 'pending' && (
-                                        <span className="text-[9px] text-tertiary font-bold uppercase tracking-wider px-1.5 py-0.5 bg-tertiary/10 rounded-full">En cola</span>
+                                        <span className="text-[10px] text-tertiary flex items-center gap-1 font-bold uppercase tracking-wider">
+                                            <span className="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
+                                            En cola
+                                        </span>
                                     )}
                                     {hologram.status === 'processing' && (
-                                        <span className="text-[9px] text-tertiary font-bold uppercase tracking-wider px-1.5 py-0.5 bg-tertiary/10 rounded-full">Procesando</span>
+                                        <span className="text-[10px] text-tertiary flex items-center gap-1 font-bold uppercase tracking-wider">
+                                            <span className="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
+                                            Procesando
+                                        </span>
+                                    )}
+                                    {hologram.status === 'error' && (
+                                        <span className="text-[10px] text-error flex items-center gap-1 font-bold uppercase tracking-wider">
+                                            <span className="material-symbols-outlined text-[12px]">error</span>
+                                            Error
+                                        </span>
                                     )}
                                     {hologram.status === 'stopped' && (
                                         <span className="text-[9px] text-error font-bold uppercase tracking-wider px-1.5 py-0.5 bg-error/10 rounded-full">Detenido</span>
