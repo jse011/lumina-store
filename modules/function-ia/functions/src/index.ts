@@ -1,7 +1,8 @@
 import { onCall, onRequest, HttpsError } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 import { getDatabase } from "firebase-admin/database";
-
+import { getStorage } from "firebase-admin/storage";
+import * as crypto from "crypto";
 // Initialize Firebase Admin SDK
 initializeApp();
 const db = getDatabase();
@@ -202,15 +203,114 @@ export const generateRunwayTask = onCall(async (request) => {
 
     // 4. Spawn background polling/monitoring (non-blocking)
     // This handles local development and acts as a fallback for production
-    pollRunwayTask(env, userId, hologramId, taskId, isMock).catch((err) => {
+    /*pollRunwayTask(env, userId, hologramId, taskId, isMock).catch((err) => {
         console.error(`[generateRunwayTask] Error in background poller for task ${taskId}:`, err);
-    });
+    });*/
 
     return {
         success: true,
         taskId: taskId,
         status: "processing"
     };
+});
+
+/**
+ * Callable Function: Checks the status of a Runway task
+ */
+export const checkHologramStatus = onCall(async (request) => {
+    if (!request.auth) {
+        throw new HttpsError("unauthenticated", "Debe estar autenticado para consultar el holograma.");
+    }
+
+    const { userId, hologramId, taskId, env: requestEnv, isMock } = request.data;
+
+    if (userId !== request.auth.uid) {
+        throw new HttpsError("permission-denied", "No tienes permisos.");
+    }
+
+    const env = requestEnv || "prueba";
+
+    if (isMock) {
+        const hologramSnap = await db.ref(`${env}/users/${userId}/holograms/${hologramId}`).once('value');
+        const hologram = hologramSnap.val();
+        // MOCK: Si han pasado más de 30 segundos, simulamos éxito
+        if (hologram && hologram.updateAt && (Date.now() - hologram.updateAt > 30000)) {
+            await updateHologramStatus(env, userId, hologramId, {
+                status: "ready",
+                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-hologram-effect-40019-large.mp4"
+            });
+            return { status: "SUCCESS" };
+        }
+        return { status: "PROCESSING" };
+    }
+
+    const secretSnapshot = await db.ref('config/runwaySecret').once('value');
+    const runwaySecret = secretSnapshot.val() || "";
+
+    try {
+        const response = await fetch(`https://api.dev.runwayml.com/v1/tasks/${taskId}`, {
+            headers: {
+                "Authorization": `Bearer ${runwaySecret}`,
+                "X-Runway-Version": "2024-11-06"
+            }
+        });
+
+        if (!response.ok) {
+            throw new HttpsError("internal", `Error Runway API: ${response.status}`);
+        }
+
+        const task = await response.json();
+
+        if (task.status === "SUCCEEDED" || task.status === "SUCCESS") {
+            let videoUrl = task.output?.[0] || task.artifacts?.[0]?.url || task.videoUrl || "";
+
+            // Download and save to Firebase Storage
+            if (videoUrl) {
+                try {
+                    const videoResponse = await fetch(videoUrl);
+                    if (!videoResponse.ok) {
+                        throw new Error(`Failed to fetch video: ${videoResponse.statusText}`);
+                    }
+                    const arrayBuffer = await videoResponse.arrayBuffer();
+                    const buffer = Buffer.from(arrayBuffer);
+
+                    const bucket = getStorage().bucket();
+                    const filePath = `${env}/${userId}/${hologramId}/video.mp4`;
+                    const file = bucket.file(filePath);
+
+                    const token = crypto.randomUUID();
+                    await file.save(buffer, {
+                        metadata: {
+                            contentType: 'video/mp4',
+                            metadata: {
+                                firebaseStorageDownloadTokens: token
+                            }
+                        }
+                    });
+
+                    videoUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
+                    console.log(`[checkHologramStatus] Video uploaded to Storage: ${videoUrl}`);
+                } catch (uploadError) {
+                    console.error("[checkHologramStatus] Error uploading to Storage:", uploadError);
+                    // If it fails, videoUrl remains the Runway URL as fallback
+                }
+            }
+
+            await updateHologramStatus(env, userId, hologramId, {
+                status: "ready",
+                videoUrl: videoUrl
+            });
+        } else if (task.status === "FAILED" || task.status === "ERROR" || task.status === "CANCELLED") {
+            await updateHologramStatus(env, userId, hologramId, {
+                status: "error"
+            });
+        }
+
+        return { status: task.status };
+    } catch (error: any) {
+        console.error("[checkHologramStatus] Error:", error);
+        throw new HttpsError("internal", "Error al consultar estado en Runway.");
+    }
 });
 
 /**

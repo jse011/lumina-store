@@ -59,7 +59,7 @@ export function useHologramCreator({ onClose }: Props) {
 
             // 3. Invocar la Cloud Function para llamar a Runway y guardar en DB
             const generateRunwayTask = httpsCallable(functions, 'generateRunwayTask');
-            await generateRunwayTask({
+            const result = await generateRunwayTask({
                 userId: user.uid,
                 hologramId,
                 name: state.name || autoName,
@@ -71,13 +71,21 @@ export function useHologramCreator({ onClose }: Props) {
                 actions: state.actions,
                 env: env
             });
-
-            onClose();
+            // Listen to DB for status changes instead of polling
+            const unsubscribe = repository.onHologramChange(user.uid, hologramId, (hologram) => {
+                if (hologram && (hologram.status === "ready" || hologram.status === "error")) {
+                    unsubscribe();
+                    if (hologram.status === "ready") {
+                        onClose();
+                    } else {
+                        updateState({ step: 'review' });
+                    }
+                }
+            });
 
         } catch (error) {
             console.error("Error generating hologram:", error);
             updateState({ step: 'review' });
-
         }
     };
 
