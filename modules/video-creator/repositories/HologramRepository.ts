@@ -8,5 +8,6 @@ export interface HologramRepository {
     createHologramWithId(userId: string, id: string, hologram: Omit<Hologram, 'id' | 'createdAt' | 'status'>): Promise<void>;
     deleteHologram(userId: string, hologramId: string): Promise<void>;
     onHologramsChange(userId: string, callback: (holograms: Hologram[]) => void): () => void;
+    onHologramChange(userId: string, hologramId: string, callback: (hologram: Hologram | null) => void): () => void;
     getActionsByType(type: 'persona' | 'mascota'): Promise<HologramAction[]>;
 }

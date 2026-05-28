@@ -89,6 +89,18 @@ export class FirebaseHologramRepository implements HologramRepository {
         return unsubscribe;
     }
 
+    onHologramChange(userId: string, hologramId: string, callback: (hologram: Hologram | null) => void): () => void {
+        const hologramRef = ref(database, `${this.basePath}/${userId}/holograms/${hologramId}`);
+        const unsubscribe = onValue(hologramRef, (snapshot) => {
+            if (!snapshot.exists()) {
+                callback(null);
+                return;
+            }
+            const data = snapshot.val();
+            callback({ id: hologramId, ...data } as Hologram);
+        });
+        return unsubscribe;
+    }
 
     async getActionsByType(type: 'persona' | 'mascota'): Promise<HologramAction[]> {
         const actionsRef = ref(database, `${getBasePath()}/settings/hologramActions/${type}`);
