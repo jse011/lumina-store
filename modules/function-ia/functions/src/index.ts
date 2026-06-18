@@ -1,4 +1,4 @@
-import { onCall, onRequest, HttpsError } from "firebase-functions/v2/https";
+import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 import { getDatabase } from "firebase-admin/database";
 import { getStorage } from "firebase-admin/storage";
@@ -15,86 +15,7 @@ async function updateHologramStatus(env: string, userId: string, hologramId: str
     await ref.update(updates);
 }
 
-/**
- * Helper to poll Runway task status and trigger webhook when completed
- */
-async function pollRunwayTask(env: string, userId: string, hologramId: string, taskId: string, isMock: boolean) {
-    const maxAttempts = 30; // 30 attempts * 5 seconds = 150 seconds (2.5 minutes)
-    const intervalMs = 5000;
-
-    // Note: in local emulator, the functions emulator runs on http://127.0.0.1:5001/<project-id>/us-central1/runwayWebhook
-    // So we can hit our own webhook handler function directly instead of making an HTTP call, to avoid networking issues!
-    if (isMock) {
-        console.log(`[Poller] Running in Mock Mode for task ${taskId}. Waiting 30s...`);
-        await new Promise((resolve) => setTimeout(resolve, 30000));
-        try {
-            await updateHologramStatus(env, userId, hologramId, {
-                status: "ready",
-                videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-hologram-effect-40019-large.mp4"
-            });
-            console.log(`[Poller] Mock task ${taskId} completed and database updated.`);
-        } catch (err) {
-            console.error(`[Poller] Error updating database for mock task ${taskId}:`, err);
-        }
-        return;
-    }
-
-    const secretSnapshot = await db.ref('config/runwaySecret').once('value');
-    const runwaySecret = secretSnapshot.val() || "";
-
-    console.log(`[Poller] Starting polling for real Runway task ${taskId}...`);
-    let taskCompleted = false;
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        await new Promise((resolve) => setTimeout(resolve, intervalMs));
-
-        try {
-            const response = await fetch(`https://api.dev.runwayml.com/v1/tasks/${taskId}`, {
-                headers: {
-                    "Authorization": `Bearer ${runwaySecret}`,
-                    "X-Runway-Version": "2024-11-06"
-                }
-            });
-
-            if (!response.ok) {
-                console.error(`[Poller] Failed to poll Runway task ${taskId} (Attempt ${attempt}): status ${response.status}`);
-                continue;
-            }
-
-            const task = await response.json();
-            console.log(`[Poller] Task ${taskId} status (Attempt ${attempt}): ${task.status}`);
-
-            if (task.status === "SUCCEEDED" || task.status === "SUCCESS") {
-                const videoUrl = task.output?.[0] || task.artifacts?.[0]?.url || task.videoUrl || "";
-                await updateHologramStatus(env, userId, hologramId, {
-                    status: "ready",
-                    videoUrl: videoUrl
-                });
-                console.log(`[Poller] Real task ${taskId} succeeded. Updated database with videoUrl.`);
-                taskCompleted = true;
-                break;
-            } else if (task.status === "FAILED" || task.status === "ERROR" || task.status === "CANCELLED") {
-                await updateHologramStatus(env, userId, hologramId, {
-                    status: "error"
-                });
-                taskCompleted = true;
-                console.log(`[Poller] Real task ${taskId} failed or cancelled. Updated status in database.`);
-                break;
-            }
-        } catch (error) {
-            console.error(`[Poller] Error during Runway polling attempt ${attempt} for task ${taskId}:`, error);
-        }
-    }
-
-    if (!taskCompleted) {
-        await updateHologramStatus(env, userId, hologramId, {
-            status: "stopped",
-            error: "Error de tiempo de espera de espera de ejecución del servicio de IA"
-        });
-        console.log(`[Poller] Real task ${taskId} failed or cancelled. Updated status in database.`);
-    }
-
-
-}
+// pollRunwayTask removido por estar sin uso y para evitar costos de polling en el servidor.
 
 /**
  * Callable Function: Initiates a video generation task on Runway
@@ -105,7 +26,7 @@ export const generateRunwayTask = onCall(async (request) => {
         throw new HttpsError("unauthenticated", "Debe estar autenticado para generar un holograma.");
     }
 
-    const { userId, hologramId, name, thumbnailUrl, musicName, duration, creditsUsed, type, actions, env: requestEnv } = request.data;
+    const { userId, hologramId, name, thumbnailUrl, musicName, type, actions, env: requestEnv } = request.data;
 
     // 2. Security validation: Ensure user matches authenticated UID
     if (userId !== request.auth.uid) {
@@ -149,9 +70,17 @@ export const generateRunwayTask = onCall(async (request) => {
             const callbackUrl = `https://${region}-${projectId}.cloudfunctions.net/runwayWebhook?userId=${userId}&hologramId=${hologramId}&env=${env}`;
             console.log(`[generateRunwayTask] Submitting task to Runway API for url ${callbackUrl}`);
 
-            const promptText = `Realistic full-body pet centered and visible, soft breathing, subtle head and ear movement, gentle blinking, calm behavior, pure black background, no floor or objects, floating appearance, ultra realistic cinematic premium Pawai-style hologram, centered medium shot, soft front studio lighting, controlled reflections, no excessive shine, optimized for transparent hologram display, emotional holographic atmosphere for transparent 12x12 cm cube using Pepper’s Ghost reflection with smartphone screen, fixed camera, deep blacks, high contrast, natural colors, reduced glare, 4K ultra detailed, realistic proportions, smooth motion, stable clean image, optimized for premium transparent hologram.`;
+            // PASO 1: Crear tarea de corrección de imagen
+            const imagePrompt = `Restore and complete ONLY the single subject from the reference image. The image must contain exactly ONE subject only: one person or one animal. No duplicates, extra limbs, reflections, objects, text, or artifacts.
 
-            const response = await fetch("https://api.dev.runwayml.com/v1/image_to_video", {
+Preserve the exact identity, anatomy, colors, and facial features. Reconstruct any missing or cropped body parts naturally.
+
+Create a dynamic full-body pose suitable for holographic animation, with natural posture, balanced stance, and subtle motion readiness. Leave generous empty space around the subject to allow movement across the frame while always keeping the full body visible.
+
+Pure absolute black background. No floor, shadows, scenery, or environment.
+
+Ultra-realistic cinematic studio quality, sharp focus, clean silhouette, holographic presentation style.`;
+            const response = await fetch("https://api.dev.runwayml.com/v1/text_to_image", {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${runwaySecret}`,
@@ -159,11 +88,15 @@ export const generateRunwayTask = onCall(async (request) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: "gen4.5",
-                    promptImage: thumbnailUrl,
-                    promptText: promptText,
-                    ratio: "720:1280",
-                    duration: 10// pass the callbackUrl parameter
+                    model: "gemini_image3_pro",//ggemini_2.5_flash gemini_image3_pro
+                    promptText: imagePrompt,
+                    ratio: "1344:768", // Coincidimos con el aspect ratio del video final
+                    referenceImages: [
+                        {
+                            uri: thumbnailUrl,
+                            tag: "ref_image"
+                        }
+                    ]
                 })
             });
 
@@ -192,6 +125,7 @@ export const generateRunwayTask = onCall(async (request) => {
         const hologramRef = db.ref(`${env}/users/${userId}/holograms/${hologramId}`);
         await hologramRef.update({
             runwayTaskId: taskId,
+            runwayTaskType: "image", // Indicamos que es la tarea de imagen
             status: "processing",
             updateAt: Date.now()
         });
@@ -230,10 +164,17 @@ export const checkHologramStatus = onCall(async (request) => {
 
     const env = requestEnv || "prueba";
 
-    if (isMock) {
-        const hologramSnap = await db.ref(`${env}/users/${userId}/holograms/${hologramId}`).once('value');
-        const hologram = hologramSnap.val();
-        // MOCK: Si han pasado más de 30 segundos, simulamos éxito
+    const hologramSnap = await db.ref(`${env}/users/${userId}/holograms/${hologramId}`).once('value');
+    const hologram = hologramSnap.val();
+    if (!hologram) {
+        throw new HttpsError("not-found", "Holograma no encontrado.");
+    }
+
+    // Obtenemos el ID de tarea actual desde Firebase (ignora el del request si ya avanzó)
+    const currentTaskId = hologram.runwayTaskId || taskId;
+    const taskType = hologram.runwayTaskType || "video"; // "image" o "video"
+
+    if (isMock) {  // MOCK: Si han pasado más de 30 segundos, simulamos éxito
         if (hologram && hologram.updateAt && (Date.now() - hologram.updateAt > 30000)) {
             await updateHologramStatus(env, userId, hologramId, {
                 status: "ready",
@@ -248,7 +189,7 @@ export const checkHologramStatus = onCall(async (request) => {
     const runwaySecret = secretSnapshot.val() || "";
 
     try {
-        const response = await fetch(`https://api.dev.runwayml.com/v1/tasks/${taskId}`, {
+        const response = await fetch(`https://api.dev.runwayml.com/v1/tasks/${currentTaskId}`, {
             headers: {
                 "Authorization": `Bearer ${runwaySecret}`,
                 "X-Runway-Version": "2024-11-06"
@@ -262,48 +203,96 @@ export const checkHologramStatus = onCall(async (request) => {
         const task = await response.json();
 
         if (task.status === "SUCCEEDED" || task.status === "SUCCESS") {
-            let videoUrl = task.output?.[0] || task.artifacts?.[0]?.url || task.videoUrl || "";
+            let mediaUrl = task.output?.[0] || task.artifacts?.[0]?.url || task.videoUrl || task.imageUrl || "";
 
-            // Download and save to Firebase Storage
-            if (videoUrl) {
+            if (taskType === "image") {
+                // PASO 2: La imagen se corrigió. Ahora creamos la tarea de VIDEO.
+                console.log(`[checkHologramStatus] Image task succeeded. URL: ${mediaUrl}. Starting video task...`);
                 try {
-                    const videoResponse = await fetch(videoUrl);
-                    if (!videoResponse.ok) {
-                        throw new Error(`Failed to fetch video: ${videoResponse.statusText}`);
-                    }
-                    const arrayBuffer = await videoResponse.arrayBuffer();
-                    const buffer = Buffer.from(arrayBuffer);
+                    const videoPrompt = `A realistic full-body pet, fully visible against a pure black background. The pet smoothly moves across the frame with natural full-body motion, gently floating and drifting side to side like a premium hologram. Continuous movement, subtle walking, body rotation, posture shifting, and smooth forward motion while remaining fully visible. Cinematic hologram style, static wide shot, soft front studio lighting, deep blacks, high contrast, smooth animation, stable anatomy, clean silhouette, pure black void background, no floor, no shadows, no extra objects.`;
 
-                    const bucket = getStorage().bucket();
-                    const filePath = `${env}/${userId}/${hologramId}/video.mp4`;
-                    const file = bucket.file(filePath);
-
-                    const token = crypto.randomUUID();
-                    await file.save(buffer, {
-                        metadata: {
-                            contentType: 'video/mp4',
-                            metadata: {
-                                firebaseStorageDownloadTokens: token
-                            }
-                        }
+                    const videoResponse = await fetch("https://api.dev.runwayml.com/v1/image_to_video", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${runwaySecret}`,
+                            "X-Runway-Version": "2024-11-06",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            model: "gen4.5", // Usando el modelo de video solicitado
+                            promptImage: mediaUrl,
+                            promptText: videoPrompt,
+                            ratio: "1280:720",
+                            duration: 10
+                        })
                     });
 
-                    videoUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
-                    console.log(`[checkHologramStatus] Video uploaded to Storage: ${videoUrl}`);
-                } catch (uploadError) {
-                    console.error("[checkHologramStatus] Error uploading to Storage:", uploadError);
-                    // If it fails, videoUrl remains the Runway URL as fallback
-                }
-            }
+                    if (!videoResponse.ok) {
+                        const errText = await videoResponse.text();
+                        throw new Error(`Video task creation failed: ${videoResponse.status} - ${errText}`);
+                    }
+                    const videoTaskResult = await videoResponse.json();
+                    const newTaskId = videoTaskResult.id || videoTaskResult.taskId;
 
-            await updateHologramStatus(env, userId, hologramId, {
-                status: "ready",
-                videoUrl: videoUrl
-            });
+                    // Actualizamos la BD con la nueva tarea de video
+                    await updateHologramStatus(env, userId, hologramId, {
+                        runwayTaskId: newTaskId,
+                        runwayTaskType: "video",
+                        updateAt: Date.now()
+                    });
+
+                    // Respondemos al frontend que sigue en proceso
+                    return { status: "PROCESSING" };
+                } catch (videoError) {
+                    console.error("[checkHologramStatus] Error launching video task:", videoError);
+                    await updateHologramStatus(env, userId, hologramId, { status: "error" });
+                    return { status: "FAILED" };
+                }
+            } else {
+                // TAREA DE VIDEO TERMINADA -> Subir a Storage
+                let videoUrl = mediaUrl;
+                if (videoUrl) {
+                    try {
+                        const videoResponse = await fetch(videoUrl);
+                        if (!videoResponse.ok) {
+                            throw new Error(`Failed to fetch video: ${videoResponse.statusText}`);
+                        }
+                        const arrayBuffer = await videoResponse.arrayBuffer();
+                        const buffer = Buffer.from(arrayBuffer);
+
+                        const bucket = getStorage().bucket();
+                        const filePath = `${env}/${userId}/${hologramId}/video.mp4`;
+                        const file = bucket.file(filePath);
+
+                        const token = crypto.randomUUID();
+                        await file.save(buffer, {
+                            metadata: {
+                                contentType: 'video/mp4',
+                                metadata: {
+                                    firebaseStorageDownloadTokens: token
+                                }
+                            }
+                        });
+
+                        videoUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
+                        console.log(`[checkHologramStatus] Video uploaded to Storage: ${videoUrl}`);
+                    } catch (uploadError) {
+                        console.error("[checkHologramStatus] Error uploading to Storage:", uploadError);
+                        // If it fails, videoUrl remains the Runway URL as fallback
+                    }
+                }
+
+                await updateHologramStatus(env, userId, hologramId, {
+                    status: "ready",
+                    videoUrl: videoUrl
+                });
+                return { status: task.status };
+            }
         } else if (task.status === "FAILED" || task.status === "ERROR" || task.status === "CANCELLED") {
             await updateHologramStatus(env, userId, hologramId, {
                 status: "error"
             });
+            return { status: task.status };
         }
 
         return { status: task.status };
