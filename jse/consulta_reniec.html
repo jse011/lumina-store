@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta RENIEC</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Ventana principal */
+        .window-container {
+            width: 750px;
+            background-color: #ffffff;
+            border: 1px solid #b5c7b7;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* Barra de título */
+        .window-header {
+            background-color: #e5efe5;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #b5c7b7;
+        }
+
+        .window-title {
+            color: #0026ff;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .close-btn {
+            background-color: #dbe4dc;
+            border: 1px solid #9cb19e;
+            color: #0026ff;
+            font-weight: bold;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 2px;
+            font-size: 12px;
+        }
+
+        .close-btn:hover {
+            background-color: #c8d6c9;
+        }
+
+        /* Contenedor del cuerpo */
+        .window-body {
+            padding: 15px;
+        }
+
+        /* Sección superior: Búsqueda */
+        .search-panel {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        .search-panel h3 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .search-options {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .consultar-btn {
+            background: linear-gradient(to bottom, #ffba00, #ff8c00);
+            border: 1px solid #b36200;
+            color: #333;
+            font-weight: bold;
+            padding: 6px 18px;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .consultar-btn:hover {
+            background: linear-gradient(to bottom, #ffc72b, #ff9914);
+        }
+
+        /* Contenedor de Pestañas */
+        .tabs-container {
+            margin-top: 10px;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid #ff9900;
+            gap: 2px;
+        }
+
+        .tab-button {
+            padding: 6px 15px;
+            background-color: #eaeaea;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .tab-button.active {
+            background-color: #ffffff;
+            border-color: #ff9900;
+            border-bottom: 1px solid #ffffff;
+            font-weight: bold;
+            margin-bottom: -1px;
+        }
+
+        /* Contenido de la pestaña */
+        .tab-content {
+            display: none;
+            border: 1px solid #ccc;
+            border-top: none;
+            padding: 20px;
+            background-color: #ffffff;
+            min-height: 380px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Sub-contenedor interno de pestaña */
+        .inner-box {
+            border: 1px solid #e2e2e2;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .inner-box h4 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #000;
+        }
+
+        /* Formulario de datos */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 160px 250px;
+            row-gap: 8px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            color: #222;
+        }
+
+        .form-input-box {
+            background-color: #e2e2e2;
+            height: 18px;
+            width: 100%;
+            border: none;
+        }
+
+        /* Sección de Foto y Firma */
+        .media-section {
+            display: flex;
+            gap: 40px;
+            align-items: flex-end;
+            margin-top: 20px;
+        }
+
+        .media-box {
+            border: 1px solid #f2f2f2;
+            background-color: #fbfbfb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .photo-box {
+            width: 180px;
+            height: 230px;
+            background-color: #fffafb;
+        }
+
+        .signature-box {
+            width: 350px;
+            height: 130px;
+            flex-direction: row;
+            gap: 15px;
+            background-color: #ffffff;
+            border: 1px solid #eaeaea;
+        }
+
+        /* Emulación del logo azul de RENIEC */
+        .logo-placeholder {
+            width: 45px;
+            height: 65px;
+            background: radial-gradient(circle, #001f5c 40%, transparent 42%), linear-gradient(#001f5c, #001f5c);
+            background-size: 30px 30px, 20px 20px;
+            background-repeat: no-repeat;
+            background-position: center top, bottom left;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .logo-placeholder::before {
+            content: "";
+            position: absolute;
+            top: 0; right: 0;
+            width: 25px; height: 30px;
+            background-color: #001f5c;
+        }
+        .logo-placeholder::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 25px; height: 30px;
+            background-color: #001f5c;
+        }
+
+        .media-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #111;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .signature-box .logo-placeholder {
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window-container">
+        <!-- Barra de título -->
+        <div class="window-header">
+            <div class="window-title">Consulta RENIEC</div>
+            <div class="close-btn" onclick="alert('Cerrando consulta...')">X</div>
+        </div>
+
+        <!-- Cuerpo de la ventana -->
+        <div class="window-body">
+            <!-- Sección de Búsqueda -->
+            <div class="search-panel">
+                <h3>Busqueda por:</h3>
+                <div class="search-options">
+                    <label class="radio-label">
+                        <input type="radio" name="busqueda" value="dni" checked> DNI
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="busqueda" value="persona"> Persona
+                    </label>
+                </div>
+                <button class="consultar-btn" onclick="alert('Realizando consulta...')">Consultar</button>
+            </div>
+
+            <!-- Navegación de Pestañas -->
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-button active" onclick="changeTab(event, 'tab-general')">Consulta General</button>
+                    <button class="tab-button" onclick="changeTab(event, 'tab-adicional')">Información Adicional</button>
+                    <button class="tab-button" onclick="changeTab(event, 'tab-aproximacion')">Consulta por Aproximacion</button>
+                </div>
+
+                <!-- Pestaña 1: Consulta General -->
+                <div id="tab-general" class="tab-content active">
+                    <div class="inner-box">
+                        <h4>Por Persona</h4>
+                        
+                        <div class="form-grid">
+                            <div class="form-label">Número de Documento:</div>
+                            <div class="form-input-box"></div>
+
+                            <div class="form-label">Apellido Paterno:</div>
+                            <div class="form-input-box"></div>
+
+                            <div class="form-label">Apellido Materno:</div>
+                            <div class="form-input-box"></div>
+
+                            <div class="form-label">Nombre:</div>
+                            <div class="form-input-box"></div>
+
+                            <div class="form-label">Fecha de Nacimiento:</div>
+                            <div class="form-input-box"></div>
+
+                            <div class="form-label">Nombre del Padre:</div>
+                            <div class="form-input-box"></div>
+
+                            <div class="form-label">Nombre de la Madre :</div>
+                            <div class="form-input-box"></div>
+                        </div>
+
+                        <div class="media-section">
+                            <!-- Caja de Foto -->
+                            <div class="media-box photo-box">
+                                <div class="logo-placeholder"></div>
+                                <div class="media-text">Foto no<br>disponible</div>
+                            </div>
+
+                            <!-- Caja de Firma -->
+                            <div class="media-box signature-box">
+                                <div class="logo-placeholder"></div>
+                                <div class="media-text">Firma no disponible</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Pestaña 2: Información Adicional -->
+                <div id="tab-adicional" class="tab-content">
+                    <div class="inner-box">
+                        <h4>Información Adicional</h4>
+                        <p>No hay información adicional disponible para mostrar en este momento.</p>
+                    </div>
+                </div>
+
+                <!-- Pestaña 3: Consulta por Aproximación -->
+                <div id="tab-aproximacion" class="tab-content">
+                    <div class="inner-box">
+                        <h4>Consulta por Aproximación</h4>
+                        <p>Ingrese los parámetros de búsqueda por aproximación en el panel superior.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para cambiar entre pestañas -->
+    <script>
+        function changeTab(event, tabId) {
+            // Ocultar todos los contenidos de pestañas
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Quitar clase active de todos los botones
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            // Activar la pestaña actual y su botón respectivo
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
