@@ -1,6 +1,6 @@
 <!-- Barra de navegación gris y menús desplegables -->
 <nav class="navbar">
-  @for (item of menuItems; track item.label) {
+  @for (item of menuItems(); track item.label) {
     <div class="nav-item">
       <div class="nav-item-label">
         <span>{{ item.label }}</span>

@@ -1,14 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-  @Input() systemTitle: string = 'SISTEMA DE EVALUACION DE RIESGOS';
-  @Input() userInfo: string = 'Usuario: Usuario ADQ : Vulcano';
+  systemTitle = input('SISTEMA DE EVALUACION DE RIESGOS');
+  userInfo = input('Usuario: Usuario ADQ : Vulcano');
 
   onLogout(event: Event): void {
     event.preventDefault();

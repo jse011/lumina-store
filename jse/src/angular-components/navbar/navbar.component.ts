@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface MenuItem {
@@ -8,13 +8,13 @@ interface MenuItem {
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent {
-  menuItems: MenuItem[] = [
+  menuItems = signal<MenuItem[]>([
     {
       label: 'Consulta',
       subitems: [
@@ -40,7 +40,7 @@ export class NavbarComponent {
         { label: 'Parametro', url: '#' }
       ]
     }
-  ];
+  ]);
 
   onMenuSelect(event: Event, item: { label: string; url: string }): void {
     event.preventDefault();

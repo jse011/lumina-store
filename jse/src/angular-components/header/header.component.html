@@ -11,9 +11,9 @@
   </div>
 
   <div class="header-content">
-    <div class="system-title">{{ systemTitle }}</div>
+    <div class="system-title">{{ systemTitle() }}</div>
     <div class="header-bottom-row">
-      <div class="user-text">{{ userInfo }}</div>
+      <div class="user-text">{{ userInfo() }}</div>
       <a href="#" (click)="onLogout($event)" class="logout-link">Cerrar Sesion</a>
     </div>
   </div>
