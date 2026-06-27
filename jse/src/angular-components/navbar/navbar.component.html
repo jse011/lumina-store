@@ -1,0 +1,18 @@
+<!-- Barra de navegación gris y menús desplegables -->
+<nav class="navbar">
+  @for (item of menuItems; track item.label) {
+    <div class="nav-item">
+      <div class="nav-item-label">
+        <span>{{ item.label }}</span>
+        <span class="nav-arrow">&#9656;</span>
+      </div>
+      <ul class="dropdown-menu">
+        @for (sub of item.subitems; track sub.label) {
+          <li>
+            <a [href]="sub.url" (click)="onMenuSelect($event, sub)">{{ sub.label }}</a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</nav>

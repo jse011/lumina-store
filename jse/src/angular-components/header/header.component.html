@@ -1,0 +1,20 @@
+<!-- Borde superior biselado -->
+<div class="top-window-border"></div>
+
+<!-- Encabezado verde con logo y matriz de puntos -->
+<header class="header-banner">
+  <div class="logo-container">
+    <div class="logo-box">
+      <div class="logo-box-inner"></div>
+    </div>
+    <div class="logo-text">Interbank</div>
+  </div>
+
+  <div class="header-content">
+    <div class="system-title">{{ systemTitle }}</div>
+    <div class="header-bottom-row">
+      <div class="user-text">{{ userInfo }}</div>
+      <a href="#" (click)="onLogout($event)" class="logout-link">Cerrar Sesion</a>
+    </div>
+  </div>
+</header>
