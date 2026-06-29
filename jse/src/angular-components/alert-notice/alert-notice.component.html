@@ -1,0 +1,44 @@
+@if (visible()) {
+  <div class="alert-card" 
+       [class.alert-card-inline]="mode() === 'inline'"
+       [class.type-info]="type() === 'info'"
+       [class.type-success]="type() === 'success'"
+       [class.type-warning]="type() === 'warning'"
+       [class.type-error]="type() === 'error'"
+       [style.box-shadow]="customStyle()?.['box-shadow']"
+       [style.border-left]="customStyle()?.['border-left']"
+       [style.background-color]="customStyle()?.['background-color']"
+       [style.border]="customStyle()?.['border']"
+       [style.margin-bottom]="customStyle()?.['margin-bottom']">
+    
+    <div class="alert-header">
+      <div class="alert-icon" [class]="'alert-icon icon-' + type()">{{ icon() }}</div>
+      <div class="alert-content">
+        @if (title()) {
+          <div class="alert-title">{{ title() }}</div>
+        }
+        @if (message()) {
+          <div class="alert-message">{{ message() }}</div>
+        }
+      </div>
+      @if (showCloseButton() && mode() === 'expanded') {
+        <button class="alert-close" (click)="onClose()" aria-label="Cerrar alerta">×</button>
+      }
+    </div>
+
+    @if (primaryButtonLabel() || secondaryButtonLabel()) {
+      <div class="alert-actions" [class.actions-expanded]="mode() === 'expanded'">
+        @if (primaryButtonLabel()) {
+          <button class="btn" [class]="'btn btn-' + type()" (click)="onPrimaryAction()">
+            {{ primaryButtonLabel() }}
+          </button>
+        }
+        @if (secondaryButtonLabel()) {
+          <button class="btn btn-ghost" (click)="onSecondaryAction()">
+            {{ secondaryButtonLabel() }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+}
