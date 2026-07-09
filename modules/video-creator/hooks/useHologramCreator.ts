@@ -6,7 +6,7 @@ import { useAuth } from "@/core/providers/AuthContext";
 import { FirebaseHologramRepository } from "../data/firebase/FirebaseHologramRepository";
 
 import { storage, functions } from "@/core/lib/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { httpsCallable } from "firebase/functions";
 
 const repository = new FirebaseHologramRepository();
@@ -57,6 +57,11 @@ export function useHologramCreator({ onClose }: Props) {
 
             const autoName = `${typeStr}${actionStr} (${dateStr})`;
 
+            const availableActions = await repository.getActionsByType(state.type);
+            const actionPrompts = state.actions
+                .map(id => availableActions.find(a => a.id === id)?.prompt)
+                .filter(Boolean);
+
             // 3. Invocar la Cloud Function para llamar a Runway y guardar en DB
             const generateRunwayTask = httpsCallable(functions, 'generateRunwayTask');
             const result = await generateRunwayTask({
@@ -65,10 +70,9 @@ export function useHologramCreator({ onClose }: Props) {
                 name: state.name || autoName,
                 thumbnailUrl: finalPreparedUrl,
                 musicName: state.music,
-                duration: "10 seg",
-                creditsUsed: 1,
                 type: state.type,
                 actions: state.actions,
+                actionPrompts: actionPrompts,
                 env: env
             });
             // Listen to DB for status changes instead of polling

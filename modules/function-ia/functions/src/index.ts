@@ -26,7 +26,7 @@ export const generateRunwayTask = onCall(async (request) => {
         throw new HttpsError("unauthenticated", "Debe estar autenticado para generar un holograma.");
     }
 
-    const { userId, hologramId, name, thumbnailUrl, musicName, type, actions, env: requestEnv } = request.data;
+    const { userId, hologramId, name, thumbnailUrl, musicName, type, actions, actionPrompts, env: requestEnv } = request.data;
 
     // 2. Security validation: Ensure user matches authenticated UID
     if (userId !== request.auth.uid) {
@@ -46,7 +46,8 @@ export const generateRunwayTask = onCall(async (request) => {
         duration: "10 seg",
         creditsUsed: 1,
         type: type,
-        actions: actions,
+        actions: actions || [],
+        actionPrompts: actionPrompts || [],
         status: "pending",
         updateAt: Date.now()
     });
@@ -209,7 +210,10 @@ export const checkHologramStatus = onCall(async (request) => {
                 // PASO 2: La imagen se corrigió. Ahora creamos la tarea de VIDEO.
                 console.log(`[checkHologramStatus] Image task succeeded. URL: ${mediaUrl}. Starting video task...`);
                 try {
-                    const videoPrompt = `A realistic full-body pet, fully visible against a pure black background. The pet smoothly moves across the frame with natural full-body motion, gently floating and drifting side to side like a premium hologram. Continuous movement, subtle walking, body rotation, posture shifting, and smooth forward motion while remaining fully visible. Cinematic hologram style, static wide shot, soft front studio lighting, deep blacks, high contrast, smooth animation, stable anatomy, clean silhouette, pure black void background, no floor, no shadows, no extra objects.`;
+                    const actionPrompts = hologram.actionPrompts || [];
+                    const actionPromptsText = actionPrompts.length > 0 ? ` Additional actions: ${actionPrompts.join(', ')}.` : "";
+                    
+                    const videoPrompt = `A realistic full-body pet, centered and visible against a pure black background. Soft breathing, subtle head and ear movement, gentle blinking. Calm behavior, floating appearance. Cinematic premium hologram style, fixed camera, medium shot, soft front studio lighting. Deep blacks, high contrast, smooth motion, stable clean image.${actionPromptsText}`;
 
                     const videoResponse = await fetch("https://api.dev.runwayml.com/v1/image_to_video", {
                         method: "POST",
