@@ -125,6 +125,7 @@ Ultra-realistic cinematic studio quality, sharp focus, clean silhouette, hologra
     try {
         const hologramRef = db.ref(`${env}/users/${userId}/holograms/${hologramId}`);
         await hologramRef.update({
+            runwayImageTaskId: taskId,
             runwayTaskId: taskId,
             runwayTaskType: "image", // Indicamos que es la tarea de imagen
             status: "processing",

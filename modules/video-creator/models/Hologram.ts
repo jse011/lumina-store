@@ -10,6 +10,7 @@ export interface Hologram {
     status: 'pending' | 'processing' | 'ready' | 'error' | 'stopped';
     type: 'persona' | 'mascota';
     actions: string[];
+    actionPrompts?: string[];
     deleted?: boolean;
     runwayTaskId?: string;
 }
