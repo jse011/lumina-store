@@ -107,14 +107,24 @@ export class FirebaseHologramRepository implements HologramRepository {
         const snapshot = await get(actionsRef);
 
         if (!snapshot.exists()) {
-            // Default actions in case Firebase is not configured yet
-            if (type === 'mascota') {
-                return [];
-            } else {
-                return [];
-            }
+            return [];
         }
 
-        return snapshot.val() as HologramAction[];
+        const data = snapshot.val();
+        
+        // Firebase puede retornar un array o un objeto dependiendo de las llaves
+        if (Array.isArray(data)) {
+            return data.filter(Boolean).map((item, index) => ({
+                ...item,
+                id: item.id || String(index) // Aseguramos que tenga un id
+            })) as HologramAction[];
+        } else if (typeof data === 'object') {
+            return Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            })) as HologramAction[];
+        }
+
+        return [];
     }
 }
